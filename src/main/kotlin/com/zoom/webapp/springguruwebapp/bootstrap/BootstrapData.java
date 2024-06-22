@@ -2,8 +2,10 @@ package com.zoom.webapp.springguruwebapp.bootstrap;
 
 import com.zoom.webapp.springguruwebapp.domain.Author;
 import com.zoom.webapp.springguruwebapp.domain.Book;
+import com.zoom.webapp.springguruwebapp.domain.Publisher;
 import com.zoom.webapp.springguruwebapp.repositories.AuthorRepository;
 import com.zoom.webapp.springguruwebapp.repositories.BookRepository;
+import com.zoom.webapp.springguruwebapp.repositories.PublisherRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
@@ -12,10 +14,12 @@ public class BootstrapData implements CommandLineRunner {
 
     private final AuthorRepository authorRepository;
     private final BookRepository bookRepository;
+    private final PublisherRepository publisherRepository;
 
-    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository) {
+    public BootstrapData(AuthorRepository authorRepository, BookRepository bookRepository, PublisherRepository publisherRepository) {
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
+        this.publisherRepository = publisherRepository;
     }
 
     @Override
@@ -53,5 +57,13 @@ public class BootstrapData implements CommandLineRunner {
         System.out.println("Book Count:" + bookRepository.count());
         System.out.println("Author Content:" + authorRepository.findAll());
         System.out.println("Book Content:" + bookRepository.findAll());
+
+        Publisher publisher = new Publisher();
+        publisher.setName("My Publisher");
+        publisher.setAddress("123 Main St");
+
+        publisherRepository.save(publisher);
+
+        System.out.println("Publisher Count:" + publisherRepository.count());
     }
 }
