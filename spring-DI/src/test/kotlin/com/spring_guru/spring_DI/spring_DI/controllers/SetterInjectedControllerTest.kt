@@ -5,15 +5,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 
+@SpringBootTest
 class SetterInjectedControllerTest {
+    @Autowired
     lateinit var setterInjectedController: SetterInjectedController
-
-    @BeforeEach
-    fun setUp() {
-        setterInjectedController = SetterInjectedController()
-        setterInjectedController.setService(GreetingServiceImpl()) //If it is commented exist, then NPE will be thrown
-    }
 
     @Test
     fun sayHello() {

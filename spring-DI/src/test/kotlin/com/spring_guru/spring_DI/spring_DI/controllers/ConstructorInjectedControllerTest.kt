@@ -1,19 +1,14 @@
 package com.spring_guru.spring_DI.spring_DI.controllers
 
-import com.spring_guru.spring_DI.spring_DI.services.GreetingServiceImpl
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 
-import org.junit.jupiter.api.Assertions.*
-
+@SpringBootTest
 class ConstructorInjectedControllerTest {
 
+    @Autowired
     lateinit var constructorInjectedController: ConstructorInjectedController
-
-    @BeforeEach
-    fun setUp() {
-        constructorInjectedController = ConstructorInjectedController(greetingService = GreetingServiceImpl())
-    }
 
     @Test
     fun sayHello() {
