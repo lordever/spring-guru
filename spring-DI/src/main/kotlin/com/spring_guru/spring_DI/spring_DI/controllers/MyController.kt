@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller
 @Controller
 class MyController() {
 
-    final lateinit var service: GreetingService
+    final var service: GreetingService
 
     init {
         service = GreetingServiceImpl()
