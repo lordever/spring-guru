@@ -18,4 +18,12 @@ class MyController() {
 
         return service.sayGreeting()
     }
+
+    fun beforeInit() {
+        println("## - Before Init - Called by Bean Post Processor")
+    }
+
+    fun afterInit() {
+        println("## - After init called by Bean Post Processor")
+    }
 }
