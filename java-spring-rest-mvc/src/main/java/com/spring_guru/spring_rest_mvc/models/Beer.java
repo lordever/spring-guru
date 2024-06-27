@@ -1,11 +1,13 @@
 package com.spring_guru.spring_rest_mvc.models;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@Builder
 @Data
 public class Beer {
     private UUID id;
