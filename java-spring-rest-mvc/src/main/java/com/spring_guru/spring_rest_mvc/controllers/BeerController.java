@@ -14,7 +14,7 @@ import java.util.UUID;
 public class BeerController {
     private final BeerService beerService;
 
-    public Beer gerBeerById(UUID id) {
+    public Beer getBeerById(UUID id) {
         log.debug("Get beer by id {}", id);
 
         return beerService.getBeerById(id);
