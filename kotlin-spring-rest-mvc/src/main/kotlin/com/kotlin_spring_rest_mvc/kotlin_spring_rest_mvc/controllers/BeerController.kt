@@ -3,6 +3,7 @@ package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.controllers
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Beer
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.BeerService
 import mu.KotlinLogging
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -19,7 +20,13 @@ class BeerController(private val beerService: BeerService) {
     fun handlePost(@RequestBody beer: Beer): ResponseEntity<Beer> {
         val savedBeer: Beer = beerService.saveNewBeer(beer)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBeer)
+        val headers = HttpHeaders()
+        headers.add("Location", "/api/v1/beers/${savedBeer.id}")
+
+        return ResponseEntity
+            .status(HttpStatus.CREATED)
+            .headers(headers)
+            .body(savedBeer)
     }
 
     @GetMapping
