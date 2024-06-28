@@ -6,4 +6,5 @@ import java.util.*
 interface CustomerService {
     fun findAll(): List<Customer>
     fun findById(id: UUID): Customer?
+    fun save(customer: Customer): Customer
 }

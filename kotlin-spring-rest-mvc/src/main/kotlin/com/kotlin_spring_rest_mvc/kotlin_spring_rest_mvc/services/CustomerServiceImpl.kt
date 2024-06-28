@@ -59,4 +59,17 @@ class CustomerServiceImpl : CustomerService {
     override fun findById(id: UUID): Customer? {
         return customerMap[id]
     }
+
+    override fun save(customer: Customer): Customer {
+        val newCustomer = Customer(
+            name = customer.name,
+            version = customer.version,
+            createdDate = LocalDateTime.now(),
+            lastModifiedDate = LocalDateTime.now()
+        )
+
+        customerMap[newCustomer.id] = newCustomer
+
+        return newCustomer
+    }
 }
