@@ -9,9 +9,9 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 @Service
-class BeerServiceImpl: BeerService {
+class BeerServiceImpl : BeerService {
     private val log = KotlinLogging.logger {}
-    private val beerMap: MutableMap<UUID, Beer> = mutableMapOf()
+    private var beerMap: MutableMap<UUID, Beer> = mutableMapOf()
 
     init {
         val beer1 = Beer(
@@ -65,7 +65,7 @@ class BeerServiceImpl: BeerService {
         return beerMap.values.toList()
     }
 
-    override fun saveNewBeer(beer: Beer): Beer {
+    override fun save(beer: Beer): Beer {
         val newBeer = Beer(
             version = beer.version,
             name = beer.name,
@@ -80,5 +80,23 @@ class BeerServiceImpl: BeerService {
         beerMap[newBeer.id] = newBeer
 
         return newBeer
+    }
+
+    override fun updateById(id: UUID, newBeer: Beer) {
+        val existingBeer = beerMap[id]
+
+        if (existingBeer != null) {
+            existingBeer.name = newBeer.name
+            existingBeer.price = newBeer.price
+            existingBeer.quantity = newBeer.quantity
+            existingBeer.style = newBeer.style
+            existingBeer.upc = newBeer.upc
+            existingBeer.version = newBeer.version
+            existingBeer.updateDate = LocalDateTime.now()
+
+            beerMap[id] = existingBeer
+        } else {
+            log.debug { "Beer $id wasn't found" }
+        }
     }
 }

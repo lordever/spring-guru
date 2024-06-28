@@ -15,10 +15,18 @@ class BeerController(private val beerService: BeerService) {
 
     private val logger = KotlinLogging.logger {}
 
+    @GetMapping
+    fun listBeers(): List<Beer> = beerService.listBeer()
+
+    @GetMapping("/{id}")
+    fun getBeerById(@PathVariable("id") id: UUID): Beer? {
+        logger.debug { "Get beer by id $id" }
+        return beerService.getBeerById(id)
+    }
 
     @PostMapping
     fun handlePost(@RequestBody beer: Beer): ResponseEntity<Beer> {
-        val savedBeer: Beer = beerService.saveNewBeer(beer)
+        val savedBeer: Beer = beerService.save(beer)
 
         val headers = HttpHeaders()
         headers.add("Location", "/api/v1/beers/${savedBeer.id}")
@@ -29,12 +37,12 @@ class BeerController(private val beerService: BeerService) {
             .body(savedBeer)
     }
 
-    @GetMapping
-    fun listBeers(): List<Beer> = beerService.listBeer()
+    @PutMapping("/{id}")
+    fun updateById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<String> {
+        beerService.updateById(id, beer)
 
-    @GetMapping("/{id}")
-    fun getBeerById(@PathVariable("id") id: UUID): Beer? {
-        logger.debug { "Get beer by id $id" }
-        return beerService.getBeerById(id)
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .body("Beer: $id was updated")
     }
 }
