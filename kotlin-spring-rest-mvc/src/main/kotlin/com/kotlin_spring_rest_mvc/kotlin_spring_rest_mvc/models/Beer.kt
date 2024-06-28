@@ -14,5 +14,4 @@ data class Beer(
     val price: BigDecimal,
     val createDate: LocalDateTime,
     val updateDate: LocalDateTime
-) {
-}
+)

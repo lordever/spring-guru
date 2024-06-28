@@ -17,9 +17,7 @@ class BeerController(private val beerService: BeerService) {
     private val logger = KotlinLogging.logger {}
 
     @GetMapping
-    fun listBeers(): List<Beer> {
-        return beerService.listBeer()
-    }
+    fun listBeers(): List<Beer> = beerService.listBeer()
 
     @GetMapping("/{id}")
     fun getBeerById(@PathVariable("id") id: UUID): Beer? {
