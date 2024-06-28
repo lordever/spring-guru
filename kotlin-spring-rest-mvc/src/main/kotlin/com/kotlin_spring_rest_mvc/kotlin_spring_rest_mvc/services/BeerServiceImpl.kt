@@ -64,4 +64,21 @@ class BeerServiceImpl: BeerService {
     override fun listBeer(): List<Beer> {
         return beerMap.values.toList()
     }
+
+    override fun saveNewBeer(beer: Beer): Beer {
+        val newBeer = Beer(
+            version = beer.version,
+            name = beer.name,
+            style = beer.style,
+            upc = beer.upc,
+            price = beer.price,
+            quantity = beer.quantity,
+            createDate = LocalDateTime.now(),
+            updateDate = LocalDateTime.now()
+        )
+
+        beerMap[newBeer.id] = newBeer
+
+        return newBeer
+    }
 }

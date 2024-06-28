@@ -6,4 +6,5 @@ import java.util.UUID
 interface BeerService {
     fun getBeerById(id: UUID): Beer?
     fun listBeer(): List<Beer>
+    fun saveNewBeer(beer: Beer): Beer
 }
