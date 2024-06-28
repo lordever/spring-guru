@@ -7,4 +7,5 @@ interface CustomerService {
     fun findAll(): List<Customer>
     fun findById(id: UUID): Customer?
     fun save(customer: Customer): Customer
+    fun updateById(id: UUID, customer: Customer): Customer?
 }

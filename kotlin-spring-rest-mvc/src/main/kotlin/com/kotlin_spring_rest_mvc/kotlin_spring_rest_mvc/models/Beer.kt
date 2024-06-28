@@ -12,6 +12,6 @@ data class Beer(
     var upc: String = "",
     var style: BeerStyle,
     var price: BigDecimal,
-    var createDate: LocalDateTime = LocalDateTime.now(),
+    val createDate: LocalDateTime = LocalDateTime.now(),
     var updateDate: LocalDateTime = LocalDateTime.now()
 )

@@ -5,8 +5,8 @@ import java.util.UUID
 
 data class Customer(
     val id: UUID = UUID.randomUUID(),
-    val name: String,
-    val version: String,
+    var name: String,
+    var version: String,
     val createdDate: LocalDateTime = LocalDateTime.now(),
-    val lastModifiedDate: LocalDateTime = LocalDateTime.now(),
+    var lastModifiedDate: LocalDateTime = LocalDateTime.now(),
 )

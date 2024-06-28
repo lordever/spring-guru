@@ -72,4 +72,18 @@ class CustomerServiceImpl : CustomerService {
 
         return newCustomer
     }
+
+    override fun updateById(id: UUID, customer: Customer): Customer? {
+        val existingCustomer = customerMap[id]
+
+        if (existingCustomer != null) {
+            existingCustomer.name = customer.name
+            existingCustomer.version = customer.version
+            existingCustomer.lastModifiedDate = LocalDateTime.now()
+        } else {
+            log.debug { "Customer $id wasn't found" }
+        }
+
+        return existingCustomer
+    }
 }
