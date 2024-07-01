@@ -44,6 +44,15 @@ class CustomerController(val customerService: CustomerService) {
             .body(updatedCustomer)
     }
 
+    @PatchMapping("{id}")
+    fun patchById(@PathVariable id: UUID, @RequestBody customer: Customer): ResponseEntity<Customer> {
+        val updatedCustomer = customerService.patchById(id, customer)
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(updatedCustomer)
+    }
+
     @DeleteMapping("{id}")
     fun deleteById(@PathVariable id: UUID): ResponseEntity<String> {
         customerService.deleteById(id)

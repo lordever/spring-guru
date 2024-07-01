@@ -87,6 +87,25 @@ class CustomerServiceImpl : CustomerService {
         return existingCustomer
     }
 
+    override fun patchById(id: UUID, customer: Customer): Customer? {
+        val existingCustomer = customerMap[id]
+
+        if (existingCustomer != null) {
+            if (customer.name != null) {
+                existingCustomer.name = customer.name
+            }
+            if (customer.version != null) {
+                existingCustomer.version = customer.version
+            }
+
+            existingCustomer.lastModifiedDate = LocalDateTime.now()
+        } else {
+            log.debug { "Customer $id wasn't found" }
+        }
+
+        return existingCustomer
+    }
+
     override fun deleteById(id: UUID) {
         customerMap.remove(id)
     }

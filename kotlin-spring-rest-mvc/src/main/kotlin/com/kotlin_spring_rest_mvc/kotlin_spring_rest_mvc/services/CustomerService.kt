@@ -8,5 +8,6 @@ interface CustomerService {
     fun findById(id: UUID): Customer?
     fun save(customer: Customer): Customer
     fun updateById(id: UUID, customer: Customer): Customer?
+    fun patchById(id: UUID, customer: Customer): Customer?
     fun deleteById(id: UUID)
 }
