@@ -86,4 +86,8 @@ class CustomerServiceImpl : CustomerService {
 
         return existingCustomer
     }
+
+    override fun deleteById(id: UUID) {
+        customerMap.remove(id)
+    }
 }

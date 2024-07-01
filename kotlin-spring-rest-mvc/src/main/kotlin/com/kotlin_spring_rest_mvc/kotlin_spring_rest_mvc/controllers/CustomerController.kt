@@ -43,4 +43,13 @@ class CustomerController(val customerService: CustomerService) {
             .status(HttpStatus.OK)
             .body(updatedCustomer)
     }
+
+    @DeleteMapping("{id}")
+    fun deleteById(@PathVariable id: UUID): ResponseEntity<String> {
+        customerService.deleteById(id)
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body("Customer with id $id has been deleted")
+    }
 }
