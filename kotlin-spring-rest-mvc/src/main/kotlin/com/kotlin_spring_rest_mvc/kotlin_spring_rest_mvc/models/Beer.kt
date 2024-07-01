@@ -6,12 +6,12 @@ import java.util.*
 
 data class Beer(
     val id: UUID = UUID.randomUUID(),
-    var version: Int,
-    var quantity: Int,
-    var name: String,
-    var upc: String = "",
-    var style: BeerStyle,
-    var price: BigDecimal,
+    var version: Int?,
+    var quantity: Int?,
+    var name: String?,
+    var upc: String?,
+    var style: BeerStyle?,
+    var price: BigDecimal?,
     val createDate: LocalDateTime = LocalDateTime.now(),
     var updateDate: LocalDateTime = LocalDateTime.now()
 )

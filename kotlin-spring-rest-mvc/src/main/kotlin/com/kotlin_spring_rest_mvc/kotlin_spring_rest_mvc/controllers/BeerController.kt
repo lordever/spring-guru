@@ -46,6 +46,15 @@ class BeerController(private val beerService: BeerService) {
             .body("Beer: $id was updated")
     }
 
+    @PatchMapping("/{id}")
+    fun patchById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<String> {
+        beerService.patchById(id, beer)
+
+        return ResponseEntity
+            .status(HttpStatus.NO_CONTENT)
+            .body("Beer: $id was updated")
+    }
+
     @DeleteMapping("/{id}")
     fun deleteById(@PathVariable("id") id: UUID): ResponseEntity<String> {
         beerService.deleteById(id)

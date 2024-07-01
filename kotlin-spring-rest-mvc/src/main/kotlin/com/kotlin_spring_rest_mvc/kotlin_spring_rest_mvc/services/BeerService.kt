@@ -8,5 +8,6 @@ interface BeerService {
     fun listBeer(): List<Beer>
     fun save(beer: Beer): Beer
     fun updateById(id: UUID, newBeer: Beer)
+    fun patchById(id: UUID, newBeer: Beer)
     fun deleteById(id: UUID)
 }

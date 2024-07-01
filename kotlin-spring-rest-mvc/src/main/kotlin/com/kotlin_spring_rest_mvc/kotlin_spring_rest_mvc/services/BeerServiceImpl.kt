@@ -100,6 +100,37 @@ class BeerServiceImpl : BeerService {
         }
     }
 
+    override fun patchById(id: UUID, newBeer: Beer) {
+        val existingBeer = beerMap[id]
+
+        if (existingBeer != null) {
+            if (newBeer.name != null) {
+                existingBeer.name = newBeer.name
+            }
+            if (newBeer.price != null) {
+                existingBeer.price = newBeer.price
+            }
+            if (newBeer.quantity != null) {
+                existingBeer.quantity = newBeer.quantity
+            }
+            if (newBeer.style != null) {
+                existingBeer.style = newBeer.style
+            }
+            if (newBeer.upc != null) {
+                existingBeer.upc = newBeer.upc
+            }
+            if (newBeer.version != null) {
+                existingBeer.version = newBeer.version
+            }
+
+            existingBeer.updateDate = LocalDateTime.now()
+
+            beerMap[id] = existingBeer
+        } else {
+            log.debug { "Beer $id wasn't found" }
+        }
+    }
+
     override fun deleteById(id: UUID) {
         beerMap.remove(id)
     }
