@@ -99,4 +99,8 @@ class BeerServiceImpl : BeerService {
             log.debug { "Beer $id wasn't found" }
         }
     }
+
+    override fun deleteById(id: UUID) {
+        beerMap.remove(id)
+    }
 }

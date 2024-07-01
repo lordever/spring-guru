@@ -45,4 +45,13 @@ class BeerController(private val beerService: BeerService) {
             .status(HttpStatus.NO_CONTENT)
             .body("Beer: $id was updated")
     }
+
+    @DeleteMapping("/{id}")
+    fun deleteById(@PathVariable("id") id: UUID): ResponseEntity<String> {
+        beerService.deleteById(id)
+
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body("Beer: $id was deleted")
+    }
 }
