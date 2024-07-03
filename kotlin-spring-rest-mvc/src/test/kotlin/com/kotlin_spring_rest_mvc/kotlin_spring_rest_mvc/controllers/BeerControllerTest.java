@@ -1,5 +1,7 @@
 package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Beer;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.BeerService;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.BeerServiceImpl;
@@ -20,6 +22,9 @@ class BeerControllerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @Autowired
+    ObjectMapper objectMapper;
 
     @MockBean
     BeerService beerService;
@@ -49,5 +54,12 @@ class BeerControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", is(testBeer.getId().toString())))
                 .andExpect(jsonPath("$.name", is(testBeer.getName())));
+    }
+
+    @Test
+    void creteNewBeer() throws JsonProcessingException {
+        Beer testBeer = beerServiceImpl.listBeer().getFirst();
+
+        System.out.println(objectMapper.writeValueAsString(testBeer));
     }
 }
