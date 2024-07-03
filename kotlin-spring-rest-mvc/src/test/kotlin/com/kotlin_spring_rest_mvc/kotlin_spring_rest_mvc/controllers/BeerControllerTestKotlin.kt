@@ -25,6 +25,19 @@ class BeerControllerTestKotlin {
     private val beerServiceImpl = BeerServiceImpl()
 
     @Test
+    fun getAllBeersList() {
+        given(beerService.listBeer()).willReturn(beerServiceImpl.listBeer())
+
+        mockMvc.perform(
+            get("/api/v1/beers")
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isOk)
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(jsonPath("$.length()", equalTo(beerServiceImpl.listBeer().size)))
+    }
+
+    @Test
     fun getBeerById() {
         val testBeer = beerServiceImpl.listBeer().first()
 
