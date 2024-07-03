@@ -1,19 +1,24 @@
 package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Customer;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.CustomerService;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.CustomerServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.NoSuchElementException;
+
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
@@ -22,10 +27,18 @@ public class CustomerControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     CustomerService customerService;
 
-    CustomerServiceImpl customerServiceImpl = new CustomerServiceImpl();
+    CustomerServiceImpl customerServiceImpl;
+
+    @BeforeEach
+    void setUp() {
+        customerServiceImpl = new CustomerServiceImpl();
+    }
 
     @Test
     void getAllCustomersList() throws Exception {
@@ -45,10 +58,31 @@ public class CustomerControllerTest {
         given(customerService.findById(testCustomer.getId())).willReturn(testCustomer);
 
         mockMvc
-                .perform(get("/api/v1/customers/"+testCustomer.getId()).accept(MediaType.APPLICATION_JSON))
+                .perform(get("/api/v1/customers/" + testCustomer.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name", is(testCustomer.getName())))
                 .andExpect(jsonPath("$.version", is(testCustomer.getVersion())));
+    }
+
+    @Test
+    void createNewCustomer() throws Exception {
+        Customer testCustomer =  customerServiceImpl.findAll().stream()
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("No customers found"));
+
+        testCustomer.setId(null);
+        testCustomer.setVersion(null);
+
+        given(customerService.save(any(Customer.class))).willReturn(customerServiceImpl.findAll().get(0));
+
+        mockMvc
+                .perform(post("/api/v1/customers")
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testCustomer))
+                )
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"));
     }
 }

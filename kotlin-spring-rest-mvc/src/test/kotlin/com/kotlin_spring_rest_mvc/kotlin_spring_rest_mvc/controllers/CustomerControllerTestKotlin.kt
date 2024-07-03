@@ -37,8 +37,9 @@ class CustomerControllerTestKotlin {
     @Test
     fun getCustomerById() {
         val testCustomer = customerServiceImpl.findAll().first()
+        val customerId = requireNotNull(testCustomer.id) { "Customer ID cannot be null" }
 
-        given(customerService.findById(testCustomer.id)).willReturn(testCustomer)
+        given(customerService.findById(customerId)).willReturn(testCustomer)
 
         mockMvc.perform(get("/api/v1/customers/${testCustomer.id}").accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk)

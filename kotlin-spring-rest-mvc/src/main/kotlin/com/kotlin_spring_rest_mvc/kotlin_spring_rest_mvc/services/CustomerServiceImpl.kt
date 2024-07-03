@@ -44,10 +44,10 @@ class CustomerServiceImpl : CustomerService {
             lastModifiedDate = LocalDateTime.now()
         )
 
-        customerMap[customer1.id] = customer1
-        customerMap[customer2.id] = customer2
-        customerMap[customer3.id] = customer3
-        customerMap[customer4.id] = customer4
+        customer1.id?.let { customerMap[it] = customer1 }
+        customer2.id?.let { customerMap[it] = customer2 }
+        customer3.id?.let { customerMap[it] = customer3 }
+        customer4.id?.let { customerMap[it] = customer4 }
     }
 
     override fun findAll(): List<Customer> {
@@ -62,13 +62,14 @@ class CustomerServiceImpl : CustomerService {
 
     override fun save(customer: Customer): Customer {
         val newCustomer = Customer(
+            id = UUID.randomUUID(),
             name = customer.name,
             version = customer.version,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
 
-        customerMap[newCustomer.id] = newCustomer
+        newCustomer.id?.let { customerMap[newCustomer.id] }
 
         return newCustomer
     }

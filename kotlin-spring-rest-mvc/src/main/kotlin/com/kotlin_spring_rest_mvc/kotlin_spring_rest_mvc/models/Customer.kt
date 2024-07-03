@@ -4,7 +4,7 @@ import java.time.LocalDateTime
 import java.util.UUID
 
 data class Customer(
-    val id: UUID = UUID.randomUUID(),
+    var id: UUID?,
     var name: String?,
     var version: String?,
     val createdDate: LocalDateTime = LocalDateTime.now(),
