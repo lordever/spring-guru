@@ -50,9 +50,9 @@ class BeerServiceImpl : BeerService {
             updateDate = LocalDateTime.now()
         )
 
-        beerMap[beer1.id] = beer1
-        beerMap[beer2.id] = beer2
-        beerMap[beer3.id] = beer3
+        beer1.id?.let { beerMap[it] = beer1 }
+        beer2.id?.let { beerMap[it] = beer2 }
+        beer3.id?.let { beerMap[it] = beer3 }
     }
 
     override fun getBeerById(id: UUID): Beer? {
@@ -67,6 +67,7 @@ class BeerServiceImpl : BeerService {
 
     override fun save(beer: Beer): Beer {
         val newBeer = Beer(
+            id = UUID.randomUUID(),
             version = beer.version,
             name = beer.name,
             style = beer.style,
@@ -77,7 +78,7 @@ class BeerServiceImpl : BeerService {
             updateDate = LocalDateTime.now()
         )
 
-        beerMap[newBeer.id] = newBeer
+        newBeer.id?.let { beerMap[it] = newBeer }
 
         return newBeer
     }

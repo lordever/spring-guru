@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class Beer(
-    val id: UUID = UUID.randomUUID(),
+    var id: UUID?,
     var version: Int?,
     var quantity: Int?,
     var name: String?,

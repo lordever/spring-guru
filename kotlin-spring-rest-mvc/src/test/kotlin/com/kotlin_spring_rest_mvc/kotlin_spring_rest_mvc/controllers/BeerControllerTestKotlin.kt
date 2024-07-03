@@ -41,7 +41,8 @@ class BeerControllerTestKotlin {
     fun getBeerById() {
         val testBeer = beerServiceImpl.listBeer().first()
 
-        given(beerService.getBeerById(testBeer.id)).willReturn(testBeer)
+        val beerId = requireNotNull(testBeer.id) { "Beer ID cannot be null" }
+        given(beerService.getBeerById(beerId)).willReturn(testBeer)
 
         mockMvc.perform(
             get("/api/v1/beers/${testBeer.id}")
