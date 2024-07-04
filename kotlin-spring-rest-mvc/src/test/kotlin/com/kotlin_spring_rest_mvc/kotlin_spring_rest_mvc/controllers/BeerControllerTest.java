@@ -7,12 +7,15 @@ import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.BeerServiceImp
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -36,7 +39,14 @@ class BeerControllerTest {
     @MockBean
     BeerService beerService;
 
+    @Captor
+    ArgumentCaptor<UUID> uuidArgumentCaptor;
+
+    @Captor
+    ArgumentCaptor<Beer> beerCaptor;
+
     BeerServiceImpl beerServiceImpl;
+
 
     @BeforeEach
     void setUp() {
@@ -105,12 +115,30 @@ class BeerControllerTest {
         assertNotNull(testBeer.getId(), "The beer ID should not be null");
 
         mockMvc.perform(delete("/api/v1/beers/" + testBeer.getId())
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
-        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
         verify(beerService).deleteById(uuidArgumentCaptor.capture());
 
         assertThat(uuidArgumentCaptor.getValue()).isEqualTo(testBeer.getId());
+    }
+
+    @Test
+    void testPatchBeer() throws Exception {
+        Beer testBeer = beerServiceImpl.listBeer().getFirst();
+
+        Map<String, Object> beerMap = new HashMap<>();
+        beerMap.put("name", "New Name");
+
+        mockMvc.perform(patch("/api/v1/beers/" + testBeer.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(beerMap))
+                )
+                .andExpect(status().isNoContent());
+
+        verify(beerService).patchById(uuidArgumentCaptor.capture(), beerCaptor.capture());
+        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(testBeer.getId());
+        assertThat(beerCaptor.getValue().getName()).isEqualTo(beerMap.get("name"));
     }
 }
