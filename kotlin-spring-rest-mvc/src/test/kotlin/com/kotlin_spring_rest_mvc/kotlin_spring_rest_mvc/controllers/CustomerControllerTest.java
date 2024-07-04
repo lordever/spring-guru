@@ -1,5 +1,6 @@
 package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Customer;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.CustomerService;
@@ -13,12 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CustomerController.class)
@@ -67,7 +70,7 @@ public class CustomerControllerTest {
 
     @Test
     void createNewCustomer() throws Exception {
-        Customer testCustomer =  customerServiceImpl.findAll().stream()
+        Customer testCustomer = customerServiceImpl.findAll().stream()
                 .findFirst()
                 .orElseThrow(() -> new NoSuchElementException("No customers found"));
 
@@ -84,5 +87,22 @@ public class CustomerControllerTest {
                 )
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"));
+    }
+
+    @Test
+    void testUpdateCustomer() throws Exception {
+        Customer testCustomer = customerServiceImpl.findAll().getFirst();
+        String newTestName = "New Test Name";
+        String newTestVersion = "2";
+        testCustomer.setName(newTestName);
+        testCustomer.setVersion(newTestVersion);
+
+        mockMvc.perform(put("/api/v1/customers/" + testCustomer.getId())
+                        .accept(MediaType.APPLICATION_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(testCustomer)))
+                .andExpect(status().isNoContent());
+
+        verify(customerService).updateById(any(UUID.class), any(Customer.class));
     }
 }

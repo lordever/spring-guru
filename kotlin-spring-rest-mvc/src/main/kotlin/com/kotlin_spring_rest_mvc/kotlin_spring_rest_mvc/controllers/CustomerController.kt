@@ -36,12 +36,12 @@ class CustomerController(val customerService: CustomerService) {
     }
 
     @PutMapping("{id}")
-    fun updateById(@PathVariable id: UUID, @RequestBody customer: Customer): ResponseEntity<Customer?> {
-        val updatedCustomer = customerService.updateById(id, customer)
+    fun updateById(@PathVariable id: UUID, @RequestBody customer: Customer): ResponseEntity<String> {
+        customerService.updateById(id, customer)
 
         return ResponseEntity
-            .status(HttpStatus.OK)
-            .body(updatedCustomer)
+            .status(HttpStatus.NO_CONTENT)
+            .body("Customer ${id} was updated")
     }
 
     @PatchMapping("{id}")
