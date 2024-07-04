@@ -38,29 +38,24 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @PutMapping("/{id}")
-    fun updateById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<String> {
+    fun updateById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<Void> {
         beerService.updateById(id, beer)
 
-        return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .body("Beer: $id was updated")
+        return ResponseEntity(HttpStatus.NO_CONTENT)
+
     }
 
     @PatchMapping("/{id}")
-    fun patchById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<String> {
+    fun patchById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<Void> {
         beerService.patchById(id, beer)
 
-        return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .body("Beer: $id was updated")
+        return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
     @DeleteMapping("/{id}")
-    fun deleteById(@PathVariable("id") id: UUID): ResponseEntity<String> {
+    fun deleteById(@PathVariable("id") id: UUID): ResponseEntity<Void> {
         beerService.deleteById(id)
 
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body("Beer: $id was deleted")
+        return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 }

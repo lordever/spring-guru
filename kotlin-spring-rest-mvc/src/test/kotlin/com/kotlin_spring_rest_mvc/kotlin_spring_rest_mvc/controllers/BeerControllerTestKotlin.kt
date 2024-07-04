@@ -42,7 +42,7 @@ class BeerControllerTestKotlin {
     }
 
     @Test
-    fun getAllBeersList() {
+    fun testGetAllBeersList() {
         given(beerService.listBeer()).willReturn(beerServiceImpl.listBeer())
 
         mockMvc.perform(
@@ -55,7 +55,7 @@ class BeerControllerTestKotlin {
     }
 
     @Test
-    fun getBeerById() {
+    fun testGetBeerById() {
         val testBeer = beerServiceImpl.listBeer().first()
 
         val beerId = requireNotNull(testBeer.id) { "Beer ID cannot be null" }
@@ -72,7 +72,7 @@ class BeerControllerTestKotlin {
     }
 
     @Test
-    fun createNewBeer() {
+    fun testCreateNewBeer() {
         val testBeer = beerServiceImpl.listBeer().first()
 
         testBeer.id = null

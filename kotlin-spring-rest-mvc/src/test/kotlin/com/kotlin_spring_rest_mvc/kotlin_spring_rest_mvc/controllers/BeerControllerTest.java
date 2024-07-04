@@ -1,12 +1,12 @@
 package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Beer;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.BeerService;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.BeerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,7 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -42,7 +44,7 @@ class BeerControllerTest {
     }
 
     @Test
-    void getAllBeers() throws Exception {
+    void testGetAllBeers() throws Exception {
         given(beerService.listBeer()).willReturn(beerServiceImpl.listBeer());
 
         mockMvc.perform(get("/api/v1/beers")
@@ -53,7 +55,7 @@ class BeerControllerTest {
     }
 
     @Test
-    void getBeerById() throws Exception {
+    void testGetBeerById() throws Exception {
         Beer testBeer = beerServiceImpl.listBeer().getFirst();
 
         given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
@@ -67,7 +69,7 @@ class BeerControllerTest {
     }
 
     @Test
-    void creteNewBeer() throws Exception {
+    void testCreteNewBeer() throws Exception {
         Beer testBeer = beerServiceImpl.listBeer().getFirst();
 
         testBeer.setVersion(null);
@@ -84,7 +86,7 @@ class BeerControllerTest {
     }
 
     @Test
-    void updateBeer() throws Exception {
+    void testUpdateBeer() throws Exception {
         Beer testBeer = beerServiceImpl.listBeer().getFirst();
 
         mockMvc.perform(put("/api/v1/beers/" + testBeer.getId())
@@ -94,5 +96,21 @@ class BeerControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(beerService).updateById(any(UUID.class), any(Beer.class));
+    }
+
+    @Test
+    void testDeleteBeer() throws Exception {
+        Beer testBeer = beerServiceImpl.listBeer().getFirst();
+
+        assertNotNull(testBeer.getId(), "The beer ID should not be null");
+
+        mockMvc.perform(delete("/api/v1/beers/" + testBeer.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
+        verify(beerService).deleteById(uuidArgumentCaptor.capture());
+
+        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(testBeer.getId());
     }
 }
