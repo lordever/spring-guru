@@ -1,12 +1,12 @@
 package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Customer;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.CustomerService;
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services.CustomerServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,13 +16,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
 
 @WebMvcTest(CustomerController.class)
 public class CustomerControllerTest {
@@ -104,5 +105,19 @@ public class CustomerControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(customerService).updateById(any(UUID.class), any(Customer.class));
+    }
+
+    @Test
+    void testDeleteCustomer() throws Exception {
+        Customer testCustomer = customerServiceImpl.findAll().getFirst();
+
+        mockMvc.perform(delete("/api/v1/customers/"+testCustomer.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        ArgumentCaptor<UUID> uuidArgumentCaptor = ArgumentCaptor.forClass(UUID.class);
+        verify(customerService).deleteById(uuidArgumentCaptor.capture());
+
+        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(testCustomer.getId());
     }
 }

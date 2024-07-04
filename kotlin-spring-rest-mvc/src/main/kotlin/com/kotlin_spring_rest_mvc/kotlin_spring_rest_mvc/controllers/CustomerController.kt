@@ -36,12 +36,10 @@ class CustomerController(val customerService: CustomerService) {
     }
 
     @PutMapping("{id}")
-    fun updateById(@PathVariable id: UUID, @RequestBody customer: Customer): ResponseEntity<String> {
+    fun updateById(@PathVariable id: UUID, @RequestBody customer: Customer): ResponseEntity<Void> {
         customerService.updateById(id, customer)
 
-        return ResponseEntity
-            .status(HttpStatus.NO_CONTENT)
-            .body("Customer ${id} was updated")
+        return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
     @PatchMapping("{id}")
@@ -54,11 +52,10 @@ class CustomerController(val customerService: CustomerService) {
     }
 
     @DeleteMapping("{id}")
-    fun deleteById(@PathVariable id: UUID): ResponseEntity<String> {
+    fun deleteById(@PathVariable id: UUID): ResponseEntity<Void> {
         customerService.deleteById(id)
 
-        return ResponseEntity
-            .status(HttpStatus.OK)
-            .body("Customer with id $id has been deleted")
+        return ResponseEntity(HttpStatus.NO_CONTENT)
+
     }
 }
