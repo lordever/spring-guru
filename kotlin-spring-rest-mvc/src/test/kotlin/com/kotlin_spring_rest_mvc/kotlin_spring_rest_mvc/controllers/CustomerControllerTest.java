@@ -71,7 +71,7 @@ public class CustomerControllerTest {
         given(customerService.findById(testCustomer.getId())).willReturn(testCustomer);
 
         mockMvc
-                .perform(get(CustomerController.BASE_CUSTOMERS_PATH + "/" + testCustomer.getId()).accept(MediaType.APPLICATION_JSON))
+                .perform(get(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.getId()).accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.name", is(testCustomer.getName())))
@@ -107,7 +107,7 @@ public class CustomerControllerTest {
         testCustomer.setName(newTestName);
         testCustomer.setVersion(newTestVersion);
 
-        mockMvc.perform(put(CustomerController.BASE_CUSTOMERS_PATH + "/" + testCustomer.getId())
+        mockMvc.perform(put(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testCustomer)))
@@ -120,7 +120,7 @@ public class CustomerControllerTest {
     void testDeleteCustomer() throws Exception {
         Customer testCustomer = customerServiceImpl.findAll().getFirst();
 
-        mockMvc.perform(delete(CustomerController.BASE_CUSTOMERS_PATH + "/" + testCustomer.getId())
+        mockMvc.perform(delete(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -136,7 +136,7 @@ public class CustomerControllerTest {
 
         customerMap.put("name", "Test Customer Name");
 
-        mockMvc.perform(patch(CustomerController.BASE_CUSTOMERS_PATH + "/" + testCustomer.getId())
+        mockMvc.perform(patch(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(customerMap)))
