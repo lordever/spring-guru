@@ -19,6 +19,9 @@ class BeerController(private val beerService: BeerService) {
         const val BEER_PATH_WITH_ID = "$BASE_BEER_PATH/{id}"
     }
 
+    @ExceptionHandler(NotFoundException::class)
+    fun handleNotFoundException(): ResponseEntity<String> = ResponseEntity.notFound().build()
+
     @GetMapping(BASE_BEER_PATH)
     fun listBeers(): List<Beer> = beerService.listBeer()
 
