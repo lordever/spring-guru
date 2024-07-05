@@ -18,9 +18,6 @@ class CustomerController(val customerService: CustomerService) {
         const val CUSTOMERS_PATH_WITH_ID = "${BASE_CUSTOMERS_PATH}/{id}";
     }
 
-    @ExceptionHandler(NotFoundException::class)
-    fun handleNotFoundException(): ResponseEntity<String> = ResponseEntity(HttpStatus.NOT_FOUND)
-
     @GetMapping(BASE_CUSTOMERS_PATH)
     fun findAll(): List<Customer> = customerService.findAll()
 

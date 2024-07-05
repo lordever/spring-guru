@@ -20,7 +20,11 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @ExceptionHandler(NotFoundException::class)
-    fun handleNotFoundException(): ResponseEntity<String> = ResponseEntity.notFound().build()
+    fun handleNotFoundException(): ResponseEntity<String>  {
+        println("Calling from BeerController custom exception handler")
+
+        return ResponseEntity.notFound().build()
+    }
 
     @GetMapping(BASE_BEER_PATH)
     fun listBeers(): List<Beer> = beerService.listBeer()
