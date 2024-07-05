@@ -24,7 +24,7 @@ class CustomerController(val customerService: CustomerService) {
     @GetMapping(CUSTOMERS_PATH_WITH_ID)
     fun findById(@PathVariable id: UUID): Customer? {
         logger.debug { "Get customer by id $id" }
-        return customerService.findById(id)
+        return customerService.findById(id) ?: throw NotFoundException()
     }
 
     @PostMapping(BASE_CUSTOMERS_PATH)

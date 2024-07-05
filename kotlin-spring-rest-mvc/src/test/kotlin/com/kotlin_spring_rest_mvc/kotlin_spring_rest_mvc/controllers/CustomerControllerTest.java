@@ -80,7 +80,7 @@ public class CustomerControllerTest {
 
     @Test
     void testGetCustomerByIdNotFound() throws Exception {
-        given(customerService.findById(any(UUID.class))).willThrow(NotFoundException.class);
+        given(customerService.findById(any(UUID.class))).willReturn(null);
 
         mockMvc.perform(get(CustomerController.CUSTOMERS_PATH_WITH_ID, UUID.randomUUID()))
                 .andExpect(status().isNotFound());

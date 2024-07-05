@@ -32,7 +32,7 @@ class BeerController(private val beerService: BeerService) {
     @GetMapping(BEER_PATH_WITH_ID)
     fun getBeerById(@PathVariable("id") id: UUID): Beer? {
         logger.debug { "Get beer by id $id" }
-        return beerService.getBeerById(id)
+        return beerService.getBeerById(id) ?: throw NotFoundException()
     }
 
     @PostMapping(BASE_BEER_PATH)
