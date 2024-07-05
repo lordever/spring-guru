@@ -10,21 +10,25 @@ import org.springframework.web.bind.annotation.*
 import java.util.*
 
 @RestController
-@RequestMapping("/api/v1/beers")
 class BeerController(private val beerService: BeerService) {
 
     private val logger = KotlinLogging.logger {}
 
-    @GetMapping
+    companion object {
+        const val BASE_BEER_PATH = "/api/v1/beers"
+        const val BEER_PATH_WITH_ID = "$BASE_BEER_PATH/{id}"
+    }
+
+    @GetMapping(BASE_BEER_PATH)
     fun listBeers(): List<Beer> = beerService.listBeer()
 
-    @GetMapping("/{id}")
+    @GetMapping(BEER_PATH_WITH_ID)
     fun getBeerById(@PathVariable("id") id: UUID): Beer? {
         logger.debug { "Get beer by id $id" }
         return beerService.getBeerById(id)
     }
 
-    @PostMapping
+    @PostMapping(BASE_BEER_PATH)
     fun handlePost(@RequestBody beer: Beer): ResponseEntity<Beer> {
         val savedBeer: Beer = beerService.save(beer)
 
@@ -37,7 +41,7 @@ class BeerController(private val beerService: BeerService) {
             .body(savedBeer)
     }
 
-    @PutMapping("/{id}")
+    @PutMapping(BEER_PATH_WITH_ID)
     fun updateById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<Void> {
         beerService.updateById(id, beer)
 
@@ -45,14 +49,14 @@ class BeerController(private val beerService: BeerService) {
 
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping(BEER_PATH_WITH_ID)
     fun patchById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<Void> {
         beerService.patchById(id, beer)
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(BEER_PATH_WITH_ID)
     fun deleteById(@PathVariable("id") id: UUID): ResponseEntity<Void> {
         beerService.deleteById(id)
 

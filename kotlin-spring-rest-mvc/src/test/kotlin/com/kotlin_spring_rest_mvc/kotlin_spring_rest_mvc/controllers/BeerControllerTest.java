@@ -57,7 +57,7 @@ class BeerControllerTest {
     void testGetAllBeers() throws Exception {
         given(beerService.listBeer()).willReturn(beerServiceImpl.listBeer());
 
-        mockMvc.perform(get("/api/v1/beers")
+        mockMvc.perform(get(BeerController.BASE_BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -70,7 +70,7 @@ class BeerControllerTest {
 
         given(beerService.getBeerById(testBeer.getId())).willReturn(testBeer);
 
-        mockMvc.perform(get("/api/v1/beers/" + testBeer.getId())
+        mockMvc.perform(get(BeerController.BASE_BEER_PATH + "/" + testBeer.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -87,7 +87,7 @@ class BeerControllerTest {
 
         given(beerService.save(any(Beer.class))).willReturn(beerServiceImpl.listBeer().getFirst());
 
-        mockMvc.perform(post("/api/v1/beers")
+        mockMvc.perform(post(BeerController.BASE_BEER_PATH)
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testBeer)))
@@ -99,7 +99,7 @@ class BeerControllerTest {
     void testUpdateBeer() throws Exception {
         Beer testBeer = beerServiceImpl.listBeer().getFirst();
 
-        mockMvc.perform(put("/api/v1/beers/" + testBeer.getId())
+        mockMvc.perform(put(BeerController.BASE_BEER_PATH + "/" + testBeer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(testBeer)))
@@ -114,7 +114,7 @@ class BeerControllerTest {
 
         assertNotNull(testBeer.getId(), "The beer ID should not be null");
 
-        mockMvc.perform(delete("/api/v1/beers/" + testBeer.getId())
+        mockMvc.perform(delete(BeerController.BASE_BEER_PATH + "/" + testBeer.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
 
@@ -130,7 +130,7 @@ class BeerControllerTest {
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("name", "New Name");
 
-        mockMvc.perform(patch("/api/v1/beers/" + testBeer.getId())
+        mockMvc.perform(patch(BeerController.BASE_BEER_PATH + "/" + testBeer.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap))
