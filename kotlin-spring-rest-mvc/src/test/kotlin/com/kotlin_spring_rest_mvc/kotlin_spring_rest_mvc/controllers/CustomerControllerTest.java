@@ -79,6 +79,14 @@ public class CustomerControllerTest {
     }
 
     @Test
+    void testGetCustomerByIdNotFound() throws Exception {
+        given(customerService.findById(any(UUID.class))).willThrow(NotFoundException.class);
+
+        mockMvc.perform(get(CustomerController.CUSTOMERS_PATH_WITH_ID, UUID.randomUUID()))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     void createNewCustomer() throws Exception {
         Customer testCustomer = customerServiceImpl.findAll().stream()
                 .findFirst()
