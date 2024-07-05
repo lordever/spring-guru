@@ -1,5 +1,9 @@
 package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.controllers
 
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ResponseStatus
+
+@ResponseStatus(HttpStatus.NOT_FOUND, reason = "Not Found")
 class NotFoundException: RuntimeException {
     constructor() : super()
     constructor(message: String?) : super(message)
