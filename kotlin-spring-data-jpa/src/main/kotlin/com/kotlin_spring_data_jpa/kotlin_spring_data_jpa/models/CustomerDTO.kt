@@ -3,7 +3,7 @@ package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models
 import java.time.LocalDateTime
 import java.util.UUID
 
-data class Customer(
+data class CustomerDTO(
     var id: UUID?,
     var name: String?,
     var version: String?,

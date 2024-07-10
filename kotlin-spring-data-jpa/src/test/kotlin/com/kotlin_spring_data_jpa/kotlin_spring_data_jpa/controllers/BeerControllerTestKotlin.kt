@@ -1,7 +1,7 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.Beer
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services.BeerService
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services.BeerServiceImpl
 import org.hamcrest.CoreMatchers.equalTo
@@ -9,8 +9,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.argThat
 import org.mockito.BDDMockito.given
-import org.mockito.Mock
-import org.mockito.Mockito.any
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -79,7 +77,7 @@ class BeerControllerTestKotlin {
         testBeer.version = null
 
         //TODO: can't resolve this issue yet
-        given(beerService.save(argThat { it is Beer })).willReturn(beerServiceImpl.listBeer().first())
+        given(beerService.save(argThat { it is BeerDTO })).willReturn(beerServiceImpl.listBeer().first())
 
         mockMvc.perform(
             post("/api/v1/beers")

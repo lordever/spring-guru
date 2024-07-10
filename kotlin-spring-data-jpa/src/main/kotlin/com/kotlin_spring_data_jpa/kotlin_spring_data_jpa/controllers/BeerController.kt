@@ -1,6 +1,6 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.controllers
 
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.Beer
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services.BeerService
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
@@ -27,38 +27,38 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @GetMapping(BASE_BEER_PATH)
-    fun listBeers(): List<Beer> = beerService.listBeer()
+    fun listBeers(): List<BeerDTO> = beerService.listBeer()
 
     @GetMapping(BEER_PATH_WITH_ID)
-    fun getBeerById(@PathVariable("id") id: UUID): Beer? {
+    fun getBeerById(@PathVariable("id") id: UUID): BeerDTO? {
         logger.debug { "Get beer by id $id" }
         return beerService.getBeerById(id) ?: throw NotFoundException()
     }
 
     @PostMapping(BASE_BEER_PATH)
-    fun handlePost(@RequestBody beer: Beer): ResponseEntity<Beer> {
-        val savedBeer: Beer = beerService.save(beer)
+    fun handlePost(@RequestBody beerDTO: BeerDTO): ResponseEntity<BeerDTO> {
+        val savedBeerDTO: BeerDTO = beerService.save(beerDTO)
 
         val headers = HttpHeaders()
-        headers.add("Location", "/api/v1/beers/${savedBeer.id}")
+        headers.add("Location", "/api/v1/beers/${savedBeerDTO.id}")
 
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .headers(headers)
-            .body(savedBeer)
+            .body(savedBeerDTO)
     }
 
     @PutMapping(BEER_PATH_WITH_ID)
-    fun updateById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<Void> {
-        beerService.updateById(id, beer)
+    fun updateById(@PathVariable id: UUID, @RequestBody beerDTO: BeerDTO): ResponseEntity<Void> {
+        beerService.updateById(id, beerDTO)
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
 
     }
 
     @PatchMapping(BEER_PATH_WITH_ID)
-    fun patchById(@PathVariable id: UUID, @RequestBody beer: Beer): ResponseEntity<Void> {
-        beerService.patchById(id, beer)
+    fun patchById(@PathVariable id: UUID, @RequestBody beerDTO: BeerDTO): ResponseEntity<Void> {
+        beerService.patchById(id, beerDTO)
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }

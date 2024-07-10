@@ -1,6 +1,6 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.controllers
 
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.Customer
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.CustomerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services.CustomerService
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
@@ -19,17 +19,17 @@ class CustomerController(val customerService: CustomerService) {
     }
 
     @GetMapping(BASE_CUSTOMERS_PATH)
-    fun findAll(): List<Customer> = customerService.findAll()
+    fun findAll(): List<CustomerDTO> = customerService.findAll()
 
     @GetMapping(CUSTOMERS_PATH_WITH_ID)
-    fun findById(@PathVariable id: UUID): Customer? {
+    fun findById(@PathVariable id: UUID): CustomerDTO? {
         logger.debug { "Get customer by id $id" }
         return customerService.findById(id) ?: throw NotFoundException()
     }
 
     @PostMapping(BASE_CUSTOMERS_PATH)
-    fun saveCustomer(@RequestBody customer: Customer): ResponseEntity<Customer> {
-        val savedCustomer = customerService.save(customer)
+    fun saveCustomer(@RequestBody customerDTO: CustomerDTO): ResponseEntity<CustomerDTO> {
+        val savedCustomer = customerService.save(customerDTO)
         val headers = HttpHeaders()
         headers.add("Location", "/api/v1/customers/${savedCustomer.id}")
 
@@ -40,15 +40,15 @@ class CustomerController(val customerService: CustomerService) {
     }
 
     @PutMapping(CUSTOMERS_PATH_WITH_ID)
-    fun updateById(@PathVariable id: UUID, @RequestBody customer: Customer): ResponseEntity<Void> {
-        customerService.updateById(id, customer)
+    fun updateById(@PathVariable id: UUID, @RequestBody customerDTO: CustomerDTO): ResponseEntity<Void> {
+        customerService.updateById(id, customerDTO)
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
     @PatchMapping(CUSTOMERS_PATH_WITH_ID)
-    fun patchById(@PathVariable id: UUID, @RequestBody customer: Customer): ResponseEntity<Void> {
-        customerService.patchById(id, customer)
+    fun patchById(@PathVariable id: UUID, @RequestBody customerDTO: CustomerDTO): ResponseEntity<Void> {
+        customerService.patchById(id, customerDTO)
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }

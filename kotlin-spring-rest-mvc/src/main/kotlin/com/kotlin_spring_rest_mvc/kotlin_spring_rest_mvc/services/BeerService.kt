@@ -1,4 +1,4 @@
-package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services
+package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services
 
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Beer
 import java.util.UUID

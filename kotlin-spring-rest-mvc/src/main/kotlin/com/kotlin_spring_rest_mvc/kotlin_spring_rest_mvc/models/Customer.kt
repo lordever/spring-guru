@@ -1,4 +1,4 @@
-package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models
+package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models
 
 import java.time.LocalDateTime
 import java.util.UUID

@@ -4,7 +4,7 @@ import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
 
-data class Beer(
+data class BeerDTO(
     var id: UUID?,
     var version: Int?,
     var quantity: Int?,

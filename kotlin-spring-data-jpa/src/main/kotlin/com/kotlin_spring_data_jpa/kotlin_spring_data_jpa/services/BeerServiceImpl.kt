@@ -1,6 +1,6 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services
 
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.Beer
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerStyle
 import org.springframework.stereotype.Service
 import mu.KotlinLogging
@@ -11,10 +11,10 @@ import java.util.UUID
 @Service
 class BeerServiceImpl : BeerService {
     private val log = KotlinLogging.logger {}
-    private var beerMap: MutableMap<UUID, Beer> = mutableMapOf()
+    private var beerDTOMap: MutableMap<UUID, BeerDTO> = mutableMapOf()
 
     init {
-        val beer1 = Beer(
+        val beerDTO1 = BeerDTO(
             id = UUID.randomUUID(),
             version = 1,
             name = "Galaxy Cat",
@@ -26,7 +26,7 @@ class BeerServiceImpl : BeerService {
             updateDate = LocalDateTime.now()
         )
 
-        val beer2 = Beer(
+        val beerDTO2 = BeerDTO(
             id = UUID.randomUUID(),
             version = 1,
             name = "Crank",
@@ -38,7 +38,7 @@ class BeerServiceImpl : BeerService {
             updateDate = LocalDateTime.now()
         )
 
-        val beer3 = Beer(
+        val beerDTO3 = BeerDTO(
             id = UUID.randomUUID(),
             version = 1,
             name = "Sunshine City",
@@ -50,89 +50,89 @@ class BeerServiceImpl : BeerService {
             updateDate = LocalDateTime.now()
         )
 
-        beer1.id?.let { beerMap[it] = beer1 }
-        beer2.id?.let { beerMap[it] = beer2 }
-        beer3.id?.let { beerMap[it] = beer3 }
+        beerDTO1.id?.let { beerDTOMap[it] = beerDTO1 }
+        beerDTO2.id?.let { beerDTOMap[it] = beerDTO2 }
+        beerDTO3.id?.let { beerDTOMap[it] = beerDTO3 }
     }
 
-    override fun getBeerById(id: UUID): Beer? {
+    override fun getBeerById(id: UUID): BeerDTO? {
         log.debug { "Get Beer Id in service was called" }
 
-        return beerMap[id]
+        return beerDTOMap[id]
     }
 
-    override fun listBeer(): List<Beer> {
-        return beerMap.values.toList()
+    override fun listBeer(): List<BeerDTO> {
+        return beerDTOMap.values.toList()
     }
 
-    override fun save(beer: Beer): Beer {
-        val newBeer = Beer(
+    override fun save(beerDTO: BeerDTO): BeerDTO {
+        val newBeerDTO = BeerDTO(
             id = UUID.randomUUID(),
-            version = beer.version,
-            name = beer.name,
-            style = beer.style,
-            upc = beer.upc,
-            price = beer.price,
-            quantity = beer.quantity,
+            version = beerDTO.version,
+            name = beerDTO.name,
+            style = beerDTO.style,
+            upc = beerDTO.upc,
+            price = beerDTO.price,
+            quantity = beerDTO.quantity,
             createDate = LocalDateTime.now(),
             updateDate = LocalDateTime.now()
         )
 
-        newBeer.id?.let { beerMap[it] = newBeer }
+        newBeerDTO.id?.let { beerDTOMap[it] = newBeerDTO }
 
-        return newBeer
+        return newBeerDTO
     }
 
-    override fun updateById(id: UUID, newBeer: Beer) {
-        val existingBeer = beerMap[id]
+    override fun updateById(id: UUID, newBeerDTO: BeerDTO) {
+        val existingBeer = beerDTOMap[id]
 
         if (existingBeer != null) {
-            existingBeer.name = newBeer.name
-            existingBeer.price = newBeer.price
-            existingBeer.quantity = newBeer.quantity
-            existingBeer.style = newBeer.style
-            existingBeer.upc = newBeer.upc
-            existingBeer.version = newBeer.version
+            existingBeer.name = newBeerDTO.name
+            existingBeer.price = newBeerDTO.price
+            existingBeer.quantity = newBeerDTO.quantity
+            existingBeer.style = newBeerDTO.style
+            existingBeer.upc = newBeerDTO.upc
+            existingBeer.version = newBeerDTO.version
             existingBeer.updateDate = LocalDateTime.now()
 
-            beerMap[id] = existingBeer
+            beerDTOMap[id] = existingBeer
         } else {
             log.debug { "Beer $id wasn't found" }
         }
     }
 
-    override fun patchById(id: UUID, newBeer: Beer) {
-        val existingBeer = beerMap[id]
+    override fun patchById(id: UUID, newBeerDTO: BeerDTO) {
+        val existingBeer = beerDTOMap[id]
 
         if (existingBeer != null) {
-            if (newBeer.name != null) {
-                existingBeer.name = newBeer.name
+            if (newBeerDTO.name != null) {
+                existingBeer.name = newBeerDTO.name
             }
-            if (newBeer.price != null) {
-                existingBeer.price = newBeer.price
+            if (newBeerDTO.price != null) {
+                existingBeer.price = newBeerDTO.price
             }
-            if (newBeer.quantity != null) {
-                existingBeer.quantity = newBeer.quantity
+            if (newBeerDTO.quantity != null) {
+                existingBeer.quantity = newBeerDTO.quantity
             }
-            if (newBeer.style != null) {
-                existingBeer.style = newBeer.style
+            if (newBeerDTO.style != null) {
+                existingBeer.style = newBeerDTO.style
             }
-            if (newBeer.upc != null) {
-                existingBeer.upc = newBeer.upc
+            if (newBeerDTO.upc != null) {
+                existingBeer.upc = newBeerDTO.upc
             }
-            if (newBeer.version != null) {
-                existingBeer.version = newBeer.version
+            if (newBeerDTO.version != null) {
+                existingBeer.version = newBeerDTO.version
             }
 
             existingBeer.updateDate = LocalDateTime.now()
 
-            beerMap[id] = existingBeer
+            beerDTOMap[id] = existingBeer
         } else {
             log.debug { "Beer $id wasn't found" }
         }
     }
 
     override fun deleteById(id: UUID) {
-        beerMap.remove(id)
+        beerDTOMap.remove(id)
     }
 }
