@@ -1,9 +1,8 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities
 
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerStyle
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Version
+import jakarta.persistence.*
+import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -11,6 +10,9 @@ import java.util.*
 @Entity
 data class Beer(
     @Id
+    @GeneratedValue(generator = "UUID")
+//    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(length=36,columnDefinition = "varchar", updatable = false, nullable = false)
     val id: UUID? = null,
 
     @Version
