@@ -12,16 +12,16 @@ data class Beer(
     @GeneratedValue(generator = "UUID")
 //    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(length=36,columnDefinition = "varchar", updatable = false, nullable = false)
-    val id: UUID? = null,
+    var id: UUID? = null,
 
     @Version
-    val version: Int? = null,
+    var version: Int? = null,
 
-    val beerName: String? = null,
-    val beerStyle: BeerStyle? = null,
-    val upc: String? = null,
-    val quantityOnHand: Int? = null,
-    val price: BigDecimal? = null,
-    val createdDate: LocalDateTime? = null,
-    val updateDate: LocalDateTime? = null
+    var beerName: String? = null,
+    var beerStyle: BeerStyle? = null,
+    var upc: String? = null,
+    var quantityOnHand: Int? = null,
+    var price: BigDecimal? = null,
+    var createdDate: LocalDateTime? = null,
+    var updateDate: LocalDateTime? = null
 )

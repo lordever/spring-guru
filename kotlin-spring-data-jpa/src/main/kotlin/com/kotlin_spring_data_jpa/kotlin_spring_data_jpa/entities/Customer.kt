@@ -5,20 +5,22 @@ import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.Version
+import lombok.Builder
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
+@Builder
 data class Customer(
     @Id
     @GeneratedValue(generator = "UUID")
 //    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(length=36,columnDefinition = "varchar", updatable = false, nullable = false)
-    val id: UUID? = null,
-    val name: String? = null,
+    var id: UUID? = null,
+    var name: String? = null,
 
     @Version
-    val version: Int? = null,
-    val createdDate: LocalDateTime = LocalDateTime.now(),
-    val lastModifiedDate: LocalDateTime = LocalDateTime.now(),
+    var version: Int? = null,
+    var createdDate: LocalDateTime = LocalDateTime.now(),
+    var lastModifiedDate: LocalDateTime = LocalDateTime.now(),
 )
