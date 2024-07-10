@@ -1,13 +1,15 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities
 
-import jakarta.persistence.*
-import org.hibernate.annotations.GenericGenerator
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.Id
+import jakarta.persistence.Version
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-data class CustomerDTO(
-
+data class Customer(
     @Id
     @GeneratedValue(generator = "UUID")
 //    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")

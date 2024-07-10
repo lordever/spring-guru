@@ -2,7 +2,6 @@ package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities
 
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerStyle
 import jakarta.persistence.*
-import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
