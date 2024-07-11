@@ -74,7 +74,7 @@ class CustomerServiceImpl : CustomerService {
         return newCustomerDTO
     }
 
-    override fun updateById(id: UUID, customerDTO: CustomerDTO): CustomerDTO? {
+    override fun updateById(id: UUID, customerDTO: CustomerDTO) {
         val existingCustomer = customerDTOMap[id]
 
         if (existingCustomer != null) {
@@ -84,11 +84,9 @@ class CustomerServiceImpl : CustomerService {
         } else {
             log.debug { "Customer $id wasn't found" }
         }
-
-        return existingCustomer
     }
 
-    override fun patchById(id: UUID, customerDTO: CustomerDTO): CustomerDTO? {
+    override fun patchById(id: UUID, customerDTO: CustomerDTO) {
         val existingCustomer = customerDTOMap[id]
 
         if (existingCustomer != null) {
@@ -103,8 +101,6 @@ class CustomerServiceImpl : CustomerService {
         } else {
             log.debug { "Customer $id wasn't found" }
         }
-
-        return existingCustomer
     }
 
     override fun deleteById(id: UUID) {

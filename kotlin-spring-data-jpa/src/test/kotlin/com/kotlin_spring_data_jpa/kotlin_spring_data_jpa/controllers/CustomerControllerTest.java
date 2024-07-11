@@ -108,6 +108,19 @@ public class CustomerControllerTest {
     }
 
     @Test
+    void testDeleteCustomer() throws Exception {
+        CustomerDTO testCustomerDTO = customerServiceImpl.findAll().getFirst();
+
+        mockMvc.perform(delete(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomerDTO.getId())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(customerService).deleteById(uuidArgumentCaptor.capture());
+
+        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(testCustomerDTO.getId());
+    }
+
+    @Test
     void testUpdateCustomer() throws Exception {
         CustomerDTO testCustomerDTO = customerServiceImpl.findAll().getFirst();
         String newTestName = "New Test Name";
@@ -122,19 +135,6 @@ public class CustomerControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(customerService).updateById(any(UUID.class), any(CustomerDTO.class));
-    }
-
-    @Test
-    void testDeleteCustomer() throws Exception {
-        CustomerDTO testCustomerDTO = customerServiceImpl.findAll().getFirst();
-
-        mockMvc.perform(delete(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomerDTO.getId())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
-
-        verify(customerService).deleteById(uuidArgumentCaptor.capture());
-
-        assertThat(uuidArgumentCaptor.getValue()).isEqualTo(testCustomerDTO.getId());
     }
 
     @Test

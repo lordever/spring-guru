@@ -13,8 +13,6 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentCaptor
-import org.mockito.Captor
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -36,9 +34,6 @@ class BeerControllerTestKotlin {
     @MockkBean
     lateinit var beerService: BeerService
 
-    @Captor
-    var uuidArgumentCaptor: ArgumentCaptor<UUID>? = null
-
     private lateinit var beerServiceImpl: BeerServiceImpl
 
     @BeforeEach
@@ -52,7 +47,7 @@ class BeerControllerTestKotlin {
         every { beerService.listBeer() } returns beerServiceImpl.listBeer()
 
         mockMvc.perform(
-            get("/api/v1/beers")
+            get(BeerController.BASE_BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
@@ -68,7 +63,7 @@ class BeerControllerTestKotlin {
         every { beerService.getBeerById(beerId) } returns testBeer
 
         mockMvc.perform(
-            get("/api/v1/beers/${testBeer.id}")
+            get(BeerController.BEER_PATH_WITH_ID, beerId)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
@@ -95,7 +90,7 @@ class BeerControllerTestKotlin {
         every { beerService.save(any()) } returns beerServiceImpl.listBeer().first()
 
         mockMvc.perform(
-            post("/api/v1/beers")
+            post(BeerController.BASE_BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testBeer))
@@ -161,6 +156,6 @@ class BeerControllerTestKotlin {
 
         verify { beerService.patchById(any(), any()) }
         assertThat(uuidSlot.captured).isEqualTo(testBeer.id)
-        assertThat(beerSlot.captured.name).isEqualTo(beerMap.get("name"))
+        assertThat(beerSlot.captured.name).isEqualTo(beerMap["name"])
     }
 }
