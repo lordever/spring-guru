@@ -111,7 +111,7 @@ public class CustomerControllerTest {
     void testUpdateCustomer() throws Exception {
         CustomerDTO testCustomerDTO = customerServiceImpl.findAll().getFirst();
         String newTestName = "New Test Name";
-        String newTestVersion = "2";
+        Integer newTestVersion = 2;
         testCustomerDTO.setName(newTestName);
         testCustomerDTO.setVersion(newTestVersion);
 

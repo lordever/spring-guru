@@ -15,7 +15,7 @@ class CustomerServiceImpl : CustomerService {
         val customerDTO1 = CustomerDTO(
             id = UUID.randomUUID(),
             name = "John Doe",
-            version = "1",
+            version = 1,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
@@ -23,7 +23,7 @@ class CustomerServiceImpl : CustomerService {
         val customerDTO2 = CustomerDTO(
             id = UUID.randomUUID(),
             name = "Jane Smith",
-            version = "1",
+            version = 1,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
@@ -31,7 +31,7 @@ class CustomerServiceImpl : CustomerService {
         val customerDTO3 = CustomerDTO(
             id = UUID.randomUUID(),
             name = "Alice Johnson",
-            version = "1",
+            version = 1,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
@@ -39,7 +39,7 @@ class CustomerServiceImpl : CustomerService {
         val customerDTO4 = CustomerDTO(
             id = UUID.randomUUID(),
             name = "Bob Brown",
-            version = "1",
+            version = 1,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
