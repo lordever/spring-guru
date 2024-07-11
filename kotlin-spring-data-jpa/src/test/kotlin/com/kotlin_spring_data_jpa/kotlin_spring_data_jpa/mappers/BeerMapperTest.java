@@ -26,7 +26,7 @@ public class BeerMapperTest {
         beer.setUpc("123456789012");
         beer.setQuantityOnHand(10);
         beer.setPrice(BigDecimal.valueOf(9.99));
-        beer.setCreatedDate(LocalDateTime.now());
+        beer.setCreateDate(LocalDateTime.now());
         beer.setUpdateDate(LocalDateTime.now());
 
         // when
@@ -37,7 +37,7 @@ public class BeerMapperTest {
         assertThat(beerDTO.getId()).isEqualTo(beer.getId());
         assertThat(beerDTO.getName()).isEqualTo(beer.getName());
         assertThat(beerDTO.getVersion()).isEqualTo(beer.getVersion());
-        assertThat(beerDTO.getCreateDate()).isEqualTo(beer.getCreatedDate());
+        assertThat(beerDTO.getCreateDate()).isEqualTo(beer.getCreateDate());
         assertThat(beerDTO.getUpdateDate()).isEqualTo(beer.getUpdateDate());
     }
 
@@ -63,7 +63,7 @@ public class BeerMapperTest {
         assertThat(beer.getId()).isEqualTo(beerDTO.getId());
         assertThat(beer.getName()).isEqualTo(beerDTO.getName());
         assertThat(beer.getVersion()).isEqualTo(beerDTO.getVersion());
-        assertThat(beer.getCreatedDate()).isEqualTo(beerDTO.getCreateDate());
+        assertThat(beer.getCreateDate()).isEqualTo(beerDTO.getCreateDate());
         assertThat(beer.getUpdateDate()).isEqualTo(beerDTO.getUpdateDate());
     }
 }

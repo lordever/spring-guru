@@ -22,6 +22,6 @@ data class Beer(
     var upc: String? = null,
     var quantityOnHand: Int? = null,
     var price: BigDecimal? = null,
-    var createdDate: LocalDateTime? = null,
+    var createDate: LocalDateTime? = null,
     var updateDate: LocalDateTime? = null
 )
