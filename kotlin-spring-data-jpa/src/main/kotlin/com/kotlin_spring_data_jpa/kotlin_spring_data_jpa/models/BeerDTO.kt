@@ -5,13 +5,13 @@ import java.time.LocalDateTime
 import java.util.*
 
 data class BeerDTO(
-    var id: UUID?,
-    var version: Int?,
-    var quantity: Int?,
-    var name: String?,
-    var upc: String?,
-    var style: BeerStyle?,
-    var price: BigDecimal?,
-    val createDate: LocalDateTime = LocalDateTime.now(),
+    var id: UUID? = null,
+    var version: Int? = null,
+    var quantity: Int? = null,
+    var name: String? = null,
+    var upc: String? = null,
+    var style: BeerStyle? = null,
+    var price: BigDecimal? = null,
+    var createDate: LocalDateTime = LocalDateTime.now(),
     var updateDate: LocalDateTime = LocalDateTime.now()
 )

@@ -17,7 +17,7 @@ data class Beer(
     @Version
     var version: Int? = null,
 
-    var beerName: String? = null,
+    var name: String? = null,
     var beerStyle: BeerStyle? = null,
     var upc: String? = null,
     var quantityOnHand: Int? = null,

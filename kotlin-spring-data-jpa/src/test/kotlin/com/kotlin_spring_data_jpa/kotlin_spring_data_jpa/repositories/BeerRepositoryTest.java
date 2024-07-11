@@ -15,11 +15,11 @@ public class BeerRepositoryTest {
     @Test
     void testSaveBer() {
         Beer beer = new Beer();
-        beer.setBeerName("Beer Name");
+        beer.setName("Beer Name");
 
         Beer savedBeer = beerRepository.save(beer);
         assertThat(savedBeer).isNotNull();
         assertThat(savedBeer.getId()).isNotNull();
-        assertThat(savedBeer.getBeerName()).isEqualTo(beer.getBeerName());
+        assertThat(savedBeer.getName()).isEqualTo(beer.getName());
     }
 }
