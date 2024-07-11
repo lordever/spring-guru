@@ -8,20 +8,17 @@ import java.util.*
 
 @Entity
 data class Beer(
-    @Id
-    @GeneratedValue(generator = "UUID")
-//    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(length=36,columnDefinition = "varchar", updatable = false, nullable = false)
-    var id: UUID? = null,
-
-    @Version
-    var version: Int? = null,
-
     var name: String? = null,
     var beerStyle: BeerStyle? = null,
     var upc: String? = null,
     var quantityOnHand: Int? = null,
     var price: BigDecimal? = null,
     var createDate: LocalDateTime? = null,
-    var updateDate: LocalDateTime? = null
+    var updateDate: LocalDateTime? = null,
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
+    var id: UUID? = null,
+    @Version
+    var version: Int? = null
 )

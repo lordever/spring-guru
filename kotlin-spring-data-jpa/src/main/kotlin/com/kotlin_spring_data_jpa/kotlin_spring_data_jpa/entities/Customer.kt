@@ -12,15 +12,14 @@ import java.util.*
 @Entity
 @Builder
 data class Customer(
-    @Id
-    @GeneratedValue(generator = "UUID")
-//    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(length=36,columnDefinition = "varchar", updatable = false, nullable = false)
-    var id: UUID? = null,
     var name: String? = null,
-
-    @Version
-    var version: Int? = null,
     var createdDate: LocalDateTime = LocalDateTime.now(),
     var lastModifiedDate: LocalDateTime = LocalDateTime.now(),
+
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @Column(length=36,columnDefinition = "varchar", updatable = false, nullable = false)
+    var id: UUID? = null,
+    @Version
+    var version: Int? = null,
 )

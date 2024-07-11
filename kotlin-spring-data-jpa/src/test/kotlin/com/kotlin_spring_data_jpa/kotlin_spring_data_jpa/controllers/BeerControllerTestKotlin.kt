@@ -4,20 +4,25 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services.BeerService
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services.BeerServiceImpl
+import com.ninjasquad.springmockk.MockkBean
+import io.mockk.every
+import io.mockk.slot
+import io.mockk.verify
+import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.equalTo
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.argThat
-import org.mockito.BDDMockito.given
+import org.mockito.ArgumentCaptor
+import org.mockito.Captor
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.util.*
 
 @WebMvcTest(BeerController::class)
 class BeerControllerTestKotlin {
@@ -28,8 +33,11 @@ class BeerControllerTestKotlin {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    @MockBean
+    @MockkBean
     lateinit var beerService: BeerService
+
+    @Captor
+    var uuidArgumentCaptor: ArgumentCaptor<UUID>? = null
 
     private lateinit var beerServiceImpl: BeerServiceImpl
 
@@ -41,7 +49,7 @@ class BeerControllerTestKotlin {
 
     @Test
     fun testGetAllBeersList() {
-        given(beerService.listBeer()).willReturn(beerServiceImpl.listBeer())
+        every { beerService.listBeer() } returns beerServiceImpl.listBeer()
 
         mockMvc.perform(
             get("/api/v1/beers")
@@ -57,7 +65,7 @@ class BeerControllerTestKotlin {
         val testBeer = beerServiceImpl.listBeer().first()
 
         val beerId = requireNotNull(testBeer.id) { "Beer ID cannot be null" }
-        given(beerService.getBeerById(beerId)).willReturn(testBeer)
+        every { beerService.getBeerById(beerId) } returns testBeer
 
         mockMvc.perform(
             get("/api/v1/beers/${testBeer.id}")
@@ -70,14 +78,21 @@ class BeerControllerTestKotlin {
     }
 
     @Test
+    fun testGetBeerByIdNotFound() {
+        every { beerService.getBeerById(any()) } returns null
+
+        mockMvc.perform(get(BeerController.BEER_PATH_WITH_ID, UUID.randomUUID()))
+            .andExpect(status().isNotFound)
+    }
+
+    @Test
     fun testCreateNewBeer() {
-        val testBeer = beerServiceImpl.listBeer().first()
+        val testBeer = beerServiceImpl.listBeer().first().apply {
+            id = null
+            version = null
+        }
 
-        testBeer.id = null
-        testBeer.version = null
-
-        //TODO: can't resolve this issue yet
-        given(beerService.save(argThat { it is BeerDTO })).willReturn(beerServiceImpl.listBeer().first())
+        every { beerService.save(any()) } returns beerServiceImpl.listBeer().first()
 
         mockMvc.perform(
             post("/api/v1/beers")
@@ -87,5 +102,65 @@ class BeerControllerTestKotlin {
         )
             .andExpect(status().isCreated)
             .andExpect(header().exists("Location"))
+    }
+
+    @Test
+    fun testUpdateNewBeer() {
+        val testBeerDTO = beerServiceImpl.listBeer().first()
+
+        every { beerService.updateById(any(), any()) } returns Unit
+
+        mockMvc.perform(
+            put(BeerController.BEER_PATH_WITH_ID, testBeerDTO.id)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testBeerDTO))
+        )
+            .andExpect(status().isNoContent)
+
+        verify { beerService.updateById(any(), any()) }
+    }
+
+    @Test
+    fun testDeleteBeer() {
+        val testBeer = beerServiceImpl.listBeer().first()
+
+        val uuidSlot = slot<UUID>()
+        every { beerService.deleteById(capture(uuidSlot)) } returns Unit
+
+        assertNotNull(testBeer.id, "The beer ID should not be null")
+
+        mockMvc.perform(
+            delete(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .accept(MediaType.APPLICATION_JSON)
+        )
+            .andExpect(status().isNoContent())
+
+        verify { beerService.deleteById(any()) }
+
+        assertThat(uuidSlot.captured).isEqualTo(testBeer.id)
+    }
+
+    @Test
+    fun testPatchBeer() {
+        val testBeer = beerServiceImpl.listBeer().first()
+        val beerMap: MutableMap<String, Any> = HashMap()
+        beerMap["name"] = "New Name"
+
+        val uuidSlot = slot<UUID>()
+        val beerSlot = slot<BeerDTO>()
+        every { beerService.patchById(capture(uuidSlot), capture(beerSlot)) } returns Unit
+
+        mockMvc.perform(
+            patch(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beerMap))
+        )
+            .andExpect(status().isNoContent())
+
+        verify { beerService.patchById(any(), any()) }
+        assertThat(uuidSlot.captured).isEqualTo(testBeer.id)
+        assertThat(beerSlot.captured.name).isEqualTo(beerMap.get("name"))
     }
 }
