@@ -1,4 +1,4 @@
-package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services
+package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services
 
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Customer
 import mu.KotlinLogging
@@ -15,7 +15,7 @@ class CustomerServiceImpl : CustomerService {
         val customer1 = Customer(
             id = UUID.randomUUID(),
             name = "John Doe",
-            version = "1",
+            version = 1,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
@@ -23,7 +23,7 @@ class CustomerServiceImpl : CustomerService {
         val customer2 = Customer(
             id = UUID.randomUUID(),
             name = "Jane Smith",
-            version = "1",
+            version = 1,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
@@ -31,7 +31,7 @@ class CustomerServiceImpl : CustomerService {
         val customer3 = Customer(
             id = UUID.randomUUID(),
             name = "Alice Johnson",
-            version = "1",
+            version = 1,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
@@ -39,7 +39,7 @@ class CustomerServiceImpl : CustomerService {
         val customer4 = Customer(
             id = UUID.randomUUID(),
             name = "Bob Brown",
-            version = "1",
+            version = 1,
             createdDate = LocalDateTime.now(),
             lastModifiedDate = LocalDateTime.now()
         )
@@ -74,7 +74,7 @@ class CustomerServiceImpl : CustomerService {
         return newCustomer
     }
 
-    override fun updateById(id: UUID, customer: Customer): Customer? {
+    override fun updateById(id: UUID, customer: Customer) {
         val existingCustomer = customerMap[id]
 
         if (existingCustomer != null) {
@@ -84,11 +84,9 @@ class CustomerServiceImpl : CustomerService {
         } else {
             log.debug { "Customer $id wasn't found" }
         }
-
-        return existingCustomer
     }
 
-    override fun patchById(id: UUID, customer: Customer): Customer? {
+    override fun patchById(id: UUID, customer: Customer) {
         val existingCustomer = customerMap[id]
 
         if (existingCustomer != null) {
@@ -103,8 +101,6 @@ class CustomerServiceImpl : CustomerService {
         } else {
             log.debug { "Customer $id wasn't found" }
         }
-
-        return existingCustomer
     }
 
     override fun deleteById(id: UUID) {

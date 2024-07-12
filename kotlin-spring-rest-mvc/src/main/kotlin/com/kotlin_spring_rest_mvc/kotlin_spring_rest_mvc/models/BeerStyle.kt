@@ -1,4 +1,4 @@
-package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models
+package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models
 
 enum class BeerStyle {
     LAGER, PILSNER, STOUT, GOSE, PORTER, ALE, WHEAT, IPA, PALE_ALE, SAISON

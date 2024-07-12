@@ -1,4 +1,4 @@
-package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa
+package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

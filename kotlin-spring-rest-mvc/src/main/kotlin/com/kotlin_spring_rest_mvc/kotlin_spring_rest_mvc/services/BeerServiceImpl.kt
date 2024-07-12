@@ -1,12 +1,12 @@
-package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services
+package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services
 
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Beer
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.BeerStyle
-import org.springframework.stereotype.Service
 import mu.KotlinLogging
+import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 
 @Service
 class BeerServiceImpl : BeerService {
