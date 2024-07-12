@@ -9,9 +9,9 @@ import java.util.*
 @Entity
 data class Beer(
     var name: String? = null,
-    var beerStyle: BeerStyle? = null,
+    var style: BeerStyle? = null,
     var upc: String? = null,
-    var quantityOnHand: Int? = null,
+    var quantity: Int? = null,
     var price: BigDecimal? = null,
     var createDate: LocalDateTime? = null,
     var updateDate: LocalDateTime? = null,

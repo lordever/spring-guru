@@ -22,9 +22,9 @@ public class BeerMapperTest {
         beer.setId(UUID.randomUUID());
         beer.setVersion(1);
         beer.setName("Test Beer");
-        beer.setBeerStyle(BeerStyle.LAGER);
+        beer.setStyle(BeerStyle.LAGER);
         beer.setUpc("123456789012");
-        beer.setQuantityOnHand(10);
+        beer.setQuantity(10);
         beer.setPrice(BigDecimal.valueOf(9.99));
         beer.setCreateDate(LocalDateTime.now());
         beer.setUpdateDate(LocalDateTime.now());
