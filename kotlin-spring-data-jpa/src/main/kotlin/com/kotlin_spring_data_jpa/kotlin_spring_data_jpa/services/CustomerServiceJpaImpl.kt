@@ -9,19 +9,14 @@ import java.util.*
 
 @Primary
 @Service
-class CustomerServiceJpaImpl : CustomerService {
+class CustomerServiceJpaImpl(
+    private val repository: CustomerRepository,
+    private val mapper: CustomerMapper
+) : CustomerService {
+    override fun findAll(): List<CustomerDTO> = repository.findAll().map(mapper::customerToDto)
 
-    private lateinit var customerRepository: CustomerRepository
-    private lateinit var customerMapper: CustomerMapper
-
-
-    override fun findAll(): List<CustomerDTO> {
-        TODO("Not yet implemented")
-    }
-
-    override fun findById(id: UUID): CustomerDTO? {
-        TODO("Not yet implemented")
-    }
+    override fun findById(id: UUID): CustomerDTO? =
+        repository.findById(id).map(mapper::customerToDto).orElse(null)
 
     override fun save(customerDTO: CustomerDTO): CustomerDTO {
         TODO("Not yet implemented")

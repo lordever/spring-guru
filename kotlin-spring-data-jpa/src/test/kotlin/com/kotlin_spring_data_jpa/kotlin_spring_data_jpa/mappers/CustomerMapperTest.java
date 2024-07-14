@@ -15,7 +15,7 @@ public class CustomerMapperTest {
     private final CustomerMapper mapper = Mappers.getMapper(CustomerMapper.class);
 
     @Test
-    void shouldMapCustomerToCustomerDTO() {
+    void shouldMapCustomerToDto() {
         Customer customer = new Customer();
         customer.setId(UUID.randomUUID());
         customer.setName("Test Customer");
@@ -23,7 +23,7 @@ public class CustomerMapperTest {
         customer.setCreatedDate(LocalDateTime.now());
         customer.setLastModifiedDate(LocalDateTime.now());
 
-        CustomerDTO customerDTO = mapper.customerToCustomerDTO(customer);
+        CustomerDTO customerDTO = mapper.customerToDto(customer);
 
         assertThat(customerDTO).isNotNull();
         assertThat(customerDTO.getId()).isEqualTo(customer.getId());
@@ -34,7 +34,7 @@ public class CustomerMapperTest {
     }
 
     @Test
-    void shouldMapCustomerDTOToCustomer() {
+    void shouldMapDtoToCustomer() {
         CustomerDTO customerDTO = new CustomerDTO();
         customerDTO.setId(UUID.randomUUID());
         customerDTO.setName("Test Customer");
@@ -42,7 +42,7 @@ public class CustomerMapperTest {
         customerDTO.setCreatedDate(LocalDateTime.now());
         customerDTO.setLastModifiedDate(LocalDateTime.now());
 
-        Customer customer = mapper.customerDTOToCustomer(customerDTO);
+        Customer customer = mapper.dtoToCustomer(customerDTO);
 
         assertThat(customerDTO).isNotNull();
         assertThat(customerDTO.getId()).isEqualTo(customer.getId());
