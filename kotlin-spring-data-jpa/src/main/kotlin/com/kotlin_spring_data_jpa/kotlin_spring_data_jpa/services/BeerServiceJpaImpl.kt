@@ -45,6 +45,6 @@ class BeerServiceJpaImpl(
     }
 
     override fun deleteById(id: UUID) {
-        TODO("Not yet implemented")
+        beerRepository.deleteById(id)
     }
 }

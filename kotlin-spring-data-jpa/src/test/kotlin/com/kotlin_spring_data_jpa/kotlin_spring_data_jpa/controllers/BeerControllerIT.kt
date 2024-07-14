@@ -107,4 +107,16 @@ class BeerControllerIT {
             beerController.updateById(UUID.randomUUID(), BeerDTO())
         }
     }
+
+    @Rollback
+    @Transactional
+    @Test
+    fun testDeleteBeerById() {
+        val beer: Beer = beerRepository.findAll()[0]
+        val beerId = requireNotNull(beer.id) { "Beer ID cannot be null" }
+
+        val responseEntity = beerController.deleteById(beerId)
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
+        assertThat(beerRepository.findById(beerId)).isEmpty
+    }
 }
