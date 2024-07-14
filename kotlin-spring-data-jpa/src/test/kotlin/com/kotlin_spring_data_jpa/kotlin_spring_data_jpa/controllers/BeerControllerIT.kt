@@ -89,6 +89,7 @@ class BeerControllerIT {
         val beerDTO: BeerDTO = beerMapper.toDto(beer)
         beerDTO.id = null
         beerDTO.version = null
+        beerDTO.quantity = null
 
         val beerName = "UPDATED"
         beerDTO.name = beerName
@@ -99,6 +100,7 @@ class BeerControllerIT {
 
         val updatedBeer = beerRepository.findById(beerId).get()
         assertThat(updatedBeer.name).isEqualTo(beerName)
+        assertThat(updatedBeer.quantity).isEqualTo(null)
     }
 
     @Test
@@ -124,6 +126,38 @@ class BeerControllerIT {
     fun testRemoveBeerNotFound() {
         assertThrows(NotFoundException::class.java) {
             beerController.deleteById(UUID.randomUUID())
+        }
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    fun testPatchBeer() {
+        val beer: Beer = beerRepository.findAll()[0]
+        val beerDTO: BeerDTO = beerMapper.toDto(beer)
+        val beerDefaultQuantity = beerDTO.quantity
+        val beerDefaultVersion = beerDTO.version
+        beerDTO.id = null
+        beerDTO.version = null
+        beerDTO.quantity = null
+
+        val beerName = "UPDATED"
+        beerDTO.name = beerName
+
+        val beerId = requireNotNull(beer.id) { "Beer ID cannot be null" }
+        val responseEntity: ResponseEntity<Void> = beerController.patchById(beerId, beerDTO)
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
+
+        val updatedBeer = beerRepository.findById(beerId).get()
+        assertThat(updatedBeer.name).isEqualTo(beerName)
+        assertThat(updatedBeer.version).isEqualTo(beerDefaultVersion)
+        assertThat(updatedBeer.quantity).isEqualTo(beerDefaultQuantity)
+    }
+
+    @Test
+    fun testPatchBeerNotFound() {
+        assertThrows(NotFoundException::class.java) {
+            beerController.patchById(UUID.randomUUID(), BeerDTO())
         }
     }
 }

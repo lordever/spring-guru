@@ -40,8 +40,30 @@ class BeerServiceJpaImpl(
         }.orElse(null)
     }
 
-    override fun patchById(id: UUID, newBeerDTO: BeerDTO) {
-        TODO("Not yet implemented")
+    override fun patchById(id: UUID, newBeerDTO: BeerDTO): BeerDTO? {
+        return beerRepository.findById(id).map { foundBeer ->
+            if (newBeerDTO.name != null) {
+                foundBeer.name = newBeerDTO.name
+            }
+
+            if (newBeerDTO.upc != null) {
+                foundBeer.upc = newBeerDTO.upc
+            }
+
+            if (newBeerDTO.price != null) {
+                foundBeer.price = newBeerDTO.price
+            }
+
+            if (newBeerDTO.style != null) {
+                foundBeer.style = newBeerDTO.style
+            }
+
+            if (newBeerDTO.quantity != null) {
+                foundBeer.quantity = newBeerDTO.quantity
+            }
+
+            beerMapper.toDto(beerRepository.save(foundBeer))
+        }.orElse(null)
     }
 
     override fun deleteById(id: UUID): Boolean {

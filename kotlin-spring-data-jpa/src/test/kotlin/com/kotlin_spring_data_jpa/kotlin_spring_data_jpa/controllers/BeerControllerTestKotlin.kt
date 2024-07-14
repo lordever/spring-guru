@@ -144,7 +144,7 @@ class BeerControllerTestKotlin {
 
         val uuidSlot = slot<UUID>()
         val beerSlot = slot<BeerDTO>()
-        every { beerService.patchById(capture(uuidSlot), capture(beerSlot)) } returns Unit
+        every { beerService.patchById(capture(uuidSlot), capture(beerSlot)) } returns testBeer
 
         mockMvc.perform(
             patch(BeerController.BEER_PATH_WITH_ID, testBeer.id)
