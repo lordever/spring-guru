@@ -8,7 +8,7 @@ import org.mapstruct.factory.Mappers
 @Mapper(componentModel = "spring")
 interface BeerMapper {
     fun toDto(beer: Beer): BeerDTO
-    fun toEntity(beerDTO: BeerDTO): Beer
+    fun toBeer(beerDTO: BeerDTO): Beer
 
     companion object {
         val INSTANCE: BeerMapper = Mappers.getMapper(BeerMapper::class.java)

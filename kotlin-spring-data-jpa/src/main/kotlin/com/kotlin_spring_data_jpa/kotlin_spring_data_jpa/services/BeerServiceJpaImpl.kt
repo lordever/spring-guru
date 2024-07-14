@@ -1,6 +1,5 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services
 
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities.Beer
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.mappers.BeerMapper
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories.BeerRepository
@@ -19,9 +18,13 @@ class BeerServiceJpaImpl(
 
     override fun listBeer(): List<BeerDTO> = beerRepository.findAll().map(beerMapper::toDto)
 
-    override fun save(beerDTO: BeerDTO): BeerDTO {
-        TODO("Not yet implemented")
-    }
+    override fun save(beerDTO: BeerDTO): BeerDTO =
+        beerMapper
+            .toDto(
+                beerRepository.save(
+                    beerMapper.toBeer(beerDTO)
+                )
+            )
 
     override fun updateById(id: UUID, newBeerDTO: BeerDTO) {
         TODO("Not yet implemented")

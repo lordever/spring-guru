@@ -8,8 +8,8 @@ import org.mapstruct.factory.Mappers
 @Mapper(componentModel = "spring")
 interface CustomerMapper {
 
-    fun dtoToCustomer(dto: CustomerDTO): Customer
-    fun customerToDto(customer: Customer): CustomerDTO
+    fun toCustomer(dto: CustomerDTO): Customer
+    fun toDto(customer: Customer): CustomerDTO
 
     companion object {
         val INSTANCE: CustomerMapper = Mappers.getMapper(CustomerMapper::class.java)

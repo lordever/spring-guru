@@ -13,10 +13,10 @@ class CustomerServiceJpaImpl(
     private val repository: CustomerRepository,
     private val mapper: CustomerMapper
 ) : CustomerService {
-    override fun findAll(): List<CustomerDTO> = repository.findAll().map(mapper::customerToDto)
+    override fun findAll(): List<CustomerDTO> = repository.findAll().map(mapper::toDto)
 
     override fun findById(id: UUID): CustomerDTO? =
-        repository.findById(id).map(mapper::customerToDto).orElse(null)
+        repository.findById(id).map(mapper::toDto).orElse(null)
 
     override fun save(customerDTO: CustomerDTO): CustomerDTO {
         TODO("Not yet implemented")

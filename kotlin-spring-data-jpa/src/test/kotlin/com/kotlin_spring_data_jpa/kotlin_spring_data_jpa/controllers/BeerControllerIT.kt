@@ -1,5 +1,6 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.controllers
 
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities.Beer
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories.BeerRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -7,6 +8,8 @@ import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -52,5 +55,25 @@ class BeerControllerIT {
         assertThrows(NotFoundException::class.java) {
             beerController.getBeerById(UUID.randomUUID())
         }
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    fun testSaveNewBeer() {
+        val beerDTO = BeerDTO(
+            name = "Test Beer"
+        )
+
+        val responseEntity: ResponseEntity<BeerDTO> = beerController.handlePost(beerDTO)
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.CREATED)
+        assertThat(responseEntity.headers.get("Location")).isNotNull
+
+        val locationUUID: List<String>? = responseEntity.headers.location?.path?.split("/")
+        val uuid: UUID = UUID.fromString(locationUUID!![4])
+
+        val beer:Beer = beerRepository.findById(uuid).get()
+        assertThat(beer).isNotNull
+        assertThat(beer.name).isEqualTo(beerDTO.name)
     }
 }

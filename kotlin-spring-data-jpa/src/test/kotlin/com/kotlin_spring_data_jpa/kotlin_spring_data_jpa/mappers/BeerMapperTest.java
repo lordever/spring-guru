@@ -56,7 +56,7 @@ public class BeerMapperTest {
         beerDTO.setUpdateDate(LocalDateTime.now());
 
         // when
-        Beer beer = beerMapper.toEntity(beerDTO);
+        Beer beer = beerMapper.toBeer(beerDTO);
 
         // then
         assertThat(beer).isNotNull();
