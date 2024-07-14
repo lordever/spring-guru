@@ -1,5 +1,6 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services
 
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities.Beer
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.mappers.BeerMapper
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories.BeerRepository
@@ -9,10 +10,10 @@ import java.util.*
 
 @Primary
 @Service
-class BeerServiceJpaImpl : BeerService {
-    private lateinit var beerRepository: BeerRepository
-    private lateinit var beerMapper: BeerMapper
-
+class BeerServiceJpaImpl(
+    private val beerRepository: BeerRepository,
+    private val beerMapper: BeerMapper
+) : BeerService {
     override fun getBeerById(id: UUID): BeerDTO? =
         beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
 

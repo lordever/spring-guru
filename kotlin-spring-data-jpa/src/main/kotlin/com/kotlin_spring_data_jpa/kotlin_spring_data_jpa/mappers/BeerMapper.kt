@@ -5,7 +5,7 @@ import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import org.mapstruct.Mapper
 import org.mapstruct.factory.Mappers
 
-@Mapper
+@Mapper(componentModel = "spring")
 interface BeerMapper {
     fun toDto(beer: Beer): BeerDTO
     fun toEntity(beerDTO: BeerDTO): Beer
