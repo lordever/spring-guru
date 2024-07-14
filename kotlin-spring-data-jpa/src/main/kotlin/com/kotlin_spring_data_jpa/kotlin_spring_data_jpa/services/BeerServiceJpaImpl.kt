@@ -6,6 +6,7 @@ import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories.BeerReposi
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import java.util.*
+import java.util.concurrent.atomic.AtomicReference
 
 @Primary
 @Service
@@ -26,17 +27,18 @@ class BeerServiceJpaImpl(
                 )
             )
 
-    override fun updateById(id: UUID, newBeerDTO: BeerDTO) =
-        beerRepository.findById(id).ifPresent { foundBeer ->
+    override fun updateById(id: UUID, newBeerDTO: BeerDTO): BeerDTO? {
+        return beerRepository.findById(id).map { foundBeer ->
             foundBeer.apply {
                 name = newBeerDTO.name
                 style = newBeerDTO.style
                 upc = newBeerDTO.upc
                 price = newBeerDTO.price
+                quantity = newBeerDTO.quantity
             }
-
-            beerRepository.save(foundBeer)
-        }
+            beerMapper.toDto(beerRepository.save(foundBeer))
+        }.orElse(null)
+    }
 
     override fun patchById(id: UUID, newBeerDTO: BeerDTO) {
         TODO("Not yet implemented")

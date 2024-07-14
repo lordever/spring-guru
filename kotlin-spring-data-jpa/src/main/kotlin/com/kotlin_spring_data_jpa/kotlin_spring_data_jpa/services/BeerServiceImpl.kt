@@ -83,7 +83,7 @@ class BeerServiceImpl : BeerService {
         return newBeerDTO
     }
 
-    override fun updateById(id: UUID, newBeerDTO: BeerDTO) {
+    override fun updateById(id: UUID, newBeerDTO: BeerDTO): BeerDTO? {
         val existingBeer = beerDTOMap[id]
 
         if (existingBeer != null) {
@@ -99,6 +99,8 @@ class BeerServiceImpl : BeerService {
         } else {
             log.debug { "Beer $id wasn't found" }
         }
+
+        return existingBeer
     }
 
     override fun patchById(id: UUID, newBeerDTO: BeerDTO) {

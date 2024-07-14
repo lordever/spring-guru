@@ -20,7 +20,7 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @ExceptionHandler(NotFoundException::class)
-    fun handleNotFoundException(): ResponseEntity<String>  {
+    fun handleNotFoundException(): ResponseEntity<String> {
         println("Calling from BeerController custom exception handler")
 
         return ResponseEntity.notFound().build()
@@ -50,10 +50,9 @@ class BeerController(private val beerService: BeerService) {
 
     @PutMapping(BEER_PATH_WITH_ID)
     fun updateById(@PathVariable id: UUID, @RequestBody beerDTO: BeerDTO): ResponseEntity<Void> {
-        beerService.updateById(id, beerDTO)
+        beerService.updateById(id, beerDTO) ?: throw NotFoundException()
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
-
     }
 
     @PatchMapping(BEER_PATH_WITH_ID)

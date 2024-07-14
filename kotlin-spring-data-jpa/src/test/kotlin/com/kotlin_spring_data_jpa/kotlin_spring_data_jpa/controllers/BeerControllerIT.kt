@@ -100,4 +100,11 @@ class BeerControllerIT {
         val updatedBeer = beerRepository.findById(beerId).get()
         assertThat(updatedBeer.name).isEqualTo(beerName)
     }
+
+    @Test
+    fun testUpdateBeerNotFound() {
+        assertThrows(NotFoundException::class.java) {
+            beerController.updateById(UUID.randomUUID(), BeerDTO())
+        }
+    }
 }

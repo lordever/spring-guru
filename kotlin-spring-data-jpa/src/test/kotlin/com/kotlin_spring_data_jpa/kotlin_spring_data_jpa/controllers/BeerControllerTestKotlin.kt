@@ -103,7 +103,7 @@ class BeerControllerTestKotlin {
     fun testUpdateNewBeer() {
         val testBeerDTO = beerServiceImpl.listBeer().first()
 
-        every { beerService.updateById(any(), any()) } returns Unit
+        every { beerService.updateById(any(), any()) } returns testBeerDTO
 
         mockMvc.perform(
             put(BeerController.BEER_PATH_WITH_ID, testBeerDTO.id)
