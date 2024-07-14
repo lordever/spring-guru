@@ -13,13 +13,10 @@ class BeerServiceJpaImpl : BeerService {
     private lateinit var beerRepository: BeerRepository
     private lateinit var beerMapper: BeerMapper
 
-    override fun getBeerById(id: UUID): BeerDTO? {
-        TODO("Not yet implemented")
-    }
+    override fun getBeerById(id: UUID): BeerDTO? =
+        beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
 
-    override fun listBeer(): List<BeerDTO> {
-        TODO("Not yet implemented")
-    }
+    override fun listBeer(): List<BeerDTO> = beerRepository.findAll().map(beerMapper::toDto)
 
     override fun save(beerDTO: BeerDTO): BeerDTO {
         TODO("Not yet implemented")
