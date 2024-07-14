@@ -26,9 +26,17 @@ class BeerServiceJpaImpl(
                 )
             )
 
-    override fun updateById(id: UUID, newBeerDTO: BeerDTO) {
-        TODO("Not yet implemented")
-    }
+    override fun updateById(id: UUID, newBeerDTO: BeerDTO) =
+        beerRepository.findById(id).ifPresent { foundBeer ->
+            foundBeer.apply {
+                name = newBeerDTO.name
+                style = newBeerDTO.style
+                upc = newBeerDTO.upc
+                price = newBeerDTO.price
+            }
+
+            beerRepository.save(foundBeer)
+        }
 
     override fun patchById(id: UUID, newBeerDTO: BeerDTO) {
         TODO("Not yet implemented")

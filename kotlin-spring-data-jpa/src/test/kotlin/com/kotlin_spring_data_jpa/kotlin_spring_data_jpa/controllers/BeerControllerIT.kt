@@ -1,6 +1,7 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.controllers
 
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities.Beer
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.mappers.BeerMapper
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories.BeerRepository
 import org.assertj.core.api.Assertions.assertThat
@@ -21,6 +22,9 @@ class BeerControllerIT {
 
     @Autowired
     lateinit var beerController: BeerController
+
+    @Autowired
+    lateinit var beerMapper: BeerMapper
 
 
     @Test
@@ -72,8 +76,28 @@ class BeerControllerIT {
         val locationUUID: List<String>? = responseEntity.headers.location?.path?.split("/")
         val uuid: UUID = UUID.fromString(locationUUID!![4])
 
-        val beer:Beer = beerRepository.findById(uuid).get()
+        val beer: Beer = beerRepository.findById(uuid).get()
         assertThat(beer).isNotNull
         assertThat(beer.name).isEqualTo(beerDTO.name)
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    fun testUpdateBeer() {
+        val beer: Beer = beerRepository.findAll()[0]
+        val beerDTO: BeerDTO = beerMapper.toDto(beer)
+        beerDTO.id = null
+        beerDTO.version = null
+
+        val beerName = "UPDATED"
+        beerDTO.name = beerName
+
+        val beerId = requireNotNull(beer.id) { "Beer ID cannot be null" }
+        val responseEntity: ResponseEntity<Void> = beerController.updateById(beerId, beerDTO)
+        assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
+
+        val updatedBeer = beerRepository.findById(beerId).get()
+        assertThat(updatedBeer.name).isEqualTo(beerName)
     }
 }
