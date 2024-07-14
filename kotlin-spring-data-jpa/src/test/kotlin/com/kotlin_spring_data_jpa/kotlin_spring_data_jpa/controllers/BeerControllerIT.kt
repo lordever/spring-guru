@@ -119,4 +119,11 @@ class BeerControllerIT {
         assertThat(responseEntity.statusCode).isEqualTo(HttpStatus.NO_CONTENT)
         assertThat(beerRepository.findById(beerId)).isEmpty
     }
+
+    @Test
+    fun testRemoveBeerNotFound() {
+        assertThrows(NotFoundException::class.java) {
+            beerController.deleteById(UUID.randomUUID())
+        }
+    }
 }

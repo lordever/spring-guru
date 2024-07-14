@@ -9,5 +9,5 @@ interface BeerService {
     fun save(beerDTO: BeerDTO): BeerDTO
     fun updateById(id: UUID, newBeerDTO: BeerDTO): BeerDTO?
     fun patchById(id: UUID, newBeerDTO: BeerDTO)
-    fun deleteById(id: UUID)
+    fun deleteById(id: UUID): Boolean
 }

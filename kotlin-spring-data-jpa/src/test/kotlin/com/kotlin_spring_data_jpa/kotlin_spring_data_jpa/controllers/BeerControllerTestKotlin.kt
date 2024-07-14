@@ -121,7 +121,7 @@ class BeerControllerTestKotlin {
         val testBeer = beerServiceImpl.listBeer().first()
 
         val uuidSlot = slot<UUID>()
-        every { beerService.deleteById(capture(uuidSlot)) } returns Unit
+        every { beerService.deleteById(capture(uuidSlot)) } returns true
 
         assertNotNull(testBeer.id, "The beer ID should not be null")
 

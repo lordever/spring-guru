@@ -134,7 +134,9 @@ class BeerServiceImpl : BeerService {
         }
     }
 
-    override fun deleteById(id: UUID) {
+    override fun deleteById(id: UUID): Boolean {
         beerDTOMap.remove(id)
+
+        return true
     }
 }

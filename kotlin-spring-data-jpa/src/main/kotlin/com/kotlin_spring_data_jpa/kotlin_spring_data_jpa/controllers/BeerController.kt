@@ -64,7 +64,7 @@ class BeerController(private val beerService: BeerService) {
 
     @DeleteMapping(BEER_PATH_WITH_ID)
     fun deleteById(@PathVariable("id") id: UUID): ResponseEntity<Void> {
-        beerService.deleteById(id)
+        if (!beerService.deleteById(id)) throw NotFoundException()
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
