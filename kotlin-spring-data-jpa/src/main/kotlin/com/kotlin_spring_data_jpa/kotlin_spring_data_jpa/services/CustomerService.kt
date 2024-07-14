@@ -7,7 +7,7 @@ interface CustomerService {
     fun findAll(): List<CustomerDTO>
     fun findById(id: UUID): CustomerDTO?
     fun save(customerDTO: CustomerDTO): CustomerDTO
-    fun updateById(id: UUID, customerDTO: CustomerDTO)
-    fun patchById(id: UUID, customerDTO: CustomerDTO)
-    fun deleteById(id: UUID)
+    fun updateById(id: UUID, customerDTO: CustomerDTO): CustomerDTO?
+    fun patchById(id: UUID, customerDTO: CustomerDTO): CustomerDTO?
+    fun deleteById(id: UUID): Boolean
 }

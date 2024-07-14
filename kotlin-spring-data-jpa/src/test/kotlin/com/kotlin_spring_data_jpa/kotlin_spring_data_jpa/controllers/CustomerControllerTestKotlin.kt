@@ -93,7 +93,7 @@ class CustomerControllerTestKotlin {
             version = 2
         }
 
-        every { customerService.updateById(any(), any()) } returns Unit
+        every { customerService.updateById(any(), any()) } returns testCustomer
 
         mockMvc.perform(put(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
             .accept(MediaType.APPLICATION_JSON)
@@ -109,7 +109,7 @@ class CustomerControllerTestKotlin {
         val testCustomer = customerServiceImpl.findAll().first()
 
         val uuidSlot = slot<UUID>()
-        every { customerService.deleteById(capture(uuidSlot)) } returns Unit
+        every { customerService.deleteById(capture(uuidSlot)) } returns true
 
         mockMvc.perform(delete(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
             .accept(MediaType.APPLICATION_JSON))
@@ -129,7 +129,7 @@ class CustomerControllerTestKotlin {
 
         val uuidSlot = slot<UUID>()
         val customerSlot = slot<CustomerDTO>()
-        every { customerService.patchById(capture(uuidSlot), capture(customerSlot)) } returns Unit
+        every { customerService.patchById(capture(uuidSlot), capture(customerSlot)) } returns testCustomer
 
         mockMvc.perform(patch(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
             .accept(MediaType.APPLICATION_JSON)

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*
 import java.util.UUID
 
 @RestController
-class CustomerController(val customerService: CustomerService) {
+class CustomerController(private val customerService: CustomerService) {
     private val logger = KotlinLogging.logger {}
 
     companion object {
@@ -41,23 +41,24 @@ class CustomerController(val customerService: CustomerService) {
 
     @PutMapping(CUSTOMERS_PATH_WITH_ID)
     fun updateById(@PathVariable id: UUID, @RequestBody customerDTO: CustomerDTO): ResponseEntity<Void> {
-        customerService.updateById(id, customerDTO)
+        customerService.updateById(id, customerDTO) ?: throw NotFoundException()
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
     @PatchMapping(CUSTOMERS_PATH_WITH_ID)
     fun patchById(@PathVariable id: UUID, @RequestBody customerDTO: CustomerDTO): ResponseEntity<Void> {
-        customerService.patchById(id, customerDTO)
+        customerService.patchById(id, customerDTO) ?: throw NotFoundException()
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
 
     @DeleteMapping(CUSTOMERS_PATH_WITH_ID)
     fun deleteById(@PathVariable id: UUID): ResponseEntity<Void> {
-        customerService.deleteById(id)
+        if (customerService.deleteById(id)) {
+            return ResponseEntity(HttpStatus.NO_CONTENT)
+        }
 
-        return ResponseEntity(HttpStatus.NO_CONTENT)
-
+        throw NotFoundException()
     }
 }

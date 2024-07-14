@@ -18,19 +18,39 @@ class CustomerServiceJpaImpl(
     override fun findById(id: UUID): CustomerDTO? =
         repository.findById(id).map(mapper::toDto).orElse(null)
 
-    override fun save(customerDTO: CustomerDTO): CustomerDTO {
-        TODO("Not yet implemented")
+    override fun save(customerDTO: CustomerDTO): CustomerDTO =
+        mapper.toDto(
+            repository.save(
+                mapper.toCustomer(customerDTO)
+            )
+        )
+
+    override fun updateById(id: UUID, customerDTO: CustomerDTO): CustomerDTO? {
+        return repository.findById(id).map { foundCustomer ->
+            foundCustomer.apply {
+                name = customerDTO.name
+            }
+
+            mapper.toDto(foundCustomer)
+        }.orElse(null)
     }
 
-    override fun updateById(id: UUID, customerDTO: CustomerDTO) {
-        TODO("Not yet implemented")
+    override fun patchById(id: UUID, customerDTO: CustomerDTO): CustomerDTO? {
+        return repository.findById(id).map { foundCustomer ->
+            if (customerDTO.name != null) {
+                foundCustomer.name = customerDTO.name
+            }
+
+            mapper.toDto(foundCustomer)
+        }.orElse(null)
     }
 
-    override fun patchById(id: UUID, customerDTO: CustomerDTO) {
-        TODO("Not yet implemented")
-    }
+    override fun deleteById(id: UUID): Boolean {
+        if (repository.existsById(id)) {
+            repository.deleteById(id)
+            return true
+        }
 
-    override fun deleteById(id: UUID) {
-        TODO("Not yet implemented")
+        return false
     }
 }
