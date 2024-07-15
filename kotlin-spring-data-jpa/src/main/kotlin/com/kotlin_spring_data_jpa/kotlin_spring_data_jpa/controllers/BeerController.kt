@@ -6,6 +6,7 @@ import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import java.util.*
 
@@ -36,7 +37,7 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @PostMapping(BASE_BEER_PATH)
-    fun handlePost(@RequestBody beerDTO: BeerDTO): ResponseEntity<BeerDTO> {
+    fun handlePost(@Validated @RequestBody beerDTO: BeerDTO): ResponseEntity<BeerDTO> {
         val savedBeerDTO: BeerDTO = beerService.save(beerDTO)
 
         val headers = HttpHeaders()

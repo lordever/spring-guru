@@ -1,5 +1,7 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -8,6 +10,9 @@ data class BeerDTO(
     var id: UUID? = null,
     var version: Int? = null,
     var quantity: Int? = null,
+
+    @field:NotBlank
+    @field:NotNull
     var name: String? = null,
     var upc: String? = null,
     var style: BeerStyle? = null,

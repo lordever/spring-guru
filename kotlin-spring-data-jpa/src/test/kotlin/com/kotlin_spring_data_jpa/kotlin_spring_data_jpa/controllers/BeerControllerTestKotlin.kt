@@ -100,6 +100,21 @@ class BeerControllerTestKotlin {
     }
 
     @Test
+    fun testCreateNewBeerNullBeerName() {
+        val testBeer = BeerDTO()
+
+        every { beerService.save(any()) } returns beerServiceImpl.listBeer().first()
+
+        mockMvc.perform(
+            post(BeerController.BASE_BEER_PATH)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testBeer))
+        )
+            .andExpect(status().isBadRequest)
+    }
+
+    @Test
     fun testUpdateNewBeer() {
         val testBeerDTO = beerServiceImpl.listBeer().first()
 
