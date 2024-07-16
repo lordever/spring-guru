@@ -9,6 +9,7 @@ import io.mockk.every
 import io.mockk.slot
 import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
+import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,6 +21,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.transaction.annotation.Transactional
@@ -192,12 +194,16 @@ class BeerControllerIT {
         val beerMap: MutableMap<String, Any> = HashMap()
         beerMap["name"] = "New Name New Name New Name New Name New Name New Name"
 
-        mockMvc.perform(
+        val result = mockMvc.perform(
             patch(BeerController.BEER_PATH_WITH_ID, testBeer.id)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerMap))
         )
             .andExpect(status().isBadRequest)
+            .andExpect(jsonPath("$.length()", equalTo(5)))
+            .andReturn()
+
+        println(result.response.contentAsString)
     }
 }
