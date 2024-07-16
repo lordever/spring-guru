@@ -1,11 +1,13 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories
 
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities.Beer
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerStyle
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
 import org.assertj.core.api.Assertions.assertThat
+import java.math.BigDecimal
 
 @DataJpaTest
 class BeerRepositoryTestKotlin {
@@ -16,7 +18,10 @@ class BeerRepositoryTestKotlin {
     @Test
     fun testSaveBer() {
         val beer = Beer(
-            name = "Test Beer"
+            name = "Test Beer",
+            style = BeerStyle.ALE,
+            upc = "Test UPC",
+            price = BigDecimal(20.0),
         )
 
         val savedBeer = beerRepository.save(beer)
