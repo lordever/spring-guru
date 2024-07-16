@@ -1,18 +1,29 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.controllers
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities.Beer
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.mappers.BeerMapper
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories.BeerRepository
+import io.mockk.every
+import io.mockk.slot
+import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.annotation.Rollback
+import org.springframework.test.web.servlet.MockMvc
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.context.WebApplicationContext
 import java.util.*
 
 @SpringBootTest
@@ -26,6 +37,18 @@ class BeerControllerIT {
     @Autowired
     lateinit var beerMapper: BeerMapper
 
+    @Autowired
+    lateinit var wac: WebApplicationContext
+
+    @Autowired
+    lateinit var objectMapper: ObjectMapper
+
+    lateinit var mockMvc: MockMvc
+
+    @BeforeEach
+    fun setUp() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build()
+    }
 
     @Test
     fun testListBeers() {
@@ -159,5 +182,22 @@ class BeerControllerIT {
         assertThrows(NotFoundException::class.java) {
             beerController.patchById(UUID.randomUUID(), BeerDTO())
         }
+    }
+
+    @Rollback
+    @Transactional
+    @Test
+    fun testPatchBeerBadName() {
+        val testBeer = beerRepository.findAll()[0]
+        val beerMap: MutableMap<String, Any> = HashMap()
+        beerMap["name"] = "New Name New Name New Name New Name New Name New Name"
+
+        mockMvc.perform(
+            patch(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(beerMap))
+        )
+            .andExpect(status().isBadRequest)
     }
 }
