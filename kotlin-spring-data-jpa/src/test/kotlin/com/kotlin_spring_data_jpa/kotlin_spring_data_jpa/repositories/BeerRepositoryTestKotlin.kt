@@ -2,11 +2,13 @@ package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories
 
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities.Beer
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerStyle
+import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertThrows
 import java.math.BigDecimal
 
 @DataJpaTest
@@ -29,6 +31,25 @@ class BeerRepositoryTestKotlin {
         assertThat(savedBeer).isNotNull
         assertThat(savedBeer.id).isNotNull
         assertThat(savedBeer.name).isEqualTo(beer.name)
+    }
+
+    @Test
+    fun testSaveBerWhereNameIsTooLong() {
+        assertThrows(ConstraintViolationException::class.java) {
+            val beer = Beer(
+                name = "Test Beer Test Beer Test Beer Test Beer Test Beer Test Beer",
+                style = BeerStyle.ALE,
+                upc = "Test UPC",
+                price = BigDecimal(20.0),
+            )
+
+            val savedBeer = beerRepository.save(beer)
+            beerRepository.flush()
+
+            assertThat(savedBeer).isNotNull
+            assertThat(savedBeer.id).isNotNull
+            assertThat(savedBeer.name).isEqualTo(beer.name)
+        }
     }
 
 }

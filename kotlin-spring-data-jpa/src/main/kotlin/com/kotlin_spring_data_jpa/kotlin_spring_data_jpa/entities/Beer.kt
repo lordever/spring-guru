@@ -4,6 +4,7 @@ import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerStyle
 import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
+import jakarta.validation.constraints.Size
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -14,12 +15,12 @@ data class Beer(
     var createDate: LocalDateTime? = null,
     var updateDate: LocalDateTime? = null,
 
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
+    @field:Id
+    @field:GeneratedValue(generator = "UUID")
+    @field:Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
     var id: UUID? = null,
 
-    @Version
+    @field:Version
     var version: Int? = null,
 
     @field:NotNull
@@ -27,6 +28,8 @@ data class Beer(
 
     @field:NotBlank
     @field:NotNull
+    @field:Column(length = 50)
+    @field:Size(max = 50)
     var name: String? = null,
 
     @field:NotNull
@@ -34,5 +37,6 @@ data class Beer(
 
     @field:NotBlank
     @field:NotNull
+    @field:Size(max = 255)
     var upc: String? = null,
 )
