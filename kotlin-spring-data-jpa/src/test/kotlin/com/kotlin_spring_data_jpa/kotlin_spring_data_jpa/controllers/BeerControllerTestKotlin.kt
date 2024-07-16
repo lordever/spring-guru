@@ -112,7 +112,7 @@ class BeerControllerTestKotlin {
                 .content(objectMapper.writeValueAsString(testBeer))
         )
             .andExpect(status().isBadRequest)
-            .andExpect(jsonPath("$.length()", equalTo(2)))
+            .andExpect(jsonPath("$.length()", equalTo(6)))
             .andReturn()
 
         println(mockMvcResult)
