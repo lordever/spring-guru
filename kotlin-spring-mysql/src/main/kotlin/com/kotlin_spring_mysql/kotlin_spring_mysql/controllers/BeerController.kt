@@ -1,7 +1,7 @@
-package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.controllers
+package com.kotlin_spring_mysql.kotlin_spring_mysql.controllers
 
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services.BeerService
+import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
+import com.kotlin_spring_mysql.kotlin_spring_mysql.services.BeerService
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
@@ -58,7 +58,7 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @PatchMapping(BEER_PATH_WITH_ID)
-    fun patchById(@PathVariable id: UUID, @RequestBody beerDTO: BeerDTO): ResponseEntity<Void> {
+    fun patchById(@PathVariable id: UUID, @Valid @RequestBody beerDTO: BeerDTO): ResponseEntity<Void> {
         beerService.patchById(id, beerDTO)?: throw NotFoundException()
 
         return ResponseEntity(HttpStatus.NO_CONTENT)

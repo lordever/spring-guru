@@ -1,12 +1,13 @@
-package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.services
+package com.kotlin_spring_mysql.kotlin_spring_mysql.services
 
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.mappers.BeerMapper
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerDTO
-import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories.BeerRepository
+import com.kotlin_spring_mysql.kotlin_spring_mysql.mappers.BeerMapper
+import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
+import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import java.util.*
+
 
 @Primary
 @Service
