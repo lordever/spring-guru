@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id
 import jakarta.persistence.Version
 import lombok.Builder
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 import java.time.LocalDateTime
 import java.util.*
 
@@ -18,8 +20,10 @@ data class Customer(
 
     @Id
     @GeneratedValue(generator = "UUID")
-    @Column(length=36,columnDefinition = "varchar", updatable = false, nullable = false)
+    @Column(length=36,columnDefinition = "varchar(36)", updatable = false, nullable = false)
+    @field:JdbcTypeCode(SqlTypes.CHAR)
     var id: UUID? = null,
+
     @Version
     var version: Int? = null,
 )
