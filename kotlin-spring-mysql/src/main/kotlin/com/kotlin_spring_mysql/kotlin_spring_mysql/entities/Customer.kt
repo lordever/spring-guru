@@ -26,4 +26,7 @@ data class Customer(
 
     @Version
     var version: Int? = null,
+
+    @Column(length = 255)
+    var email:String? = null
 )
