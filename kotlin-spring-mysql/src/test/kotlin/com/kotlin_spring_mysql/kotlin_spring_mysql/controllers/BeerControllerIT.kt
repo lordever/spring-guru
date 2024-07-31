@@ -56,7 +56,7 @@ class BeerControllerIT {
     fun testListBeers() {
         val dtos: List<BeerDTO> = beerController.listBeers()
 
-        assertThat(dtos.size).isEqualTo(3)
+        assertThat(dtos.size).isEqualTo(2413)
     }
 
     @Rollback
