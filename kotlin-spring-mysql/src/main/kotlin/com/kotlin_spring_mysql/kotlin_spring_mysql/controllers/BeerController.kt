@@ -58,7 +58,7 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @PatchMapping(BEER_PATH_WITH_ID)
-    fun patchById(@PathVariable id: UUID, @Valid @RequestBody beerDTO: BeerDTO): ResponseEntity<Void> {
+    fun patchById(@PathVariable id: UUID, @RequestBody beerDTO: BeerDTO): ResponseEntity<Void> {
         beerService.patchById(id, beerDTO)?: throw NotFoundException()
 
         return ResponseEntity(HttpStatus.NO_CONTENT)

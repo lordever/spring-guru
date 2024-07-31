@@ -171,7 +171,7 @@ class BeerControllerTestKotlin {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerMap))
         )
-            .andExpect(status().isNoContent())
+            .andExpect(status().isNoContent)
 
         verify { beerService.patchById(any(), any()) }
         assertThat(uuidSlot.captured).isEqualTo(testBeer.id)

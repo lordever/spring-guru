@@ -1,9 +1,7 @@
 package com.kotlin_spring_mysql.kotlin_spring_mysql.models
 
-import jakarta.persistence.Column
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size
+import jakarta.validation.constraints.NotBlank
+import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -15,13 +13,10 @@ data class BeerDTO(
 
     @field:NotBlank
     @field:NotNull
-    @field:Column(length = 50)
-    @field:Size(max = 50)
     var name: String? = null,
 
     @field:NotBlank
     @field:NotNull
-    @field:Size(max = 255)
     var upc: String? = null,
 
     @field:NotNull
