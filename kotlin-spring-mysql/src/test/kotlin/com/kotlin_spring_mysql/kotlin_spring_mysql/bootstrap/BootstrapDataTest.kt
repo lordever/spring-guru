@@ -3,6 +3,7 @@ package com.kotlin_spring_mysql.kotlin_spring_mysql.bootstrap
 import com.kotlin_spring_mysql.kotlin_spring_mysql.boostrap.BootstrapData
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.CustomerRepository
+import com.kotlin_spring_mysql.kotlin_spring_mysql.services.BeerCsvService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -17,11 +18,14 @@ class BootstrapDataTest {
     @Autowired
     lateinit var customerRepository: CustomerRepository
 
+    @Autowired
+    lateinit var beerCsvService: BeerCsvService
+
     lateinit var bootstrapData: BootstrapData
 
     @BeforeEach
     fun setUp() {
-        bootstrapData = BootstrapData(beerRepository, customerRepository)
+        bootstrapData = BootstrapData(beerRepository, beerCsvService, customerRepository)
     }
 
     @Test

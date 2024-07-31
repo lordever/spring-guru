@@ -2,11 +2,18 @@ package com.kotlin_spring_mysql.kotlin_spring_mysql.boostrap
 
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Beer
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Customer
+import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerCSVRecord
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.CustomerRepository
+import com.kotlin_spring_mysql.kotlin_spring_mysql.services.BeerCsvService
+import com.kotlin_spring_mysql.kotlin_spring_mysql.services.BeerService
+import org.apache.commons.lang3.StringUtils
 import org.springframework.boot.CommandLineRunner
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.ResourceUtils
+import java.io.File
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
@@ -14,15 +21,18 @@ import java.util.*
 @Component
 class BootstrapData(
     var beerRepository: BeerRepository,
+    var beerCsvService: BeerCsvService,
     var customerRepository: CustomerRepository
 ) : CommandLineRunner {
 
+    @Transactional
     override fun run(vararg args: String?) {
         loadBeerData()
+        loadCsvData()
         loadCustomerData()
     }
 
-    fun loadBeerData() {
+    private fun loadBeerData() {
         if (beerRepository.count() == 0L) {
             val beer1 = Beer(
                 id = UUID.randomUUID(),
@@ -66,7 +76,39 @@ class BootstrapData(
         }
     }
 
-    fun loadCustomerData() {
+    private fun loadCsvData() {
+        if (beerRepository.count() < 10) {
+            val file: File = ResourceUtils.getFile("classpath:csvdata/beers.csv")
+
+            val recs: List<BeerCSVRecord> = beerCsvService.convertCsv(file)
+
+            recs.forEach { beerCSVRecord ->
+                val beerStyle = when (beerCSVRecord.style) {
+                    "American Pale Lager" -> BeerStyle.LAGER
+                    "American Pale Ale (APA)", "American Black Ale", "Belgian Dark Ale", "American Blonde Ale" -> BeerStyle.ALE
+                    "American IPA", "American Double / Imperial IPA", "Belgian IPA" -> BeerStyle.IPA
+                    "American Porter" -> BeerStyle.PORTER
+                    "Oatmeal Stout", "American Stout" -> BeerStyle.STOUT
+                    "Saison / Farmhouse Ale" -> BeerStyle.SAISON
+                    "Fruit / Vegetable Beer", "Winter Warmer", "Berliner Weissbier" -> BeerStyle.WHEAT
+                    "English Pale Ale" -> BeerStyle.PALE_ALE
+                    else -> BeerStyle.PILSNER
+                }
+
+                beerRepository.save(
+                    Beer(
+                        name = StringUtils.abbreviate(beerCSVRecord.beer, 50),
+                        style = beerStyle,
+                        price = BigDecimal.TEN,
+                        upc = beerCSVRecord.row.toString(),
+                        quantity = beerCSVRecord.count
+                    )
+                )
+            }
+        }
+    }
+
+    private fun loadCustomerData() {
         if (customerRepository.count() == 0L) {
             val customer1 = Customer(
                 id = UUID.randomUUID(),

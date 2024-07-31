@@ -5,7 +5,9 @@ import jakarta.persistence.*
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
 import jakarta.validation.constraints.Size
+import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.type.SqlTypes
 import java.math.BigDecimal
 import java.time.LocalDateTime
@@ -14,8 +16,7 @@ import java.util.*
 @Entity
 data class Beer(
     var quantity: Int? = null,
-    var createDate: LocalDateTime? = null,
-    var updateDate: LocalDateTime? = null,
+
 
     @field:Id
     @field:GeneratedValue(generator = "UUID")
@@ -42,4 +43,10 @@ data class Beer(
     @field:NotNull
     @field:Size(max = 255)
     var upc: String? = null,
+
+    @field:CreationTimestamp
+    var createDate: LocalDateTime? = null,
+
+    @field:UpdateTimestamp
+    var updateDate: LocalDateTime? = null,
 )
