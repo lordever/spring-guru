@@ -4,32 +4,32 @@ import com.opencsv.bean.CsvBindByName
 
 data class BeerCSVRecord(
     @CsvBindByName
-    val row: Int,
+    val row: Int? = null,
     @CsvBindByName(column = "count.x")
-    val count: Int,
+    val count: Int? = null,
     @CsvBindByName
-    val abv: String,
+    val abv: String? = null,
     @CsvBindByName(column = "brewery_id")
-    val breweryId: Int,
+    val breweryId: Int? = null,
     @CsvBindByName
-    val id: Int,
+    val id: Int? = null,
     @CsvBindByName
-    val ibu: String,
+    val ibu: String? = null,
     @CsvBindByName
-    val beer: String,
+    val beer: String? = null,
     @CsvBindByName
-    val style: String,
+    val style: String? = null,
     @CsvBindByName
-    val style2: String,
+    val style2: String? = null,
     @CsvBindByName(column = "count.y")
-    val countY: String,
+    val countY: String? = null,
     @CsvBindByName
-    val city: String,
+    val city: String? = null,
     @CsvBindByName
-    val state: String,
+    val state: String? = null,
     @CsvBindByName
-    val label: String,
+    val label: String? = null,
     @CsvBindByName
-    val ounces: Float,
+    val ounces: Float? = null,
 
-)
+    )
