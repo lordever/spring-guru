@@ -5,9 +5,6 @@ import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Beer
 import com.kotlin_spring_mysql.kotlin_spring_mysql.mappers.BeerMapper
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
-import io.mockk.every
-import io.mockk.slot
-import io.mockk.verify
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.Assertions.assertThrows
@@ -21,6 +18,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -50,6 +48,16 @@ class BeerControllerIT {
     @BeforeEach
     fun setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build()
+    }
+
+    @Test
+    fun testListBeersByName() {
+        mockMvc.perform(
+            get(BeerController.BASE_BEER_PATH)
+                .queryParam("name", "IPA")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()", equalTo(100)))
     }
 
     @Test
