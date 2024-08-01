@@ -57,7 +57,7 @@ class BeerControllerIT {
                 .queryParam("name", "IPA")
         )
             .andExpect(status().isOk)
-            .andExpect(jsonPath("$.length()", equalTo(100)))
+            .andExpect(jsonPath("$.length()", equalTo(336)))
     }
 
     @Test

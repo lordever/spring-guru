@@ -29,7 +29,7 @@ class BeerController(private val beerService: BeerService) {
 
     @GetMapping(BASE_BEER_PATH)
     fun listBeers(@RequestParam name: String?): List<BeerDTO> {
-        return beerService.listBeer(null)
+        return beerService.listBeer(name)
     }
 
     @GetMapping(BEER_PATH_WITH_ID)

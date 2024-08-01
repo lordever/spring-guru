@@ -31,10 +31,8 @@ class BeerServiceJpaImpl(
         return beerList.map(beerMapper::toDto)
     }
 
-    fun listBeersByName(name: String): List<Beer> {
-        val beerList: List<Beer> = ArrayList()
-
-        return beerList
+    private fun listBeersByName(name: String): List<Beer> {
+        return beerRepository.findAllByNameIsLikeIgnoreCase("%${name}%")
     }
 
     override fun save(beerDTO: BeerDTO): BeerDTO =
