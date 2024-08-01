@@ -7,4 +7,5 @@ import java.util.*
 
 @Repository
 interface BeerRepository: JpaRepository<Beer, UUID> {
+    fun findAllByNameIsLikeIgnoreCase(name: String): List<Beer>
 }

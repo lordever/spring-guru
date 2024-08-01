@@ -1,5 +1,6 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.repositories
 
+import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.boostrap.BootstrapData
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities.Beer
 import com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.models.BeerStyle
 import jakarta.validation.ConstraintViolationException
