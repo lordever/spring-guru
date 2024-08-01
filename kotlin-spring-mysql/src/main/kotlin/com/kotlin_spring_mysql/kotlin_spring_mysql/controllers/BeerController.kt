@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import javax.validation.Valid
 
 @RestController
 class BeerController(private val beerService: BeerService) {
@@ -30,7 +29,7 @@ class BeerController(private val beerService: BeerService) {
 
     @GetMapping(BASE_BEER_PATH)
     fun listBeers(@RequestParam name: String?): List<BeerDTO> {
-        return beerService.listBeer()
+        return beerService.listBeer(null)
     }
 
     @GetMapping(BEER_PATH_WITH_ID)

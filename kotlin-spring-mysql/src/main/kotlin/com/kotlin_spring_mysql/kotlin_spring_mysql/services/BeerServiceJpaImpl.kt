@@ -18,7 +18,7 @@ class BeerServiceJpaImpl(
     override fun getBeerById(id: UUID): BeerDTO? =
         beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
 
-    override fun listBeer(): List<BeerDTO> = beerRepository.findAll().map(beerMapper::toDto)
+    override fun listBeer(name: String?): List<BeerDTO> = beerRepository.findAll().map(beerMapper::toDto)
 
     override fun save(beerDTO: BeerDTO): BeerDTO =
         beerMapper
