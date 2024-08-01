@@ -62,7 +62,7 @@ class BeerControllerIT {
 
     @Test
     fun testListBeers() {
-        val dtos: List<BeerDTO> = beerController.listBeers()
+        val dtos: List<BeerDTO> = beerController.listBeers(null)
 
         assertThat(dtos.size).isEqualTo(2413)
     }
@@ -73,7 +73,7 @@ class BeerControllerIT {
     fun testEmptyList() {
         beerRepository.deleteAll()
 
-        val dtos: List<BeerDTO> = beerController.listBeers()
+        val dtos: List<BeerDTO> = beerController.listBeers(null)
 
         assertThat(dtos.size).isEqualTo(0)
     }

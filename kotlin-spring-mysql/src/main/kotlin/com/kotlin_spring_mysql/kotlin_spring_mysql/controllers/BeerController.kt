@@ -29,7 +29,9 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @GetMapping(BASE_BEER_PATH)
-    fun listBeers(): List<BeerDTO> = beerService.listBeer()
+    fun listBeers(@RequestParam name: String?): List<BeerDTO> {
+        return beerService.listBeer()
+    }
 
     @GetMapping(BEER_PATH_WITH_ID)
     fun getBeerById(@PathVariable("id") id: UUID): BeerDTO? {
