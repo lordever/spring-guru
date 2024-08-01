@@ -1,5 +1,6 @@
 package com.kotlin_spring_mysql.kotlin_spring_mysql.services
 
+import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Beer
 import com.kotlin_spring_mysql.kotlin_spring_mysql.mappers.BeerMapper
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 @Primary
@@ -18,7 +20,22 @@ class BeerServiceJpaImpl(
     override fun getBeerById(id: UUID): BeerDTO? =
         beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
 
-    override fun listBeer(name: String?): List<BeerDTO> = beerRepository.findAll().map(beerMapper::toDto)
+    override fun listBeer(name: String?): List<BeerDTO> {
+        val beerList: List<Beer> =
+            if (StringUtils.hasText(name)) {
+                listBeersByName(name!!)
+            } else {
+                beerRepository.findAll()
+            }
+
+        return beerList.map(beerMapper::toDto)
+    }
+
+    fun listBeersByName(name: String): List<Beer> {
+        val beerList: List<Beer> = ArrayList()
+
+        return beerList
+    }
 
     override fun save(beerDTO: BeerDTO): BeerDTO =
         beerMapper
