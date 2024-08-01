@@ -29,8 +29,13 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @GetMapping(BASE_BEER_PATH)
-    fun listBeers(@RequestParam name: String?, @RequestParam style: BeerStyle?): List<BeerDTO> {
-        return beerService.listBeer(name, style)
+    fun listBeers(
+        @RequestParam name: String?,
+        @RequestParam style: BeerStyle?,
+        @RequestParam showInventory: Boolean?
+    ): List<BeerDTO> {
+        val showInv: Boolean = showInventory == true
+        return beerService.listBeer(name, style, showInv)
     }
 
     @GetMapping(BEER_PATH_WITH_ID)

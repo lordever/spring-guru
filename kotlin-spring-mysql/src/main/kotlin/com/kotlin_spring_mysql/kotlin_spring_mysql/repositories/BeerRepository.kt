@@ -7,7 +7,8 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface BeerRepository: JpaRepository<Beer, UUID> {
+interface BeerRepository : JpaRepository<Beer, UUID> {
     fun findAllByNameIsLikeIgnoreCase(name: String): List<Beer>
     fun findAllByStyle(style: BeerStyle): List<Beer>
+    fun findAllByNameIsLikeIgnoreCaseAndStyle(name: String, style: BeerStyle): List<Beer>
 }

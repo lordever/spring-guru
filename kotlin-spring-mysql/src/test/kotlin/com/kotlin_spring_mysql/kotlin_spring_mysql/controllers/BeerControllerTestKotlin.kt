@@ -44,7 +44,7 @@ class BeerControllerTestKotlin {
 
     @Test
     fun testGetAllBeersList() {
-        every { beerService.listBeer(null, null) } returns beerServiceImpl.listBeer(null, null)
+        every { beerService.listBeer(null, null, false) } returns beerServiceImpl.listBeer(null, null, false)
 
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
@@ -52,12 +52,12 @@ class BeerControllerTestKotlin {
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.length()", equalTo(beerServiceImpl.listBeer(null, null).size)))
+            .andExpect(jsonPath("$.length()", equalTo(beerServiceImpl.listBeer(null, null, false).size)))
     }
 
     @Test
     fun testGetBeerById() {
-        val testBeer = beerServiceImpl.listBeer(null, null).first()
+        val testBeer = beerServiceImpl.listBeer(null, null, false).first()
 
         val beerId = requireNotNull(testBeer.id) { "Beer ID cannot be null" }
         every { beerService.getBeerById(beerId) } returns testBeer
@@ -82,12 +82,12 @@ class BeerControllerTestKotlin {
 
     @Test
     fun testCreateNewBeer() {
-        val testBeer = beerServiceImpl.listBeer(null, null).first().apply {
+        val testBeer = beerServiceImpl.listBeer(null, null, false).first().apply {
             id = null
             version = null
         }
 
-        every { beerService.save(any()) } returns beerServiceImpl.listBeer(null, null).first()
+        every { beerService.save(any()) } returns beerServiceImpl.listBeer(null, null, false).first()
 
         mockMvc.perform(
             post(BeerController.BASE_BEER_PATH)
@@ -103,7 +103,7 @@ class BeerControllerTestKotlin {
     fun testCreateNewBeerNullBeerName() {
         val testBeer = BeerDTO()
 
-        every { beerService.save(any()) } returns beerServiceImpl.listBeer(null, null).first()
+        every { beerService.save(any()) } returns beerServiceImpl.listBeer(null, null, false).first()
 
         val mockMvcResult = mockMvc.perform(
             post(BeerController.BASE_BEER_PATH)
@@ -120,7 +120,7 @@ class BeerControllerTestKotlin {
 
     @Test
     fun testUpdateNewBeer() {
-        val testBeerDTO = beerServiceImpl.listBeer(null, null).first()
+        val testBeerDTO = beerServiceImpl.listBeer(null, null, false).first()
 
         every { beerService.updateById(any(), any()) } returns testBeerDTO
 
@@ -137,7 +137,7 @@ class BeerControllerTestKotlin {
 
     @Test
     fun testDeleteBeer() {
-        val testBeer = beerServiceImpl.listBeer(null, null).first()
+        val testBeer = beerServiceImpl.listBeer(null, null, false).first()
 
         val uuidSlot = slot<UUID>()
         every { beerService.deleteById(capture(uuidSlot)) } returns true
@@ -157,7 +157,7 @@ class BeerControllerTestKotlin {
 
     @Test
     fun testPatchBeer() {
-        val testBeer = beerServiceImpl.listBeer(null, null).first()
+        val testBeer = beerServiceImpl.listBeer(null, null, false).first()
         val beerMap: MutableMap<String, Any> = HashMap()
         beerMap["name"] = "New Name"
 

@@ -8,6 +8,7 @@ import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.core.IsNull
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -52,28 +53,8 @@ class BeerControllerIT {
     }
 
     @Test
-    fun testListBeersByName() {
-        mockMvc.perform(
-            get(BeerController.BASE_BEER_PATH)
-                .queryParam("name", "IPA")
-        )
-            .andExpect(status().isOk)
-            .andExpect(jsonPath("$.length()", equalTo(336)))
-    }
-
-    @Test
-    fun testListBeersByStyle() {
-        mockMvc.perform(
-            get(BeerController.BASE_BEER_PATH)
-                .queryParam("style", BeerStyle.ALE.toString())
-        )
-            .andExpect(status().isOk)
-            .andExpect(jsonPath("$.length()", equalTo(400)))
-    }
-
-    @Test
     fun testListBeers() {
-        val dtos: List<BeerDTO> = beerController.listBeers(null, null)
+        val dtos: List<BeerDTO> = beerController.listBeers(null, null, false)
 
         assertThat(dtos.size).isEqualTo(2413)
     }
@@ -84,7 +65,7 @@ class BeerControllerIT {
     fun testEmptyList() {
         beerRepository.deleteAll()
 
-        val dtos: List<BeerDTO> = beerController.listBeers(null, null)
+        val dtos: List<BeerDTO> = beerController.listBeers(null, null, false)
 
         assertThat(dtos.size).isEqualTo(0)
     }
@@ -224,5 +205,50 @@ class BeerControllerIT {
             .andReturn()
 
         println(result.response.contentAsString)
+    }
+
+    @Test
+    fun testListBeersByName() {
+        mockMvc.perform(
+            get(BeerController.BASE_BEER_PATH)
+                .queryParam("name", "IPA")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()", equalTo(336)))
+    }
+
+    @Test
+    fun testListBeersByStyle() {
+        mockMvc.perform(
+            get(BeerController.BASE_BEER_PATH)
+                .queryParam("style", BeerStyle.ALE.toString())
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()", equalTo(400)))
+    }
+
+    @Test
+    fun testListBeersByStyleAndNameAndShowInventory() {
+        mockMvc.perform(
+            get(BeerController.BASE_BEER_PATH)
+                .queryParam("name", "ALE")
+                .queryParam("style", BeerStyle.ALE.toString())
+                .queryParam("showInventory", "TRUE")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()", equalTo(251)))
+            .andExpect(jsonPath("$.[0].quantity").value(IsNull.nullValue()))
+    }
+
+    @Test
+    fun testListBeersByStyleAndName() {
+        mockMvc.perform(
+            get(BeerController.BASE_BEER_PATH)
+                .queryParam("name", "ALE")
+                .queryParam("style", BeerStyle.ALE.toString())
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()", equalTo(251)))
+            .andExpect(jsonPath("$.[0].quantity").value(IsNull.notNullValue()))
     }
 }

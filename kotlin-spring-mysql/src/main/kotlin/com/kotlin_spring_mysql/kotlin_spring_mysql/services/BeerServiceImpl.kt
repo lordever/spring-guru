@@ -61,7 +61,7 @@ class BeerServiceImpl : BeerService {
         return beerDTOMap[id]
     }
 
-    override fun listBeer(name: String?, style: BeerStyle?): List<BeerDTO> {
+    override fun listBeer(name: String?, style: BeerStyle?, showInventory: Boolean): List<BeerDTO> {
         return beerDTOMap.values.toList()
     }
 

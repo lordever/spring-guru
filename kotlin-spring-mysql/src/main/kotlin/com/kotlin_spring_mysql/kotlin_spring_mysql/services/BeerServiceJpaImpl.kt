@@ -9,27 +9,29 @@ import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 @Primary
 @Service
 class BeerServiceJpaImpl(
-    private val beerRepository: BeerRepository,
-    private val beerMapper: BeerMapper
+    private val beerRepository: BeerRepository, private val beerMapper: BeerMapper
 ) : BeerService {
-    override fun getBeerById(id: UUID): BeerDTO? =
-        beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
+    override fun getBeerById(id: UUID): BeerDTO? = beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
 
-    override fun listBeer(name: String?, style: BeerStyle?): List<BeerDTO> {
-        val beerList: List<Beer> =
-            if (StringUtils.hasText(name) && name != null) {
-                listBeersByName(name)
-            } else if (!StringUtils.hasText(name) && style != null) {
-                listBeersByStyle(style)
-            } else {
-                beerRepository.findAll()
-            }
+    override fun listBeer(name: String?, style: BeerStyle?, showInventory: Boolean): List<BeerDTO> {
+        val beerList: List<Beer> = if ((StringUtils.hasText(name) && name != null) && style == null) {
+            listBeersByName(name)
+        } else if (!StringUtils.hasText(name) && style != null) {
+            listBeersByStyle(style)
+        } else if ((name != null && StringUtils.hasText(name)) && style != null) {
+            listBeersByNameAndStyle(name, style)
+        } else {
+            beerRepository.findAll()
+        }
+
+        if (showInventory) {
+            beerList.forEach { beer -> beer.quantity = null }
+        }
 
         return beerList.map(beerMapper::toDto)
     }
@@ -42,13 +44,15 @@ class BeerServiceJpaImpl(
         return beerRepository.findAllByStyle(style)
     }
 
-    override fun save(beerDTO: BeerDTO): BeerDTO =
-        beerMapper
-            .toDto(
-                beerRepository.save(
-                    beerMapper.toBeer(beerDTO)
-                )
-            )
+    private fun listBeersByNameAndStyle(name: String, style: BeerStyle): List<Beer> {
+        return beerRepository.findAllByNameIsLikeIgnoreCaseAndStyle("%${name}%", style)
+    }
+
+    override fun save(beerDTO: BeerDTO): BeerDTO = beerMapper.toDto(
+        beerRepository.save(
+            beerMapper.toBeer(beerDTO)
+        )
+    )
 
     override fun updateById(id: UUID, newBeerDTO: BeerDTO): BeerDTO? {
         return beerRepository.findById(id).map { foundBeer ->
