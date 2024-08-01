@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Beer
 import com.kotlin_spring_mysql.kotlin_spring_mysql.mappers.BeerMapper
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
+import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.hamcrest.CoreMatchers.equalTo
@@ -61,8 +62,18 @@ class BeerControllerIT {
     }
 
     @Test
+    fun testListBeersByStyle() {
+        mockMvc.perform(
+            get(BeerController.BASE_BEER_PATH)
+                .queryParam("style", BeerStyle.ALE.toString())
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()", equalTo(400)))
+    }
+
+    @Test
     fun testListBeers() {
-        val dtos: List<BeerDTO> = beerController.listBeers(null)
+        val dtos: List<BeerDTO> = beerController.listBeers(null, null)
 
         assertThat(dtos.size).isEqualTo(2413)
     }
@@ -73,7 +84,7 @@ class BeerControllerIT {
     fun testEmptyList() {
         beerRepository.deleteAll()
 
-        val dtos: List<BeerDTO> = beerController.listBeers(null)
+        val dtos: List<BeerDTO> = beerController.listBeers(null, null)
 
         assertThat(dtos.size).isEqualTo(0)
     }

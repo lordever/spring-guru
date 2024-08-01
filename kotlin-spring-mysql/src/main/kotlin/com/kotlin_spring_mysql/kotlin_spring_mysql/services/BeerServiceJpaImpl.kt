@@ -3,6 +3,7 @@ package com.kotlin_spring_mysql.kotlin_spring_mysql.services
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Beer
 import com.kotlin_spring_mysql.kotlin_spring_mysql.mappers.BeerMapper
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
+import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
@@ -20,10 +21,12 @@ class BeerServiceJpaImpl(
     override fun getBeerById(id: UUID): BeerDTO? =
         beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
 
-    override fun listBeer(name: String?): List<BeerDTO> {
+    override fun listBeer(name: String?, style: BeerStyle?): List<BeerDTO> {
         val beerList: List<Beer> =
-            if (StringUtils.hasText(name)) {
-                listBeersByName(name!!)
+            if (StringUtils.hasText(name) && name != null) {
+                listBeersByName(name)
+            } else if (!StringUtils.hasText(name) && style != null) {
+                listBeersByStyle(style)
             } else {
                 beerRepository.findAll()
             }
@@ -33,6 +36,10 @@ class BeerServiceJpaImpl(
 
     private fun listBeersByName(name: String): List<Beer> {
         return beerRepository.findAllByNameIsLikeIgnoreCase("%${name}%")
+    }
+
+    private fun listBeersByStyle(style: BeerStyle): List<Beer> {
+        return beerRepository.findAllByStyle(style)
     }
 
     override fun save(beerDTO: BeerDTO): BeerDTO =

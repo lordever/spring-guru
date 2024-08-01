@@ -28,6 +28,13 @@ class BeerRepositoryTestKotlin {
     }
 
     @Test
+    fun testGetBeerListByStyle() {
+        val list: List<Beer> = beerRepository.findAllByStyle(BeerStyle.ALE)
+
+        assertThat(list).hasSize(400)
+    }
+
+    @Test
     fun testSaveBer() {
         val beer = Beer(
             name = "Test Beer",

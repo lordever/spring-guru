@@ -1,6 +1,7 @@
 package com.kotlin_spring_mysql.kotlin_spring_mysql.controllers
 
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
+import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import com.kotlin_spring_mysql.kotlin_spring_mysql.services.BeerService
 import mu.KotlinLogging
 import org.springframework.http.HttpHeaders
@@ -28,8 +29,8 @@ class BeerController(private val beerService: BeerService) {
     }
 
     @GetMapping(BASE_BEER_PATH)
-    fun listBeers(@RequestParam name: String?): List<BeerDTO> {
-        return beerService.listBeer(name)
+    fun listBeers(@RequestParam name: String?, @RequestParam style: BeerStyle?): List<BeerDTO> {
+        return beerService.listBeer(name, style)
     }
 
     @GetMapping(BEER_PATH_WITH_ID)
@@ -60,7 +61,7 @@ class BeerController(private val beerService: BeerService) {
 
     @PatchMapping(BEER_PATH_WITH_ID)
     fun patchById(@PathVariable id: UUID, @RequestBody beerDTO: BeerDTO): ResponseEntity<Void> {
-        beerService.patchById(id, beerDTO)?: throw NotFoundException()
+        beerService.patchById(id, beerDTO) ?: throw NotFoundException()
 
         return ResponseEntity(HttpStatus.NO_CONTENT)
     }
