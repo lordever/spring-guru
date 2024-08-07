@@ -6,6 +6,7 @@ import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
 import org.springframework.context.annotation.Primary
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import java.util.*
@@ -16,9 +17,20 @@ import java.util.*
 class BeerServiceJpaImpl(
     private val beerRepository: BeerRepository, private val beerMapper: BeerMapper
 ) : BeerService {
+
+    companion object {
+        const val DEFAULT_PAGE = 0
+        const val DEFAULT_PAGE_SIZE = 25
+    }
+
     override fun getBeerById(id: UUID): BeerDTO? = beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
 
-    override fun listBeer(name: String?, style: BeerStyle?, showInventory: Boolean, pageNumber: Int?, pageSize: Int?): List<BeerDTO> {
+    override fun listBeer(
+        name: String?, style: BeerStyle?, showInventory: Boolean, pageNumber: Int?, pageSize: Int?
+    ): List<BeerDTO> {
+
+        val pageRequest = buildPageRequest(pageNumber, pageSize)
+
         val beerList: List<Beer> = if ((StringUtils.hasText(name) && name != null) && style == null) {
             listBeersByName(name)
         } else if (!StringUtils.hasText(name) && style != null) {
@@ -34,6 +46,29 @@ class BeerServiceJpaImpl(
         }
 
         return beerList.map(beerMapper::toDto)
+    }
+
+    private fun buildPageRequest(pageNumber: Int?, pageSize: Int?): PageRequest {
+        var queryPageNumber: Int = DEFAULT_PAGE
+
+        if (pageNumber != null) {
+            if (pageNumber > 0) {
+                queryPageNumber = pageNumber - 1
+            }
+        }
+
+        val queryPageSize: Int
+        if (pageSize == null) {
+            queryPageSize = DEFAULT_PAGE_SIZE
+        } else {
+            if (pageSize > 1000) {
+                queryPageSize = 1000
+            } else {
+                queryPageSize = pageSize
+            }
+        }
+
+        return PageRequest.of(queryPageSize, queryPageNumber)
     }
 
     private fun listBeersByName(name: String): List<Beer> {
