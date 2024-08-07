@@ -4,6 +4,7 @@ import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import com.kotlin_spring_mysql.kotlin_spring_mysql.services.BeerService
 import mu.KotlinLogging
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -35,9 +36,9 @@ class BeerController(private val beerService: BeerService) {
         @RequestParam showInventory: Boolean?,
         @RequestParam pageNumber: Int?,
         @RequestParam pageSize: Int?
-    ): List<BeerDTO> {
+    ): Page<BeerDTO> {
         val showInv: Boolean = showInventory == true
-        return beerService.listBeer(name, style, showInv, 1, 25)
+        return beerService.listBeer(name, style, showInv, pageNumber, pageSize)
     }
 
     @GetMapping(BEER_PATH_WITH_ID)

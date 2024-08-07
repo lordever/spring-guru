@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.springframework.context.annotation.Import
+import org.springframework.data.domain.Page
 import java.math.BigDecimal
 
 @DataJpaTest
@@ -22,14 +23,14 @@ class BeerRepositoryTestKotlin {
 
     @Test
     fun testGetBeerListByName() {
-        val list: List<Beer> = beerRepository.findAllByNameIsLikeIgnoreCase("%IPA%")
+        val list: Page<Beer> = beerRepository.findAllByNameIsLikeIgnoreCase("%IPA%", null)
 
         assertThat(list).hasSize(336)
     }
 
     @Test
     fun testGetBeerListByStyle() {
-        val list: List<Beer> = beerRepository.findAllByStyle(BeerStyle.ALE)
+        val list: Page<Beer> = beerRepository.findAllByStyle(BeerStyle.ALE, null)
 
         assertThat(list).hasSize(400)
     }

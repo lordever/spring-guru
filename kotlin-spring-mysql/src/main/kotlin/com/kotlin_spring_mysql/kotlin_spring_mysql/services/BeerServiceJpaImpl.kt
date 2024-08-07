@@ -6,7 +6,9 @@ import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import com.kotlin_spring_mysql.kotlin_spring_mysql.repositories.BeerRepository
 import org.springframework.context.annotation.Primary
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.util.StringUtils
 import java.util.*
@@ -27,25 +29,26 @@ class BeerServiceJpaImpl(
 
     override fun listBeer(
         name: String?, style: BeerStyle?, showInventory: Boolean, pageNumber: Int?, pageSize: Int?
-    ): List<BeerDTO> {
+    ): Page<BeerDTO> {
 
         val pageRequest = buildPageRequest(pageNumber, pageSize)
 
-        val beerList: List<Beer> = if ((StringUtils.hasText(name) && name != null) && style == null) {
-            listBeersByName(name)
-        } else if (!StringUtils.hasText(name) && style != null) {
-            listBeersByStyle(style)
-        } else if ((name != null && StringUtils.hasText(name)) && style != null) {
-            listBeersByNameAndStyle(name, style)
-        } else {
-            beerRepository.findAll()
-        }
+        val beerPage: Page<Beer> =
+            if ((StringUtils.hasText(name) && name != null) && style == null) {
+                listBeersByName(name, pageRequest)
+            } else if (!StringUtils.hasText(name) && style != null) {
+                listBeersByStyle(style, pageRequest)
+            } else if ((name != null && StringUtils.hasText(name)) && style != null) {
+                listBeersByNameAndStyle(name, style, pageRequest)
+            } else {
+                beerRepository.findAll(pageRequest)
+            }
 
         if (showInventory) {
-            beerList.forEach { beer -> beer.quantity = null }
+            beerPage.forEach { beer -> beer.quantity = null }
         }
 
-        return beerList.map(beerMapper::toDto)
+        return beerPage.map(beerMapper::toDto)
     }
 
     private fun buildPageRequest(pageNumber: Int?, pageSize: Int?): PageRequest {
@@ -68,19 +71,19 @@ class BeerServiceJpaImpl(
             }
         }
 
-        return PageRequest.of(queryPageSize, queryPageNumber)
+        return PageRequest.of(queryPageNumber, queryPageSize)
     }
 
-    private fun listBeersByName(name: String): List<Beer> {
-        return beerRepository.findAllByNameIsLikeIgnoreCase("%${name}%")
+    private fun listBeersByName(name: String, pageable: Pageable?): Page<Beer> {
+        return beerRepository.findAllByNameIsLikeIgnoreCase("%${name}%", pageable)
     }
 
-    private fun listBeersByStyle(style: BeerStyle): List<Beer> {
-        return beerRepository.findAllByStyle(style)
+    private fun listBeersByStyle(style: BeerStyle, pageable: Pageable?): Page<Beer> {
+        return beerRepository.findAllByStyle(style, pageable)
     }
 
-    private fun listBeersByNameAndStyle(name: String, style: BeerStyle): List<Beer> {
-        return beerRepository.findAllByNameIsLikeIgnoreCaseAndStyle("%${name}%", style)
+    private fun listBeersByNameAndStyle(name: String, style: BeerStyle, pageable: Pageable?): Page<Beer> {
+        return beerRepository.findAllByNameIsLikeIgnoreCaseAndStyle("%${name}%", style, pageable)
     }
 
     override fun save(beerDTO: BeerDTO): BeerDTO = beerMapper.toDto(

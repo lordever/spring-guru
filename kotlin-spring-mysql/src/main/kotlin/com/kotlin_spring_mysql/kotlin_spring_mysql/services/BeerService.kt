@@ -2,6 +2,7 @@ package com.kotlin_spring_mysql.kotlin_spring_mysql.services
 
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
+import org.springframework.data.domain.Page
 import java.util.UUID
 
 interface BeerService {
@@ -12,7 +13,7 @@ interface BeerService {
         showInventory: Boolean = false,
         pageNumber: Int?,
         pageSize: Int?
-    ): List<BeerDTO>
+    ): Page<BeerDTO>
     fun save(beerDTO: BeerDTO): BeerDTO
     fun updateById(id: UUID, newBeerDTO: BeerDTO): BeerDTO?
     fun patchById(id: UUID, newBeerDTO: BeerDTO): BeerDTO?

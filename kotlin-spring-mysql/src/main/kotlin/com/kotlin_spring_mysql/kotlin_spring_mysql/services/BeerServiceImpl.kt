@@ -4,6 +4,8 @@ import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerDTO
 import com.kotlin_spring_mysql.kotlin_spring_mysql.models.BeerStyle
 import org.springframework.stereotype.Service
 import mu.KotlinLogging
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.UUID
@@ -67,8 +69,8 @@ class BeerServiceImpl : BeerService {
         showInventory: Boolean,
         pageNumber: Int?,
         pageSize: Int?
-    ): List<BeerDTO> {
-        return beerDTOMap.values.toList()
+    ): Page<BeerDTO> {
+        return PageImpl(beerDTOMap.values.toList())
     }
 
     override fun save(beerDTO: BeerDTO): BeerDTO {
