@@ -32,10 +32,12 @@ class BeerController(private val beerService: BeerService) {
     fun listBeers(
         @RequestParam name: String?,
         @RequestParam style: BeerStyle?,
-        @RequestParam showInventory: Boolean?
+        @RequestParam showInventory: Boolean?,
+        @RequestParam pageNumber: Int?,
+        @RequestParam pageSize: Int?
     ): List<BeerDTO> {
         val showInv: Boolean = showInventory == true
-        return beerService.listBeer(name, style, showInv)
+        return beerService.listBeer(name, style, showInv, 1, 25)
     }
 
     @GetMapping(BEER_PATH_WITH_ID)

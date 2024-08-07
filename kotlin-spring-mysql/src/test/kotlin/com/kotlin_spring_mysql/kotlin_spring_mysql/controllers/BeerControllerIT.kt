@@ -54,7 +54,7 @@ class BeerControllerIT {
 
     @Test
     fun testListBeers() {
-        val dtos: List<BeerDTO> = beerController.listBeers(null, null, false)
+        val dtos: List<BeerDTO> = beerController.listBeers(null, null, false, 1, 25)
 
         assertThat(dtos.size).isEqualTo(2413)
     }
@@ -65,7 +65,7 @@ class BeerControllerIT {
     fun testEmptyList() {
         beerRepository.deleteAll()
 
-        val dtos: List<BeerDTO> = beerController.listBeers(null, null, false)
+        val dtos: List<BeerDTO> = beerController.listBeers(null, null, false, 1, 25)
 
         assertThat(dtos.size).isEqualTo(0)
     }
@@ -249,6 +249,21 @@ class BeerControllerIT {
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.length()", equalTo(251)))
+            .andExpect(jsonPath("$.[0].quantity").value(IsNull.notNullValue()))
+    }
+
+    @Test
+    fun testListBeersByStyleAndNameShowInventoryTruePage2() {
+        mockMvc.perform(
+            get(BeerController.BASE_BEER_PATH)
+                .queryParam("name", "ALE")
+                .queryParam("style", BeerStyle.ALE.toString())
+                .queryParam("showInventory", "TRUE")
+                .queryParam("pageNumber", "2")
+                .queryParam("pageSize", "50")
+        )
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.length()", equalTo(50)))
             .andExpect(jsonPath("$.[0].quantity").value(IsNull.notNullValue()))
     }
 }

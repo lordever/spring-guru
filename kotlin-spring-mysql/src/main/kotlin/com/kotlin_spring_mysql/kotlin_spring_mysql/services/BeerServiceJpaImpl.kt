@@ -18,7 +18,7 @@ class BeerServiceJpaImpl(
 ) : BeerService {
     override fun getBeerById(id: UUID): BeerDTO? = beerRepository.findById(id).map(beerMapper::toDto).orElse(null)
 
-    override fun listBeer(name: String?, style: BeerStyle?, showInventory: Boolean): List<BeerDTO> {
+    override fun listBeer(name: String?, style: BeerStyle?, showInventory: Boolean, pageNumber: Int?, pageSize: Int?): List<BeerDTO> {
         val beerList: List<Beer> = if ((StringUtils.hasText(name) && name != null) && style == null) {
             listBeersByName(name)
         } else if (!StringUtils.hasText(name) && style != null) {
