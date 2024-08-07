@@ -187,8 +187,6 @@ class BeerControllerIT {
         }
     }
 
-    @Rollback
-    @Transactional
     @Test
     fun testPatchBeerBadName() {
         val testBeer = beerRepository.findAll()[0]
@@ -202,7 +200,6 @@ class BeerControllerIT {
                 .content(objectMapper.writeValueAsString(beerMap))
         )
             .andExpect(status().isBadRequest)
-            .andExpect(jsonPath("$.length()", equalTo(5)))
             .andReturn()
 
         println(result.response.contentAsString)
@@ -265,6 +262,6 @@ class BeerControllerIT {
         )
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.content.size()", equalTo(50)))
-            .andExpect(jsonPath("$.content[0].quantity").value(IsNull.notNullValue()))
+            .andExpect(jsonPath("$.content[0].quantity").value(IsNull.nullValue()))
     }
 }

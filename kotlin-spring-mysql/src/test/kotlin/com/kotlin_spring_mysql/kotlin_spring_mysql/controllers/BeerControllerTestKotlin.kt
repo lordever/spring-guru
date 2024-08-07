@@ -44,12 +44,12 @@ class BeerControllerTestKotlin {
 
     @Test
     fun testGetAllBeersList() {
-        every { beerService.listBeer(null, null, false, 1, 25) } returns beerServiceImpl.listBeer(
+        every { beerService.listBeer(null, null, false, null, null) } returns beerServiceImpl.listBeer(
             null,
             null,
             false,
-            1,
-            25
+            null,
+            null
         )
 
         mockMvc.perform(
@@ -58,7 +58,7 @@ class BeerControllerTestKotlin {
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-            .andExpect(jsonPath("$.length()", equalTo(beerServiceImpl.listBeer(null, null, false, 1, 25).size)))
+            .andExpect(jsonPath("$.content.length()", equalTo(3)))
     }
 
     @Test
