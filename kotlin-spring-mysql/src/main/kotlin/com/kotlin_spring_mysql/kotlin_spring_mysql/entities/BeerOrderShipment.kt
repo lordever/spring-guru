@@ -5,13 +5,12 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.type.SqlTypes
-import java.math.BigInteger
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-data class BeerOrder(
-    var customerRef: String? = null,
+data class BeerOrderShipment(
+    var trackingNumber: String? = null,
 
     @field:Id
     @field:GeneratedValue(generator = "UUID")
@@ -27,23 +26,8 @@ data class BeerOrder(
     var createdDate: LocalDateTime? = null,
 
     @field:UpdateTimestamp
-    var lastModifiedDate: LocalDateTime? = null,
+    var lastModifiedDate: LocalDateTime? = null
 ) {
-    @field:ManyToOne
-    private var customer: Customer? = null
-
-    @field:OneToMany(mappedBy = "beerOrder")
-    var beerOrderLines: Set<BeerOrderLine>? = null
-
     @OneToOne
-    var beerOrderShipment: BeerOrderShipment? = null
-
-    init {
-        customer?.beerOrders?.add(this)
-    }
-
-    fun setCustomer(customer: Customer) {
-        this.customer = customer
-        customer.beerOrders?.add(this)
-    }
+    val beerOrder: BeerOrder? = null
 }
