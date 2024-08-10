@@ -1,18 +1,17 @@
 package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities
 
 import jakarta.persistence.*
-import lombok.Builder
+import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.type.SqlTypes
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
-@Builder
-data class Customer(
-    var name: String? = null,
-    var createdDate: LocalDateTime = LocalDateTime.now(),
-    var lastModifiedDate: LocalDateTime = LocalDateTime.now(),
+data class BeerOrder(
+    var customerRef: String? = null,
+    var customerId: UUID? = null,
 
     @field:Id
     @field:GeneratedValue(generator = "UUID")
@@ -23,6 +22,13 @@ data class Customer(
     @Version
     var version: Int? = null,
 
-    @OneToMany(mappedBy = "customer")
-    var beerOrders: Set<BeerOrder>
+    @field:CreationTimestamp
+    @field:Column(updatable = false)
+    var createDate: LocalDateTime? = null,
+
+    @field:UpdateTimestamp
+    var lastModifiedDate: LocalDateTime? = null,
+
+    @field:ManyToOne(fetch = FetchType.LAZY)
+    var customer: Customer? = null,
 )
