@@ -42,4 +42,7 @@ data class Beer(
     @field:NotNull
     @field:Size(max = 255)
     var upc: String? = null,
+
+    @field:OneToMany(mappedBy = "beer")
+    var beerOrderLines: Set<BeerOrderLine>? = null,
 )

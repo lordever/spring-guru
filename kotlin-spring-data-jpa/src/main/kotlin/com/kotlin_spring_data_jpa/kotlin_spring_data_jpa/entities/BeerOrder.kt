@@ -31,4 +31,7 @@ data class BeerOrder(
 
     @field:ManyToOne(fetch = FetchType.LAZY)
     var customer: Customer? = null,
+
+    @field:OneToMany(mappedBy = "beerOrder")
+    var beerOrderLines: Set<BeerOrderLine>
 )

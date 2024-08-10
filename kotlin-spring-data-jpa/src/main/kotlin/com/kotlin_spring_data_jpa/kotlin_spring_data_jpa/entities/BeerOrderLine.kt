@@ -10,7 +10,6 @@ import java.util.*
 
 @Entity
 data class BeerOrderLine(
-    var beerId: UUID? = null,
     var beerOrderId: UUID? = null,
     var orderQuantity: Int? = null,
     var quantityAllocated: Int? = null,
@@ -34,5 +33,11 @@ data class BeerOrderLine(
     var createDate: LocalDateTime? = null,
 
     @field:UpdateTimestamp
-    var lastModifiedDate: LocalDateTime? = null
+    var lastModifiedDate: LocalDateTime? = null,
+
+    @field:ManyToOne
+    var beerOrder: BeerOrder? = null,
+
+    @field:ManyToOne
+    var beer: Beer? = null,
 )
