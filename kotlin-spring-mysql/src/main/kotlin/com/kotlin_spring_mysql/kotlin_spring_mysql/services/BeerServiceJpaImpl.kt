@@ -76,7 +76,6 @@ class BeerServiceJpaImpl(
 
         return PageRequest.of(queryPageNumber, queryPageSize, sort)
     }
-
     private fun listBeersByName(name: String, pageable: Pageable?): Page<Beer> {
         return beerRepository.findAllByNameIsLikeIgnoreCase("%${name}%", pageable)
     }
