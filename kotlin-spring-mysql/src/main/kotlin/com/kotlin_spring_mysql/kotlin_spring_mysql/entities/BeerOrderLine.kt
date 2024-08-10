@@ -1,4 +1,4 @@
-package com.kotlin_spring_data_jpa.kotlin_spring_data_jpa.entities
+package com.kotlin_spring_mysql.kotlin_spring_mysql.entities
 
 import jakarta.persistence.*
 import org.hibernate.annotations.CreationTimestamp
@@ -10,10 +10,8 @@ import java.util.*
 
 @Entity
 data class BeerOrderLine(
-    var beerOrderId: UUID? = null,
     var orderQuantity: Int? = null,
     var quantityAllocated: Int? = null,
-
 
     @field:Id
     @field:GeneratedValue(generator = "UUID")
@@ -26,11 +24,11 @@ data class BeerOrderLine(
     )
     var id: UUID? = null,
 
-    @Version var version: Int? = null,
+    @Version var version: Long? = null,
 
     @field:CreationTimestamp
     @field:Column(updatable = false)
-    var createDate: LocalDateTime? = null,
+    var createdDate: LocalDateTime? = null,
 
     @field:UpdateTimestamp
     var lastModifiedDate: LocalDateTime? = null,

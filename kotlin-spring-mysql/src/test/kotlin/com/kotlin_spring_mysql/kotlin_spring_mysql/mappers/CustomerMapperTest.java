@@ -20,8 +20,6 @@ public class CustomerMapperTest {
         customer.setId(UUID.randomUUID());
         customer.setName("Test Customer");
         customer.setVersion(1);
-        customer.setCreatedDate(LocalDateTime.now());
-        customer.setLastModifiedDate(LocalDateTime.now());
 
         CustomerDTO customerDTO = mapper.toDto(customer);
 
@@ -29,8 +27,6 @@ public class CustomerMapperTest {
         assertThat(customerDTO.getId()).isEqualTo(customer.getId());
         assertThat(customerDTO.getName()).isEqualTo(customer.getName());
         assertThat(customerDTO.getVersion()).isEqualTo(customer.getVersion());
-        assertThat(customerDTO.getCreatedDate()).isEqualTo(customer.getCreatedDate());
-        assertThat(customerDTO.getLastModifiedDate()).isEqualTo(customer.getLastModifiedDate());
     }
 
     @Test
@@ -48,7 +44,5 @@ public class CustomerMapperTest {
         assertThat(customerDTO.getId()).isEqualTo(customer.getId());
         assertThat(customerDTO.getName()).isEqualTo(customer.getName());
         assertThat(customerDTO.getVersion()).isEqualTo(customer.getVersion());
-        assertThat(customerDTO.getCreatedDate()).isEqualTo(customer.getCreatedDate());
-        assertThat(customerDTO.getLastModifiedDate()).isEqualTo(customer.getLastModifiedDate());
     }
 }

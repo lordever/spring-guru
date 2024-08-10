@@ -17,11 +17,10 @@ import java.util.*
 data class Beer(
     var quantity: Int? = null,
 
-
     @field:Id
     @field:GeneratedValue(generator = "UUID")
-    @field:Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     @field:JdbcTypeCode(SqlTypes.CHAR)
+    @field:Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
     var id: UUID? = null,
 
     @field:Version
@@ -45,8 +44,12 @@ data class Beer(
     var upc: String? = null,
 
     @field:CreationTimestamp
+    @field:Column(updatable = false)
     var createDate: LocalDateTime? = null,
 
     @field:UpdateTimestamp
     var updateDate: LocalDateTime? = null,
+
+    @field:OneToMany(mappedBy = "beer")
+    var beerOrderLines: Set<BeerOrderLine>? = null,
 )

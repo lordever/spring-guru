@@ -27,7 +27,7 @@ create table customer
     primary key (id)
 ) engine = InnoDB;
 
-CREATE TABLE 'beer_order'
+CREATE TABLE beer_order
 (
     id                 varchar(36) NOT NULL,
     created_date       datetime(6)  DEFAULT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE 'beer_order'
     CONSTRAINT FOREIGN KEY (customer_id) REFERENCES customer (id)
 ) ENGINE = InnoDB;
 
-CREATE TABLE 'beer_order_line'
+CREATE TABLE beer_order_line
 (
     id                 varchar(36) NOT NULL,
     beer_id            varchar(36) DEFAULT NULL,

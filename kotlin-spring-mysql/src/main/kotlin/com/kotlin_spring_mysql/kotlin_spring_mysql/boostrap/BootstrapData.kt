@@ -114,32 +114,28 @@ class BootstrapData(
                 id = UUID.randomUUID(),
                 name = "John Doe",
                 version = 1,
-                createdDate = LocalDateTime.now(),
-                lastModifiedDate = LocalDateTime.now()
+                beerOrders = HashSet()
             )
 
             val customer2 = Customer(
                 id = UUID.randomUUID(),
                 name = "Jane Smith",
                 version = 1,
-                createdDate = LocalDateTime.now(),
-                lastModifiedDate = LocalDateTime.now()
+                beerOrders = HashSet()
             )
 
             val customer3 = Customer(
                 id = UUID.randomUUID(),
                 name = "Alice Johnson",
                 version = 1,
-                createdDate = LocalDateTime.now(),
-                lastModifiedDate = LocalDateTime.now()
+                beerOrders = HashSet()
             )
 
             val customer4 = Customer(
                 id = UUID.randomUUID(),
                 name = "Bob Brown",
                 version = 1,
-                createdDate = LocalDateTime.now(),
-                lastModifiedDate = LocalDateTime.now()
+                beerOrders = HashSet()
             )
 
             customerRepository.save(customer1)
