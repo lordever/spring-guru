@@ -2,6 +2,7 @@ package com.kotlin_spring_mysql.kotlin_spring_mysql.repositories
 
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Beer
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.BeerOrder
+import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.BeerOrderShipment
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Customer
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -36,7 +37,12 @@ class BeerOrderRepositoryTestKotlin {
             customerRef = "Test Order"
         )
 
-        beerOrder.setCustomer(testCustomer)
+        beerOrder.assignCustomer(testCustomer)
+        beerOrder.assignBeerOrderShipment(
+            BeerOrderShipment(
+                trackingNumber = "12345r"
+            )
+        )
 
         val savedBeerOrder = beerOrderRepository.save(beerOrder)
 

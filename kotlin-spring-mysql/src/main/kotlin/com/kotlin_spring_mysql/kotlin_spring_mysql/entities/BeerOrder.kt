@@ -5,45 +5,53 @@ import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.type.SqlTypes
-import java.math.BigInteger
+import java.sql.Timestamp
 import java.time.LocalDateTime
 import java.util.*
 
 @Entity
 data class BeerOrder(
-    var customerRef: String? = null,
-
-    @field:Id
-    @field:GeneratedValue(generator = "UUID")
-    @field:JdbcTypeCode(SqlTypes.CHAR)
-    @field:Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     var id: UUID? = null,
 
     @Version
     var version: Long? = null,
 
-    @field:CreationTimestamp
-    @field:Column(updatable = false)
-    var createdDate: LocalDateTime? = null,
+    @CreationTimestamp
+    @Column(updatable = false)
+    var createdDate: Timestamp? = null,
 
-    @field:UpdateTimestamp
-    var lastModifiedDate: LocalDateTime? = null,
-) {
-    @field:ManyToOne
-    private var customer: Customer? = null
+    @UpdateTimestamp
+    var lastModifiedDate: Timestamp? = null,
 
-    @field:OneToMany(mappedBy = "beerOrder")
-    var beerOrderLines: Set<BeerOrderLine>? = null
+    var customerRef: String? = null,
 
-    @OneToOne
+    @ManyToOne
+    var customer: Customer? = null,
+
+    @OneToMany(mappedBy = "beerOrder")
+    var beerOrderLines: Set<BeerOrderLine>? = null,
+
+    @OneToOne(cascade = [CascadeType.PERSIST])
     var beerOrderShipment: BeerOrderShipment? = null
-
+) {
     init {
         customer?.beerOrders?.add(this)
+        beerOrderShipment?.beerOrder = this
     }
 
-    fun setCustomer(customer: Customer) {
+    fun isNew(): Boolean = this.id == null
+
+    fun assignCustomer(customer: Customer) {
         this.customer = customer
         customer.beerOrders?.add(this)
+    }
+
+    fun assignBeerOrderShipment(beerOrderShipment: BeerOrderShipment) {
+        this.beerOrderShipment = beerOrderShipment
+        beerOrderShipment.beerOrder = this
     }
 }

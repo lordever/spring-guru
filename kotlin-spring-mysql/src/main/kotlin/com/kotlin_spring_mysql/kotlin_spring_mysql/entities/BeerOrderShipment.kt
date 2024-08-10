@@ -29,5 +29,5 @@ data class BeerOrderShipment(
     var lastModifiedDate: LocalDateTime? = null
 ) {
     @OneToOne
-    val beerOrder: BeerOrder? = null
+    var beerOrder: BeerOrder? = null
 }
