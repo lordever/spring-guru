@@ -1,11 +1,13 @@
 package com.kotlin_spring_mysql.kotlin_spring_mysql.repositories
 
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Beer
+import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.BeerOrder
 import com.kotlin_spring_mysql.kotlin_spring_mysql.entities.Customer
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.transaction.annotation.Transactional
 
 @SpringBootTest
 class BeerOrderRepositoryTestKotlin {
@@ -27,12 +29,16 @@ class BeerOrderRepositoryTestKotlin {
         testBeer = beerRepository.findAll()[0]
     }
 
+    @Transactional
     @Test
     fun testBeerOrders() {
-        println(beerOrderRepository.count())
-        println(customerRepository.count())
-        println(beerRepository.count())
-        println(testCustomer.name)
-        println(testBeer.name)
+        val beerOrder = BeerOrder(
+            customerRef = "Test Order",
+            customer = testCustomer
+        )
+
+        val savedBeerOrder = beerOrderRepository.save(beerOrder)
+
+        println(savedBeerOrder.customerRef)
     }
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.type.SqlTypes
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.HashSet
 
 @Entity
 @Builder
@@ -31,5 +32,9 @@ data class Customer(
     var updateDate: LocalDateTime? = null,
 
     @OneToMany(mappedBy = "customer")
-    var beerOrders: Set<BeerOrder>? = null
-)
+    var beerOrders: MutableSet<BeerOrder>? = mutableSetOf()
+) {
+    override fun toString(): String {
+        return "Customer(updateDate=$updateDate, createDate=$createDate, version=$version, id=$id, name=$name)"
+    }
+}
