@@ -33,9 +33,10 @@ class BeerOrderRepositoryTestKotlin {
     @Test
     fun testBeerOrders() {
         val beerOrder = BeerOrder(
-            customerRef = "Test Order",
-            customer = testCustomer
+            customerRef = "Test Order"
         )
+
+        beerOrder.setCustomer(testCustomer)
 
         val savedBeerOrder = beerOrderRepository.save(beerOrder)
 

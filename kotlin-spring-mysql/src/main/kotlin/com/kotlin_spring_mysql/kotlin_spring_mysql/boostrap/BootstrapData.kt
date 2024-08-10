@@ -113,29 +113,25 @@ class BootstrapData(
             val customer1 = Customer(
                 id = UUID.randomUUID(),
                 name = "John Doe",
-                version = 1,
-                beerOrders = HashSet()
+                version = 1
             )
 
             val customer2 = Customer(
                 id = UUID.randomUUID(),
                 name = "Jane Smith",
-                version = 1,
-                beerOrders = HashSet()
+                version = 1
             )
 
             val customer3 = Customer(
                 id = UUID.randomUUID(),
                 name = "Alice Johnson",
-                version = 1,
-                beerOrders = HashSet()
+                version = 1
             )
 
             val customer4 = Customer(
                 id = UUID.randomUUID(),
                 name = "Bob Brown",
-                version = 1,
-                beerOrders = HashSet()
+                version = 1
             )
 
             customerRepository.save(customer1)

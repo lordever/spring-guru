@@ -28,13 +28,13 @@ data class BeerOrder(
 
     @field:UpdateTimestamp
     var lastModifiedDate: LocalDateTime? = null,
-
+) {
     @field:ManyToOne
-    private var customer: Customer? = null,
+    private var customer: Customer? = null
 
     @field:OneToMany(mappedBy = "beerOrder")
     var beerOrderLines: Set<BeerOrderLine>? = null
-) {
+
     init {
         customer?.beerOrders?.add(this)
     }
@@ -42,9 +42,5 @@ data class BeerOrder(
     fun setCustomer(customer: Customer) {
         this.customer = customer
         customer.beerOrders?.add(this)
-    }
-
-    override fun toString(): String {
-        return "BeerOrder(customerRef=$customerRef, id=$id, version=$version, createdDate=$createdDate, lastModifiedDate=$lastModifiedDate, customer=$customer)"
     }
 }

@@ -26,7 +26,8 @@ data class Category(
     var createdDate: LocalDateTime? = null,
 
     @field:UpdateTimestamp
-    var lastModifiedDate: LocalDateTime? = null,
+    var lastModifiedDate: LocalDateTime? = null
+) {
 
     @field:ManyToMany
     @field:JoinTable(
@@ -34,5 +35,5 @@ data class Category(
         joinColumns = [JoinColumn(name = "category_id")],
         inverseJoinColumns = [JoinColumn(name = "beer_id")]
     )
-    val beers: Set<Beer> = setOf(),
-)
+    val beers: MutableSet<Beer> = mutableSetOf()
+}

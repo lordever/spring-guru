@@ -30,11 +30,7 @@ data class Customer(
 
     @field:UpdateTimestamp
     var lastModifiedDate: LocalDateTime? = null,
-
+) {
     @OneToMany(mappedBy = "customer")
     var beerOrders: MutableSet<BeerOrder>? = mutableSetOf()
-) {
-    override fun toString(): String {
-        return "Customer(updateDate=$lastModifiedDate, createDate=$createdDate, version=$version, id=$id, name=$name)"
-    }
 }
