@@ -1,19 +1,16 @@
 package com.kotlin_spring_mysql.kotlin_spring_mysql.entities
 
 import jakarta.persistence.*
-import lombok.Builder
 import org.hibernate.annotations.CreationTimestamp
 import org.hibernate.annotations.JdbcTypeCode
 import org.hibernate.annotations.UpdateTimestamp
 import org.hibernate.type.SqlTypes
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.HashSet
 
 @Entity
-@Builder
-data class Customer(
-    var name: String? = null,
+data class Category(
+    var description: String? = null,
 
     @field:Id
     @field:GeneratedValue(generator = "UUID")
@@ -22,7 +19,7 @@ data class Customer(
     var id: UUID? = null,
 
     @Version
-    var version: Int? = null,
+    var version: Long? = null,
 
     @field:CreationTimestamp
     @field:Column(updatable = false)
@@ -31,10 +28,11 @@ data class Customer(
     @field:UpdateTimestamp
     var lastModifiedDate: LocalDateTime? = null,
 
-    @OneToMany(mappedBy = "customer")
-    var beerOrders: MutableSet<BeerOrder>? = mutableSetOf()
-) {
-    override fun toString(): String {
-        return "Customer(updateDate=$lastModifiedDate, createDate=$createdDate, version=$version, id=$id, name=$name)"
-    }
-}
+    @field:ManyToMany
+    @field:JoinTable(
+        name = "beer_category",
+        joinColumns = [JoinColumn(name = "category_id")],
+        inverseJoinColumns = [JoinColumn(name = "beer_id")]
+    )
+    val beers: Set<Beer> = setOf(),
+)

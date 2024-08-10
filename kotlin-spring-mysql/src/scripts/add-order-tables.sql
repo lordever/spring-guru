@@ -20,7 +20,7 @@ create table beer
 create table customer
 (
     version            integer,
-    created_date       datetime(6),
+    create_date       datetime(6),
     last_modified_date datetime(6),
     id                 varchar(36) not null,
     name               varchar(255),
@@ -43,7 +43,7 @@ CREATE TABLE beer_order_line
 (
     id                 varchar(36) NOT NULL,
     beer_id            varchar(36) DEFAULT NULL,
-    create_date        datetime(6) DEFAULT NULL,
+    created_date        datetime(6) DEFAULT NULL,
     last_modified_date datetime(6) DEFAULT NULL,
     order_quantity     int         DEFAULT NULL,
     quantity_allocated int         DEFAULT NULL,

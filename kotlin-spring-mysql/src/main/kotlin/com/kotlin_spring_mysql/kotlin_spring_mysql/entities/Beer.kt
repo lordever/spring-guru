@@ -52,4 +52,12 @@ data class Beer(
 
     @field:OneToMany(mappedBy = "beer")
     var beerOrderLines: Set<BeerOrderLine>? = null,
+
+    @ManyToMany
+    @JoinTable(
+        name = "beer_category",
+        joinColumns = [JoinColumn(name = "beer_id")],
+        inverseJoinColumns = [JoinColumn(name = "category_id")]
+    )
+    val categories: MutableSet<Category> = mutableSetOf(),
 )
