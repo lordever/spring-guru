@@ -20,8 +20,8 @@ import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
+import org.springframework.test.web.servlet.MvcResult
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
@@ -263,5 +263,38 @@ class BeerControllerIT {
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.content.size()", equalTo(50)))
             .andExpect(jsonPath("$.content[0].quantity").value(IsNull.nullValue()))
+    }
+
+    @Test
+    fun testUpdateBeerBadVersion() {
+        val testBeer = beerRepository.findAll()[0]
+
+        val firstTestBeerDTO: BeerDTO = beerMapper.toDto(testBeer)
+
+        firstTestBeerDTO.name = "New Beer Name 1"
+
+        mockMvc.perform(
+            put(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(firstTestBeerDTO))
+        )
+            .andExpect(status().isNoContent)
+
+        val firstUpdatedBeer = beerRepository.findById(testBeer.id!!).get()
+        assertThat(firstUpdatedBeer.name).isEqualTo(firstTestBeerDTO.name)
+
+        val secondTestBeerDTO: BeerDTO = beerMapper.toDto(testBeer)
+        secondTestBeerDTO.name = "New Beer Name 2"
+        mockMvc.perform(
+            put(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(secondTestBeerDTO))
+        )
+            .andExpect(status().isNoContent)
+
+        val secondUpdatedBeer = beerRepository.findById(testBeer.id!!).get()
+        assertThat(secondUpdatedBeer.name).isEqualTo(secondTestBeerDTO.name)
     }
 }

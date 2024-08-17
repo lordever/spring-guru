@@ -101,6 +101,7 @@ class BeerServiceJpaImpl(
                 style = newBeerDTO.style
                 upc = newBeerDTO.upc
                 price = newBeerDTO.price
+                version = newBeerDTO.version
                 quantity = newBeerDTO.quantity
             }
             beerMapper.toDto(beerRepository.save(foundBeer))

@@ -15,6 +15,4 @@ class NotFoundException: RuntimeException {
         enableSuppression,
         writableStackTrace
     )
-
-
 }

@@ -22,7 +22,7 @@ import java.util.*
 class BootstrapData(
     var beerRepository: BeerRepository,
     var beerCsvService: BeerCsvService,
-    var customerRepository: CustomerRepository
+    var customerRepository: CustomerRepository,
 ) : CommandLineRunner {
 
     @Transactional
