@@ -4,12 +4,12 @@ import com.sdjpa_spring_data_rest.sdjpa_spring_data_rest.domain.Beer
 import com.sdjpa_spring_data_rest.sdjpa_spring_data_rest.domain.BeerStyle
 import org.springframework.data.domain.Page
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Repository
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import java.util.*
 
 
-@Repository
+@RepositoryRestResource(path = "beer", collectionResourceRel = "beer")
 interface BeerRepository: JpaRepository<Beer, UUID> {
     fun findAllByName(beerName: String?, pageable: Pageable?): Page<Beer?>?
 
