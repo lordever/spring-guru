@@ -1,0 +1,9 @@
+GET http://localhost:8080/beers?size=3
+Accept: application/json
+
+<> 2024-08-20T170245.200.json
+
+###
+
+GET http://localhost:8080/beers/8dccaec4-ab27-4f4d-a378-835f0f086ac6
+Accept: application/json
