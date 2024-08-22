@@ -11,11 +11,11 @@ import java.util.*
 
 @RepositoryRestResource(path = "beer", collectionResourceRel = "beer")
 interface BeerRepository: JpaRepository<Beer, UUID> {
-    fun findAllByName(beerName: String?, pageable: Pageable?): Page<Beer?>?
+    fun findAllByName(name: String?, pageable: Pageable?): Page<Beer?>?
 
-    fun findAllByStyle(beerStyle: BeerStyle?, pageable: Pageable?): Page<Beer?>?
+    fun findAllByStyle(style: BeerStyle?, pageable: Pageable?): Page<Beer?>?
 
-    fun findAllByNameAndStyle(beerName: String?, beerStyle: BeerStyle?, pageable: Pageable?): Page<Beer?>?
+    fun findAllByNameAndStyle(name: String?, style: BeerStyle?, pageable: Pageable?): Page<Beer?>?
 
     fun findByUpc(upc: String?): Beer?
 }
