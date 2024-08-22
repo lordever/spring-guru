@@ -11,13 +11,23 @@ class BeerClientImpl : BeerClient {
 
     private val restTemplateBuilder: RestTemplateBuilder = RestTemplateBuilder()
 
+    companion object {
+        const val BASE_PATH = "http://localhost:8080"
+        const val GET_BEER_PATH = "api/v1/beer"
+    }
+
     override fun listBeers(): Page<BeerDTO>? {
         val restTemplate = restTemplateBuilder.build()
 
         val response: ResponseEntity<String> =
-            restTemplate.getForEntity("http://localhost:8080/api/v1/beer", String::class.java)
+            restTemplate.getForEntity("${BASE_PATH}/${GET_BEER_PATH}", String::class.java)
+
+        val mapResponse: ResponseEntity<Map<*, *>> =
+            restTemplate.getForEntity("${BASE_PATH}/${GET_BEER_PATH}", Map::class.java)
+
 
         println(response.body)
+        println(mapResponse.body)
 
         return null
     }
