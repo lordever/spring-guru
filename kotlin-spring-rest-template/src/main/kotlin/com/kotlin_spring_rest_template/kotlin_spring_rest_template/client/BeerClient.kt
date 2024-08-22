@@ -4,5 +4,5 @@ import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerDTO
 import org.springframework.data.domain.Page
 
 interface BeerClient {
-    fun listBeers(): Page<BeerDTO>
+    fun listBeers(): Page<BeerDTO>?
 }
