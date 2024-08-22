@@ -1,0 +1,9 @@
+GET http://localhost:8080/api/v1/beer?size=3
+Accept: application/json
+
+<> 2024-08-20T170245.200.json
+
+###
+
+GET http://localhost:8080/api/v1/beer/590946ac-0e44-4697-af94-dbc10cd11361
+Accept: application/json
