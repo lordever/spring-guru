@@ -1,5 +1,6 @@
 package com.kotlin_spring_rest_template.kotlin_spring_rest_template.client
 
+import com.fasterxml.jackson.databind.JsonNode
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerDTO
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.data.domain.Page
@@ -26,8 +27,15 @@ class BeerClientImpl : BeerClient {
             restTemplate.getForEntity("${BASE_PATH}/${GET_BEER_PATH}", Map::class.java)
 
 
-        println(response.body)
-        println(mapResponse.body)
+        val jsonResponse: ResponseEntity<JsonNode> =
+            restTemplate.getForEntity("${BASE_PATH}/${GET_BEER_PATH}", JsonNode::class.java)
+
+//        println(response.body)
+//        println(mapResponse.body)
+//        println(jsonResponse.body)
+
+        jsonResponse.body?.findPath("_embedded")
+            ?.elements()?.forEachRemaining { node -> println(node.get("name").asText()) }
 
         return null
     }
