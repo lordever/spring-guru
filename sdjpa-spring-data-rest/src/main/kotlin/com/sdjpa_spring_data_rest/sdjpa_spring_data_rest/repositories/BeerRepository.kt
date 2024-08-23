@@ -9,7 +9,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource
 import java.util.*
 
 
-@RepositoryRestResource(path = "beer", collectionResourceRel = "beer")
+@RepositoryRestResource(path = "beer", collectionResourceRel = "content")
 interface BeerRepository: JpaRepository<Beer, UUID> {
     fun findAllByName(name: String?, pageable: Pageable?): Page<Beer?>?
 
