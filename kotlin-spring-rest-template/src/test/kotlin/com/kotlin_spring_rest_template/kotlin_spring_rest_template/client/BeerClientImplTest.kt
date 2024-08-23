@@ -1,5 +1,7 @@
 package com.kotlin_spring_rest_template.kotlin_spring_rest_template.client
 
+import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerStyle
+import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.ListBeersFilter
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
@@ -15,17 +17,90 @@ class BeerClientImplTest {
 
     @Test
     fun listBeers() {
-        beerClient.listBeers(null)
+        val filter = ListBeersFilter()
+
+        beerClient.listBeers(filter)
     }
 
     @Test
     fun listBeersByName() {
         val name = "ALE"
-        val result = beerClient.listBeers(name)
+
+        val filter = ListBeersFilter(name = name)
+
+        val result = beerClient.listBeers(filter)
 
         assertThat(result).isNotNull
         assertThat(result).isNotEmpty
 
         result?.content?.forEach { beer -> assertThat(beer.name).containsIgnoringCase(name) }
+    }
+
+    @Test
+    fun listBeersByStyle() {
+        val style = BeerStyle.IPA
+
+        val filter = ListBeersFilter(style = style)
+
+        val result = beerClient.listBeers(filter)
+
+        assertThat(result).isNotNull
+        assertThat(result).isNotEmpty
+
+        result?.content?.forEach { beer -> assertThat(beer.style).isEqualTo(style) }
+    }
+
+    @Test
+    fun listBeersByInventory() {
+
+        val filter = ListBeersFilter(showInventory = true)
+
+        val result = beerClient.listBeers(filter)
+
+        assertThat(result).isNotNull
+        assertThat(result).isNotEmpty
+
+        result?.content?.forEach { beer -> assertThat(beer.quantity).isNull() }
+    }
+
+    @Test
+    fun listBeersWithPage() {
+        val pageNumber = 2
+        val filter = ListBeersFilter(pageNumber = pageNumber)
+
+        val result = beerClient.listBeers(filter)
+
+        assertThat(result).isNotNull
+        assertThat(result).isNotEmpty
+
+        assertThat(result?.pageable?.pageNumber).isEqualTo(pageNumber - 1)
+    }
+
+    @Test
+    fun listBeersWithPageSize() {
+        val pageSize = 5
+
+        val filter = ListBeersFilter(pageSize = pageSize)
+
+        val result = beerClient.listBeers(filter)
+
+        assertThat(result).isNotNull
+        assertThat(result).isNotEmpty
+        assertThat(result?.content?.size).isEqualTo(pageSize)
+    }
+
+    @Test
+    fun listBeersWithPageAndPageSize() {
+        val pageNumber = 2
+        val pageSize = 5
+        val filter = ListBeersFilter(pageNumber = pageNumber, pageSize = pageSize)
+
+        val result = beerClient.listBeers(filter)
+
+        assertThat(result).isNotNull
+        assertThat(result).isNotEmpty
+
+        assertThat(result?.pageable?.pageNumber).isEqualTo(pageNumber - 1)
+        assertThat(result?.content?.size).isEqualTo(pageSize)
     }
 }
