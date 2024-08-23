@@ -10,6 +10,7 @@ interface BeerClient {
         filter: ListBeersFilter
     ): Page<BeerDTO>?
 
-    fun listBeerById(id: UUID?): BeerDTO?
+    fun getBeerById(id: UUID?): BeerDTO?
     fun createBeer(newBeerDTO: BeerDTO): BeerDTO?
+    fun updateBeer(newBeerDTO: BeerDTO): BeerDTO?
 }

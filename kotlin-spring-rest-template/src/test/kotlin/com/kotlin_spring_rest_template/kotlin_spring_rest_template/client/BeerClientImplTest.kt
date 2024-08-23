@@ -117,7 +117,7 @@ class BeerClientImplTest {
 
         assertNotNull(beerDto)
 
-        val beerDtoById = beerClient.listBeerById(beerDto?.id)
+        val beerDtoById = beerClient.getBeerById(beerDto?.id)
 
         assertNotNull(beerDtoById)
         assertThat(beerDtoById?.id).isEqualTo(beerDto?.id)
@@ -135,5 +135,26 @@ class BeerClientImplTest {
 
         val savedBeer = beerClient.createBeer(newBeerDTO)
         assertNotNull(savedBeer)
+    }
+
+    @Test
+    fun updateBeer() {
+        val newBeerDTO = BeerDTO(
+            price = BigDecimal("10.99"),
+            name = "Mango Bobs 2",
+            style = BeerStyle.IPA,
+            quantity = 500,
+            upc = "12345"
+        )
+
+        val savedBeer = beerClient.createBeer(newBeerDTO)
+        assertNotNull(savedBeer)
+
+        val newName = "Mango Bobs 3"
+        savedBeer?.name = newName
+
+        val updatedBeer = beerClient.updateBeer(savedBeer!!)
+
+        assertEquals(newName, updatedBeer?.name)
     }
 }
