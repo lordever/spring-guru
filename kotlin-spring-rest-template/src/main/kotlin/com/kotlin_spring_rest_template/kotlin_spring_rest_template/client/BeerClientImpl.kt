@@ -6,6 +6,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.util.UriComponentsBuilder
 
 @Service
 class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient {
@@ -16,8 +17,10 @@ class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient 
     override fun listBeers(): Page<BeerDTO>? {
         val restTemplate = restTemplateBuilder.build()
 
+        val uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH)
+
         val response: ResponseEntity<BeerDTOPageImpl> =
-            restTemplate.getForEntity(GET_BEER_PATH, BeerDTOPageImpl::class.java)
+            restTemplate.getForEntity(uriComponentsBuilder.toUriString(), BeerDTOPageImpl::class.java)
 
         return response.body
     }
