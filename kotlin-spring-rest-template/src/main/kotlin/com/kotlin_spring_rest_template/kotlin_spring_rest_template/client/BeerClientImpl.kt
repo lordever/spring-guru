@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
+import java.net.URI
 import java.util.*
 
 @Service
@@ -59,8 +60,9 @@ class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient 
 
     override fun createBeer(newBeerDTO: BeerDTO): BeerDTO? {
         val restTemplate = restTemplateBuilder.build()
-        val response: ResponseEntity<BeerDTO> = restTemplate.postForEntity(GET_BEER_PATH, newBeerDTO, BeerDTO::class.java)
 
-        return response.body
+        val uri: URI = restTemplate.postForLocation(GET_BEER_PATH, newBeerDTO) ?: return null
+
+        return restTemplate.getForObject(uri.path, BeerDTO::class.java)
     }
 }
