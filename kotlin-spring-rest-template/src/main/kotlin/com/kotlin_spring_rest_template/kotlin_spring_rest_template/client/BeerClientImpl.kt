@@ -16,13 +16,9 @@ class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient 
     override fun listBeers(): Page<BeerDTO>? {
         val restTemplate = restTemplateBuilder.build()
 
-        val mapResponse: ResponseEntity<Map<*, *>> =
-            restTemplate.getForEntity(GET_BEER_PATH, Map::class.java)
-
-
         val response: ResponseEntity<BeerDTOPageImpl> =
             restTemplate.getForEntity(GET_BEER_PATH, BeerDTOPageImpl::class.java)
 
-        return null
+        return response.body
     }
 }
