@@ -11,4 +11,5 @@ interface BeerClient {
     ): Page<BeerDTO>?
 
     fun listBeerById(id: UUID?): BeerDTO?
+    fun createBeer(newBeerDTO: BeerDTO): BeerDTO?
 }

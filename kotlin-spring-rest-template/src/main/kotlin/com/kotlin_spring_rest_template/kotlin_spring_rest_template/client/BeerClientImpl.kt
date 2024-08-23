@@ -7,6 +7,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.util.*
 
@@ -54,5 +55,12 @@ class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient 
         val restTemplate = restTemplateBuilder.build()
 
         return restTemplate.getForObject(GET_BEER_BY_ID_PATH, BeerDTO::class.java, id)
+    }
+
+    override fun createBeer(newBeerDTO: BeerDTO): BeerDTO? {
+        val restTemplate = restTemplateBuilder.build()
+        val response: ResponseEntity<BeerDTO> = restTemplate.postForEntity(GET_BEER_PATH, newBeerDTO, BeerDTO::class.java)
+
+        return response.body
     }
 }
