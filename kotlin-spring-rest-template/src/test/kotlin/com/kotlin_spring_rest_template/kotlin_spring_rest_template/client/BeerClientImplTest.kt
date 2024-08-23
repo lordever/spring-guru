@@ -3,9 +3,8 @@ package com.kotlin_spring_rest_template.kotlin_spring_rest_template.client
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerStyle
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.ListBeersFilter
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -102,5 +101,23 @@ class BeerClientImplTest {
 
         assertThat(result?.pageable?.pageNumber).isEqualTo(pageNumber - 1)
         assertThat(result?.content?.size).isEqualTo(pageSize)
+    }
+
+    @Test
+    fun getBeerById() {
+        val filter = ListBeersFilter()
+        val listBeerDto = beerClient.listBeers(filter)
+
+        assertThat(listBeerDto).isNotNull
+        assertThat(listBeerDto).isNotEmpty
+
+        val beerDto = listBeerDto?.first()
+
+        assertNotNull(beerDto)
+
+        val beerDtoById = beerClient.listBeerById(beerDto?.id)
+
+        assertNotNull(beerDtoById)
+        assertThat(beerDtoById?.id).isEqualTo(beerDto?.id)
     }
 }

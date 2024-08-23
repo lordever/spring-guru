@@ -8,11 +8,13 @@ import org.springframework.data.domain.Page
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.util.UriComponentsBuilder
+import java.util.*
 
 @Service
 class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient {
     companion object {
         const val GET_BEER_PATH = "/api/v1/beers"
+        const val GET_BEER_BY_ID_PATH = "${GET_BEER_PATH}/{id}"
     }
 
     override fun listBeers(filter: ListBeersFilter): Page<BeerDTO>? {
@@ -46,5 +48,11 @@ class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient 
         }
 
         return uriComponentsBuilder
+    }
+
+    override fun listBeerById(id: UUID?): BeerDTO? {
+        val restTemplate = restTemplateBuilder.build()
+
+        return restTemplate.getForObject(GET_BEER_BY_ID_PATH, BeerDTO::class.java, id)
     }
 }
