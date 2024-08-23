@@ -1,5 +1,6 @@
 package com.kotlin_spring_rest_template.kotlin_spring_rest_template.client
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -14,6 +15,17 @@ class BeerClientImplTest {
 
     @Test
     fun listBeers() {
-        beerClient.listBeers()
+        beerClient.listBeers(null)
+    }
+
+    @Test
+    fun listBeersByName() {
+        val name = "ALE"
+        val result = beerClient.listBeers(name)
+
+        assertThat(result).isNotNull
+        assertThat(result).isNotEmpty
+
+        result?.content?.forEach { beer -> assertThat(beer.name).containsIgnoringCase(name) }
     }
 }

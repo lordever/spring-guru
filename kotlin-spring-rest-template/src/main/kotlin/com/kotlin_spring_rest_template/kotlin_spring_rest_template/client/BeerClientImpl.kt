@@ -14,10 +14,14 @@ class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient 
         const val GET_BEER_PATH = "/api/v1/beers"
     }
 
-    override fun listBeers(): Page<BeerDTO>? {
+    override fun listBeers(name: String?): Page<BeerDTO>? {
         val restTemplate = restTemplateBuilder.build()
 
         val uriComponentsBuilder = UriComponentsBuilder.fromPath(GET_BEER_PATH)
+
+        if (name != null) {
+            uriComponentsBuilder.queryParam("name", name)
+        }
 
         val response: ResponseEntity<BeerDTOPageImpl> =
             restTemplate.getForEntity(uriComponentsBuilder.toUriString(), BeerDTOPageImpl::class.java)
