@@ -8,24 +8,20 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
 @Service
-class BeerClientImpl : BeerClient {
-
-    private val restTemplateBuilder: RestTemplateBuilder = RestTemplateBuilder()
-
+class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient {
     companion object {
-        const val BASE_PATH = "http://localhost:8080"
-        const val GET_BEER_PATH = "api/v1/beers"
+        const val GET_BEER_PATH = "/api/v1/beers"
     }
 
     override fun listBeers(): Page<BeerDTO>? {
         val restTemplate = restTemplateBuilder.build()
 
         val mapResponse: ResponseEntity<Map<*, *>> =
-            restTemplate.getForEntity("${BASE_PATH}/${GET_BEER_PATH}", Map::class.java)
+            restTemplate.getForEntity(GET_BEER_PATH, Map::class.java)
 
 
         val response: ResponseEntity<BeerDTOPageImpl> =
-            restTemplate.getForEntity("${BASE_PATH}/${GET_BEER_PATH}", BeerDTOPageImpl::class.java)
+            restTemplate.getForEntity(GET_BEER_PATH, BeerDTOPageImpl::class.java)
 
         return null
     }
