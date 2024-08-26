@@ -1,51 +1,24 @@
 package com.kotlin_spring_rest_template.kotlin_spring_rest_template.client
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerDTO
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerDTOPageImpl
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerStyle
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.ListBeersFilter
-import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.client.RestClientTest
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.HttpMethod
-import org.springframework.http.MediaType
-import org.springframework.test.web.client.MockRestServiceServer
-import org.springframework.test.web.client.match.MockRestRequestMatchers.method
-import org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
-import org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
 import org.springframework.web.client.HttpClientErrorException
 import java.math.BigDecimal
-import java.util.*
 
-@RestClientTest(BeerClientImpl::class)
-class BeerClientImplTest {
-
-    companion object {
-        const val URL = "http://locahost:8080"
-    }
-
+@SpringBootTest
+class BeerClientImplITTest {
     @Autowired
     lateinit var beerClient: BeerClientImpl
 
-    @Autowired
-    lateinit var server: MockRestServiceServer
-
-    @Autowired
-    lateinit var objectMapper: ObjectMapper
-
     @Test
     fun listBeers() {
-        val payload = objectMapper.writeValueAsString(getPage())
-
-        server.expect(method(HttpMethod.GET))
-            .andExpect(requestTo(URL + BeerClientImpl.GET_BEER_PATH))
-            .andRespond(withSuccess(payload, MediaType.APPLICATION_JSON))
-
         val filter = ListBeersFilter()
 
         val beers = beerClient.listBeers(filter)

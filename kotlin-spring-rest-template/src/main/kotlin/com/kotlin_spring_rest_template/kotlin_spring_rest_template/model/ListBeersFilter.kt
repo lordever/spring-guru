@@ -7,9 +7,9 @@ data class ListBeersFilter(
     var pageNumber: Int? = null,
     var pageSize: Int? = null
 ) {
-    init {
-        showInventory = showInventory ?: false
-        pageNumber = pageNumber ?: 0
-        pageSize = pageSize ?: 10
-    }
+//    init {
+//        showInventory = showInventory ?: false
+//        pageNumber = pageNumber ?: 0
+//        pageSize = pageSize ?: 10
+//    }
 }
