@@ -71,4 +71,9 @@ class BeerClientImpl(val restTemplateBuilder: RestTemplateBuilder) : BeerClient 
 
         return getBeerById(newBeerDTO.id)
     }
+
+    override fun deleteBeer(id: UUID?) {
+        val restTemplate = restTemplateBuilder.build()
+        restTemplate.delete(GET_BEER_BY_ID_PATH, id)
+    }
 }

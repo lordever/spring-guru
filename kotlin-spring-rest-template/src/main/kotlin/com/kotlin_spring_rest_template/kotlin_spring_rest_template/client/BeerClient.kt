@@ -13,4 +13,5 @@ interface BeerClient {
     fun getBeerById(id: UUID?): BeerDTO?
     fun createBeer(newBeerDTO: BeerDTO): BeerDTO?
     fun updateBeer(newBeerDTO: BeerDTO): BeerDTO?
+    fun deleteBeer(id: UUID?)
 }

@@ -3,12 +3,15 @@ package com.kotlin_spring_rest_template.kotlin_spring_rest_template.client
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerDTO
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerStyle
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.ListBeersFilter
+import jakarta.transaction.Transactional
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.web.client.HttpClientErrorException
 import java.math.BigDecimal
+import java.util.*
 
 @SpringBootTest
 class BeerClientImplTest {
@@ -156,5 +159,25 @@ class BeerClientImplTest {
         val updatedBeer = beerClient.updateBeer(savedBeer!!)
 
         assertEquals(newName, updatedBeer?.name)
+    }
+
+    @Test
+    fun deleteBeer() {
+        val newBeerDTO = BeerDTO(
+            price = BigDecimal("10.99"),
+            name = "Mango Bobs",
+            style = BeerStyle.IPA,
+            quantity = 500,
+            upc = "12345"
+        )
+
+        val savedBeer = beerClient.createBeer(newBeerDTO)
+        assertNotNull(savedBeer)
+
+        beerClient.deleteBeer(savedBeer?.id)
+
+        assertThrows(HttpClientErrorException::class.java) {
+            beerClient.getBeerById(savedBeer?.id)
+        }
     }
 }
