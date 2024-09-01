@@ -19,10 +19,10 @@ import org.springframework.context.annotation.Import
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.test.web.client.MockRestServiceServer
-import org.springframework.test.web.client.match.MockRestRequestMatchers.method
-import org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
+import org.springframework.test.web.client.match.MockRestRequestMatchers.*
 import org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
 import java.math.BigDecimal
+import java.util.UUID
 
 @RestClientTest
 @Import(RestTemplateBuilderConfig::class)
@@ -66,11 +66,26 @@ class BeerClientMockTest {
         assertThat(beers?.size).isGreaterThan(0)
     }
 
+    @Test
+    fun getBeerById() {
+        val dto = getBeerDto()
+        val payload = objectMapper.writeValueAsString(dto)
+
+        server.expect(method(HttpMethod.GET))
+            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dto.id))
+            .andRespond(withSuccess(payload, MediaType.APPLICATION_JSON))
+
+        val beer = beerClient.getBeerById(dto.id)
+        assertThat(beer).isNotNull
+        assertThat(beer?.id).isEqualTo(dto.id)
+    }
+
     private fun getPage(): BeerDTOPageImpl =
         BeerDTOPageImpl(listOf(getBeerDto()), 1, 25, 1)
 
     private fun getBeerDto(): BeerDTO =
         BeerDTO(
+            id = UUID.fromString("1b3f854f-9cab-4871-9125-8e93dce3b26d"),
             price = BigDecimal("10.99"),
             name = "Mango Bobs",
             style = BeerStyle.IPA,
