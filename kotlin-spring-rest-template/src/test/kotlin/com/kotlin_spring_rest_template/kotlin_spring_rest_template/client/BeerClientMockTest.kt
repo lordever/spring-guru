@@ -20,7 +20,9 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.test.web.client.match.MockRestRequestMatchers.*
+import org.springframework.test.web.client.response.MockRestResponseCreators.withAccepted
 import org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
+import org.springframework.web.util.UriComponentsBuilder
 import java.math.BigDecimal
 import java.util.UUID
 
@@ -76,6 +78,26 @@ class BeerClientMockTest {
             .andRespond(withSuccess(payload, MediaType.APPLICATION_JSON))
 
         val beer = beerClient.getBeerById(dto.id)
+        assertThat(beer).isNotNull
+        assertThat(beer?.id).isEqualTo(dto.id)
+    }
+
+    @Test
+    fun createBeer() {
+        val dto = getBeerDto()
+        val payload = objectMapper.writeValueAsString(dto)
+        val uri = UriComponentsBuilder.fromPath(BeerClientImpl.GET_BEER_BY_ID_PATH)
+            .build(dto.id)
+
+        server.expect(method(HttpMethod.POST))
+            .andExpect(requestTo(URL + BeerClientImpl.GET_BEER_PATH))
+            .andRespond(withAccepted().location(uri))
+
+        server.expect(method(HttpMethod.GET))
+            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dto.id))
+            .andRespond(withSuccess(payload, MediaType.APPLICATION_JSON))
+
+        val beer = beerClient.createBeer(dto)
         assertThat(beer).isNotNull
         assertThat(beer?.id).isEqualTo(dto.id)
     }
