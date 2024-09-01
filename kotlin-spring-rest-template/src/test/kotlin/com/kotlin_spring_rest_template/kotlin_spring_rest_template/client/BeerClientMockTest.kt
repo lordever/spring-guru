@@ -46,12 +46,18 @@ class BeerClientMockTest {
     @Mock
     var mockRestTemplateBuilder: RestTemplateBuilder = RestTemplateBuilder(MockServerRestTemplateCustomizer())
 
+    private lateinit var dtoStr: String;
+    private lateinit var dtoJson: BeerDTO;
+
     @BeforeEach
     fun setUp() {
         val restTemplate = restTemplateBuilderConfigured.build()
         server = MockRestServiceServer.bindTo(restTemplate).build()
         Mockito.`when`(mockRestTemplateBuilder.build()).thenReturn(restTemplate)
         beerClient = BeerClientImpl(mockRestTemplateBuilder)
+
+        dtoJson = getBeerDto()
+        dtoStr = objectMapper.writeValueAsString(dtoJson)
     }
 
     @Test
@@ -70,36 +76,32 @@ class BeerClientMockTest {
 
     @Test
     fun getBeerById() {
-        val dto = getBeerDto()
-        val payload = objectMapper.writeValueAsString(dto)
 
         server.expect(method(HttpMethod.GET))
-            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dto.id))
-            .andRespond(withSuccess(payload, MediaType.APPLICATION_JSON))
+            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andRespond(withSuccess(dtoStr, MediaType.APPLICATION_JSON))
 
-        val beer = beerClient.getBeerById(dto.id)
+        val beer = beerClient.getBeerById(dtoJson.id)
         assertThat(beer).isNotNull
-        assertThat(beer?.id).isEqualTo(dto.id)
+        assertThat(beer?.id).isEqualTo(dtoJson.id)
     }
 
     @Test
     fun createBeer() {
-        val dto = getBeerDto()
-        val payload = objectMapper.writeValueAsString(dto)
         val uri = UriComponentsBuilder.fromPath(BeerClientImpl.GET_BEER_BY_ID_PATH)
-            .build(dto.id)
+            .build(dtoJson.id)
 
         server.expect(method(HttpMethod.POST))
             .andExpect(requestTo(URL + BeerClientImpl.GET_BEER_PATH))
             .andRespond(withAccepted().location(uri))
 
         server.expect(method(HttpMethod.GET))
-            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dto.id))
-            .andRespond(withSuccess(payload, MediaType.APPLICATION_JSON))
+            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andRespond(withSuccess(dtoStr, MediaType.APPLICATION_JSON))
 
-        val beer = beerClient.createBeer(dto)
+        val beer = beerClient.createBeer(dtoJson)
         assertThat(beer).isNotNull
-        assertThat(beer?.id).isEqualTo(dto.id)
+        assertThat(beer?.id).isEqualTo(dtoJson.id)
     }
 
     private fun getPage(): BeerDTOPageImpl =
