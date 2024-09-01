@@ -6,11 +6,11 @@ import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerDTO
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerDTOPageImpl
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerStyle
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.ListBeersFilter
-import com.ninjasquad.springmockk.MockkBean
-import io.mockk.every
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest
 import org.springframework.boot.test.web.client.MockServerRestTemplateCustomizer
@@ -28,7 +28,7 @@ import java.math.BigDecimal
 @Import(RestTemplateBuilderConfig::class)
 class BeerClientMockTest {
     companion object {
-        const val URL = "http://locahost:8080"
+        const val URL = "http://localhost:8080"
     }
 
     private lateinit var beerClient: BeerClientImpl
@@ -41,15 +41,14 @@ class BeerClientMockTest {
     @Autowired
     lateinit var objectMapper: ObjectMapper
 
-    @MockkBean
-    lateinit var mockRestTemplateBuilder: RestTemplateBuilder
+    @Mock
+    var mockRestTemplateBuilder: RestTemplateBuilder = RestTemplateBuilder(MockServerRestTemplateCustomizer())
 
     @BeforeEach
     fun setUp() {
-        mockRestTemplateBuilder = RestTemplateBuilder(MockServerRestTemplateCustomizer())
         val restTemplate = restTemplateBuilderConfigured.build()
         server = MockRestServiceServer.bindTo(restTemplate).build()
-        every { mockRestTemplateBuilder.build() } returns restTemplate
+        Mockito.`when`(mockRestTemplateBuilder.build()).thenReturn(restTemplate)
         beerClient = BeerClientImpl(mockRestTemplateBuilder)
     }
 
