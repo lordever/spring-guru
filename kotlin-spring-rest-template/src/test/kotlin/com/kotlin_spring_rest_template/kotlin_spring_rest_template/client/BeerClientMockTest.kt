@@ -20,8 +20,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.test.web.client.match.MockRestRequestMatchers.*
-import org.springframework.test.web.client.response.MockRestResponseCreators.withAccepted
-import org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess
+import org.springframework.test.web.client.response.MockRestResponseCreators.*
 import org.springframework.web.util.UriComponentsBuilder
 import java.math.BigDecimal
 import java.util.UUID
@@ -77,9 +76,7 @@ class BeerClientMockTest {
     @Test
     fun getBeerById() {
 
-        server.expect(method(HttpMethod.GET))
-            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
-            .andRespond(withSuccess(dtoStr, MediaType.APPLICATION_JSON))
+        mockGetOperation()
 
         val beer = beerClient.getBeerById(dtoJson.id)
         assertThat(beer).isNotNull
@@ -95,13 +92,29 @@ class BeerClientMockTest {
             .andExpect(requestTo(URL + BeerClientImpl.GET_BEER_PATH))
             .andRespond(withAccepted().location(uri))
 
-        server.expect(method(HttpMethod.GET))
-            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
-            .andRespond(withSuccess(dtoStr, MediaType.APPLICATION_JSON))
+        mockGetOperation()
 
         val beer = beerClient.createBeer(dtoJson)
         assertThat(beer).isNotNull
         assertThat(beer?.id).isEqualTo(dtoJson.id)
+    }
+
+    @Test
+    fun updateBeer() {
+        server.expect(method(HttpMethod.PUT))
+            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andRespond(withNoContent())
+
+        mockGetOperation()
+
+        val updatedBeer = beerClient.updateBeer(dtoJson)
+        assertThat(updatedBeer?.id).isEqualTo(dtoJson.id)
+    }
+
+    private fun mockGetOperation() {
+        server.expect(method(HttpMethod.GET))
+            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andRespond(withSuccess(dtoStr, MediaType.APPLICATION_JSON))
     }
 
     private fun getPage(): BeerDTOPageImpl =
