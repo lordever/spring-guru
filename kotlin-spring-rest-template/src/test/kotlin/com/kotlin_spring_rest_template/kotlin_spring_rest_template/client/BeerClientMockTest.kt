@@ -17,6 +17,7 @@ import org.springframework.boot.test.autoconfigure.web.client.RestClientTest
 import org.springframework.boot.test.web.client.MockServerRestTemplateCustomizer
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Import
+import org.springframework.data.domain.Page
 import org.springframework.http.HttpMethod
 import org.springframework.http.MediaType
 import org.springframework.test.web.client.MockRestServiceServer
@@ -25,6 +26,7 @@ import org.springframework.test.web.client.response.MockRestResponseCreators.*
 import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.util.UriComponentsBuilder
 import java.math.BigDecimal
+import java.net.URI
 import java.util.*
 
 @RestClientTest
@@ -32,6 +34,7 @@ import java.util.*
 class BeerClientMockTest {
     companion object {
         const val URL = "http://localhost:8080"
+        const val TEST_BEER_NAME = "ALE"
     }
 
     private lateinit var beerClient: BeerClientImpl
@@ -63,17 +66,37 @@ class BeerClientMockTest {
 
     @Test
     fun listBeers() {
-        val payload = objectMapper.writeValueAsString(getPage())
+        val response = objectMapper.writeValueAsString(getPage())
 
         server.expect(method(HttpMethod.GET))
             .andExpect(requestTo(URL + BeerClientImpl.GET_BEER_PATH))
-            .andRespond(withSuccess(payload, MediaType.APPLICATION_JSON))
+            .andRespond(withSuccess(response, MediaType.APPLICATION_JSON))
 
         val filter = ListBeersFilter()
 
         val beers = beerClient.listBeers(filter)
         assertThat(beers?.size).isGreaterThan(0)
     }
+
+    @Test
+    fun listBeersWithQueryParams() {
+        val response = objectMapper.writeValueAsString(getPage())
+
+        val uri: URI = UriComponentsBuilder.fromHttpUrl(URL + BeerClientImpl.GET_BEER_PATH)
+            .queryParam("name", TEST_BEER_NAME)
+            .build()
+            .toUri()
+
+        server.expect(method(HttpMethod.GET))
+            .andExpect(requestTo(uri))
+            .andExpect(queryParam("name", TEST_BEER_NAME))
+            .andRespond(withSuccess(response, MediaType.APPLICATION_JSON))
+
+        val filter = ListBeersFilter(name = TEST_BEER_NAME)
+        val responsePage: Page<BeerDTO>? = beerClient.listBeers(filter)
+        assertThat(responsePage?.content?.size).isEqualTo(1)
+    }
+
 
     @Test
     fun getBeerById() {
@@ -135,6 +158,7 @@ class BeerClientMockTest {
         }
     }
 
+
     private fun mockGetOperation() {
         server.expect(method(HttpMethod.GET))
             .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
@@ -148,7 +172,7 @@ class BeerClientMockTest {
         BeerDTO(
             id = UUID.fromString("1b3f854f-9cab-4871-9125-8e93dce3b26d"),
             price = BigDecimal("10.99"),
-            name = "Mango Bobs",
+            name = TEST_BEER_NAME,
             style = BeerStyle.IPA,
             quantity = 500,
             upc = "12345"
