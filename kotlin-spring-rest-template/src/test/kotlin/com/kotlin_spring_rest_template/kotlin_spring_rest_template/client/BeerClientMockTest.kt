@@ -111,6 +111,17 @@ class BeerClientMockTest {
         assertThat(updatedBeer?.id).isEqualTo(dtoJson.id)
     }
 
+    @Test
+    fun deleteBeer() {
+        server.expect(method(HttpMethod.DELETE))
+            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andRespond(withNoContent())
+
+        beerClient.deleteBeer(dtoJson.id)
+
+        server.verify()
+    }
+
     private fun mockGetOperation() {
         server.expect(method(HttpMethod.GET))
             .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
