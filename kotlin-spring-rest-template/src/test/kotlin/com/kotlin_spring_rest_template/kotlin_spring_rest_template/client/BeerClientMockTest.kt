@@ -7,6 +7,7 @@ import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerDTO
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.BeerStyle
 import com.kotlin_spring_rest_template.kotlin_spring_rest_template.model.ListBeersFilter
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -21,9 +22,10 @@ import org.springframework.http.MediaType
 import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.test.web.client.match.MockRestRequestMatchers.*
 import org.springframework.test.web.client.response.MockRestResponseCreators.*
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.util.UriComponentsBuilder
 import java.math.BigDecimal
-import java.util.UUID
+import java.util.*
 
 @RestClientTest
 @Import(RestTemplateBuilderConfig::class)
@@ -120,6 +122,17 @@ class BeerClientMockTest {
         beerClient.deleteBeer(dtoJson.id)
 
         server.verify()
+    }
+
+    @Test
+    fun deleteNotFound() {
+        server.expect(method(HttpMethod.DELETE))
+            .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andRespond(withResourceNotFound())
+
+        assertThrows(HttpClientErrorException::class.java) {
+            beerClient.deleteBeer(dtoJson.id)
+        }
     }
 
     private fun mockGetOperation() {
