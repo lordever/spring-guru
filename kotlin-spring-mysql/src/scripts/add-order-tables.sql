@@ -5,25 +5,25 @@ drop table if exists beer_order;
 
 create table beer
 (
-    price       decimal(38, 2) not null,
-    quantity    integer,
-    style       tinyint        not null check (style between 0 and 9),
-    version     integer,
-    create_date datetime(6),
-    update_date datetime(6),
-    id          varchar(36)    not null,
-    name        varchar(50)    not null,
-    upc         varchar(255)   not null,
+    id               varchar(36)    not null,
+    beer_name        varchar(50)    not null,
+    beer_style       smallint       not null,
+    created_date     datetime(6),
+    price            decimal(38, 2) not null,
+    quantity_on_hand integer,
+    upc              varchar(255)   not null,
+    update_date      datetime(6),
+    version          integer,
     primary key (id)
 ) engine = InnoDB;
 
 create table customer
 (
-    version            integer,
-    create_date       datetime(6),
-    last_modified_date datetime(6),
-    id                 varchar(36) not null,
-    name               varchar(255),
+    id           varchar(36) not null,
+    created_date datetime(6),
+    name         varchar(255),
+    update_date  datetime(6),
+    version      integer,
     primary key (id)
 ) engine = InnoDB;
 
@@ -43,7 +43,7 @@ CREATE TABLE beer_order_line
 (
     id                 varchar(36) NOT NULL,
     beer_id            varchar(36) DEFAULT NULL,
-    created_date        datetime(6) DEFAULT NULL,
+    created_date       datetime(6) DEFAULT NULL,
     last_modified_date datetime(6) DEFAULT NULL,
     order_quantity     int         DEFAULT NULL,
     quantity_allocated int         DEFAULT NULL,
