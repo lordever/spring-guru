@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
@@ -24,6 +25,11 @@ import java.util.*
 
 @WebMvcTest(BeerController::class)
 class BeerControllerTestKotlin {
+
+    companion object {
+        const val USERNAME = "user1"
+        const val PASSWORD = "user123"
+    }
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -54,6 +60,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
@@ -70,6 +77,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             get(BeerController.BEER_PATH_WITH_ID, beerId)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
@@ -82,7 +90,10 @@ class BeerControllerTestKotlin {
     fun testGetBeerByIdNotFound() {
         every { beerService.getBeerById(any()) } returns null
 
-        mockMvc.perform(get(BeerController.BEER_PATH_WITH_ID, UUID.randomUUID()))
+        mockMvc.perform(
+            get(BeerController.BEER_PATH_WITH_ID, UUID.randomUUID())
+                .with(httpBasic(USERNAME, PASSWORD))
+        )
             .andExpect(status().isNotFound)
     }
 
@@ -97,6 +108,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             post(BeerController.BASE_BEER_PATH)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testBeer))
@@ -113,6 +125,7 @@ class BeerControllerTestKotlin {
 
         val mockMvcResult = mockMvc.perform(
             post(BeerController.BASE_BEER_PATH)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testBeer))
@@ -132,6 +145,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             put(BeerController.BEER_PATH_WITH_ID, testBeerDTO.id)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testBeerDTO))
@@ -152,6 +166,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             delete(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNoContent())
@@ -173,6 +188,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             patch(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerMap))
