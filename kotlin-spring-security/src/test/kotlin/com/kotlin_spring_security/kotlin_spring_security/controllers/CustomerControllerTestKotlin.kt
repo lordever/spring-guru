@@ -1,6 +1,8 @@
 package com.kotlin_spring_security.kotlin_spring_security.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.kotlin_spring_security.kotlin_spring_security.config.SpringSecurityConfig
+import com.kotlin_spring_security.kotlin_spring_security.controllers.BeerControllerTestKotlin.Companion
 import com.kotlin_spring_security.kotlin_spring_security.models.CustomerDTO
 import com.kotlin_spring_security.kotlin_spring_security.services.CustomerService
 import com.kotlin_spring_security.kotlin_spring_security.services.CustomerServiceImpl
@@ -13,14 +15,22 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.util.*
 
 @WebMvcTest(CustomerController::class)
+@Import(SpringSecurityConfig::class)
 class CustomerControllerTestKotlin {
+
+    companion object {
+        const val USERNAME = "user1"
+        const val PASSWORD = "user123"
+    }
 
     @Autowired
     lateinit var mockMvc: MockMvc
@@ -37,7 +47,10 @@ class CustomerControllerTestKotlin {
     fun getCustomersList() {
         every { customerService.findAll() } returns customerServiceImpl.findAll()
 
-        mockMvc.perform(get(CustomerController.BASE_CUSTOMERS_PATH).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+            get(CustomerController.BASE_CUSTOMERS_PATH).accept(MediaType.APPLICATION_JSON)
+                .with(httpBasic(BeerControllerTestKotlin.USERNAME, BeerControllerTestKotlin.PASSWORD))
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.length()", equalTo(customerServiceImpl.findAll().size)))
@@ -50,7 +63,11 @@ class CustomerControllerTestKotlin {
 
         every { customerService.findById(any()) } returns testCustomer
 
-        mockMvc.perform(get(CustomerController.CUSTOMERS_PATH_WITH_ID, customerId).accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+            get(CustomerController.CUSTOMERS_PATH_WITH_ID, customerId)
+                .with(httpBasic(USERNAME, PASSWORD))
+                .accept(MediaType.APPLICATION_JSON)
+        )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.name", equalTo(testCustomer.name)))
@@ -61,7 +78,10 @@ class CustomerControllerTestKotlin {
     fun testGetCustomerByIdNotFound() {
         every { customerService.findById(any()) } returns null
 
-        mockMvc.perform(get(CustomerController.CUSTOMERS_PATH_WITH_ID, UUID.randomUUID()))
+        mockMvc.perform(
+            get(CustomerController.CUSTOMERS_PATH_WITH_ID, UUID.randomUUID())
+                .with(httpBasic(USERNAME, PASSWORD))
+        )
             .andExpect(status().isNotFound());
     }
 
@@ -77,10 +97,12 @@ class CustomerControllerTestKotlin {
         every { customerService.save(any()) } returns customerServiceImpl.findAll()[0]
 
         mockMvc
-            .perform(post(CustomerController.BASE_CUSTOMERS_PATH)
-                .accept(MediaType.APPLICATION_JSON)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(testCustomer))
+            .perform(
+                post(CustomerController.BASE_CUSTOMERS_PATH)
+                    .with(httpBasic(USERNAME, PASSWORD))
+                    .accept(MediaType.APPLICATION_JSON)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(testCustomer))
             )
             .andExpect(status().isCreated())
             .andExpect(header().exists("Location"));
@@ -89,16 +111,19 @@ class CustomerControllerTestKotlin {
     @Test
     fun testUpdateCustomer() {
         val testCustomer = customerServiceImpl.findAll().first().apply {
-            name ="New Test Name"
+            name = "New Test Name"
             version = 2
         }
 
         every { customerService.updateById(any(), any()) } returns testCustomer
 
-        mockMvc.perform(put(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(testCustomer)))
+        mockMvc.perform(
+            put(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
+                .with(httpBasic(USERNAME, PASSWORD))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(testCustomer))
+        )
             .andExpect(status().isNoContent())
 
         verify { customerService.updateById(any(), any()) }
@@ -111,8 +136,11 @@ class CustomerControllerTestKotlin {
         val uuidSlot = slot<UUID>()
         every { customerService.deleteById(capture(uuidSlot)) } returns true
 
-        mockMvc.perform(delete(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
-            .accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(
+            delete(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
+                .with(httpBasic(USERNAME, PASSWORD))
+                .accept(MediaType.APPLICATION_JSON)
+        )
             .andExpect(status().isNoContent())
 
         verify { customerService.deleteById(any()) }
@@ -131,10 +159,13 @@ class CustomerControllerTestKotlin {
         val customerSlot = slot<CustomerDTO>()
         every { customerService.patchById(capture(uuidSlot), capture(customerSlot)) } returns testCustomer
 
-        mockMvc.perform(patch(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
-            .accept(MediaType.APPLICATION_JSON)
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(customerMap)))
+        mockMvc.perform(
+            patch(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
+                .with(httpBasic(USERNAME, PASSWORD))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(customerMap))
+        )
             .andExpect(status().isNoContent())
 
         verify { customerService.patchById(any(), any()) }
