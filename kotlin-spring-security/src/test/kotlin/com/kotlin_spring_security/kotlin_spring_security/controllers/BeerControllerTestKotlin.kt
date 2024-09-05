@@ -1,6 +1,7 @@
 package com.kotlin_spring_security.kotlin_spring_security.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.kotlin_spring_security.kotlin_spring_security.config.SpringSecurityConfig
 import com.kotlin_spring_security.kotlin_spring_security.models.BeerDTO
 import com.kotlin_spring_security.kotlin_spring_security.services.BeerService
 import com.kotlin_spring_security.kotlin_spring_security.services.BeerServiceImpl
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
 import org.springframework.test.web.servlet.MockMvc
@@ -24,6 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.util.*
 
 @WebMvcTest(BeerController::class)
+@Import(SpringSecurityConfig::class)
 class BeerControllerTestKotlin {
 
     companion object {
