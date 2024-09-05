@@ -1,6 +1,8 @@
 package com.kotlin_spring_security.kotlin_spring_security.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.kotlin_spring_security.kotlin_spring_security.config.SpringSecurityConfig
+import com.kotlin_spring_security.kotlin_spring_security.controllers.BeerControllerTestKotlin.Companion
 import com.kotlin_spring_security.kotlin_spring_security.entities.Beer
 import com.kotlin_spring_security.kotlin_spring_security.mappers.BeerMapper
 import com.kotlin_spring_security.kotlin_spring_security.models.BeerDTO
@@ -18,12 +20,15 @@ import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
 import org.springframework.test.annotation.Rollback
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
+import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.context.WebApplicationContext
@@ -31,6 +36,11 @@ import java.util.*
 
 @SpringBootTest
 class BeerControllerIT {
+    companion object {
+        const val USERNAME = "user1"
+        const val PASSWORD = "user123"
+    }
+
     @Autowired
     lateinit var beerRepository: BeerRepository
 
@@ -50,7 +60,10 @@ class BeerControllerIT {
 
     @BeforeEach
     fun setUp() {
-        mockMvc = MockMvcBuilders.webAppContextSetup(wac).build()
+        mockMvc = MockMvcBuilders
+            .webAppContextSetup(wac)
+            .apply<DefaultMockMvcBuilder>(springSecurity())
+            .build()
     }
 
     @Test
@@ -195,6 +208,7 @@ class BeerControllerIT {
 
         val result = mockMvc.perform(
             patch(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerMap))
@@ -209,6 +223,7 @@ class BeerControllerIT {
     fun testListBeersByName() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .queryParam("name", "IPA")
         )
             .andExpect(status().isOk)
@@ -219,6 +234,7 @@ class BeerControllerIT {
     fun testListBeersByStyle() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .queryParam("style", BeerStyle.ALE.toString())
         )
             .andExpect(status().isOk)
@@ -229,6 +245,7 @@ class BeerControllerIT {
     fun testListBeersByStyleAndNameAndShowInventory() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .queryParam("name", "ALE")
                 .queryParam("style", BeerStyle.ALE.toString())
                 .queryParam("showInventory", "TRUE")
@@ -242,6 +259,7 @@ class BeerControllerIT {
     fun testListBeersByStyleAndName() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .queryParam("name", "ALE")
                 .queryParam("style", BeerStyle.ALE.toString())
         )
@@ -254,6 +272,7 @@ class BeerControllerIT {
     fun testListBeersByStyleAndNameShowInventoryTruePage2() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .queryParam("name", "ALE")
                 .queryParam("style", BeerStyle.ALE.toString())
                 .queryParam("showInventory", "TRUE")
@@ -275,6 +294,7 @@ class BeerControllerIT {
 
         mockMvc.perform(
             put(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstTestBeerDTO))
@@ -288,6 +308,7 @@ class BeerControllerIT {
         secondTestBeerDTO.name = "New Beer Name 2"
         mockMvc.perform(
             put(BeerController.BEER_PATH_WITH_ID, testBeer.id)
+                .with(httpBasic(USERNAME, PASSWORD))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(secondTestBeerDTO))
