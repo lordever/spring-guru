@@ -70,6 +70,7 @@ class BeerClientMockTest {
 
         server.expect(method(HttpMethod.GET))
             .andExpect(requestTo(URL + BeerClientImpl.GET_BEER_PATH))
+            .andExpect(header("Authorization", "Basic dXNlcjE6dXNlcjEyMw=="))
             .andRespond(withSuccess(response, MediaType.APPLICATION_JSON))
 
         val filter = ListBeersFilter()
@@ -89,6 +90,7 @@ class BeerClientMockTest {
 
         server.expect(method(HttpMethod.GET))
             .andExpect(requestTo(uri))
+            .andExpect(header("Authorization", "Basic dXNlcjE6dXNlcjEyMw=="))
             .andExpect(queryParam("name", TEST_BEER_NAME))
             .andRespond(withSuccess(response, MediaType.APPLICATION_JSON))
 
@@ -115,6 +117,7 @@ class BeerClientMockTest {
 
         server.expect(method(HttpMethod.POST))
             .andExpect(requestTo(URL + BeerClientImpl.GET_BEER_PATH))
+            .andExpect(header("Authorization", "Basic dXNlcjE6dXNlcjEyMw=="))
             .andRespond(withAccepted().location(uri))
 
         mockGetOperation()
@@ -128,6 +131,7 @@ class BeerClientMockTest {
     fun updateBeer() {
         server.expect(method(HttpMethod.PUT))
             .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andExpect(header("Authorization", "Basic dXNlcjE6dXNlcjEyMw=="))
             .andRespond(withNoContent())
 
         mockGetOperation()
@@ -140,6 +144,7 @@ class BeerClientMockTest {
     fun deleteBeer() {
         server.expect(method(HttpMethod.DELETE))
             .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andExpect(header("Authorization", "Basic dXNlcjE6dXNlcjEyMw=="))
             .andRespond(withNoContent())
 
         beerClient.deleteBeer(dtoJson.id)
@@ -151,6 +156,7 @@ class BeerClientMockTest {
     fun deleteNotFound() {
         server.expect(method(HttpMethod.DELETE))
             .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andExpect(header("Authorization", "Basic dXNlcjE6dXNlcjEyMw=="))
             .andRespond(withResourceNotFound())
 
         assertThrows(HttpClientErrorException::class.java) {
@@ -162,6 +168,7 @@ class BeerClientMockTest {
     private fun mockGetOperation() {
         server.expect(method(HttpMethod.GET))
             .andExpect(requestToUriTemplate(URL + BeerClientImpl.GET_BEER_BY_ID_PATH, dtoJson.id))
+            .andExpect(header("Authorization", "Basic dXNlcjE6dXNlcjEyMw=="))
             .andRespond(withSuccess(dtoStr, MediaType.APPLICATION_JSON))
     }
 
