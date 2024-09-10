@@ -11,12 +11,26 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt
 import org.springframework.test.annotation.Rollback
 import org.springframework.transaction.annotation.Transactional
+import java.time.Instant
 import java.util.*
 
 @SpringBootTest
 class CustomerControllerIT {
+    companion object {
+        val jwtProcessor: SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor = jwt().jwt { jwt ->
+            jwt.claims { claims ->
+                claims["scope"] = "message-read"
+                claims["scope"] = "message-write"
+            }
+                .subject("messaging-client")
+                .notBefore(Instant.now().minusSeconds(5L))
+        }
+    }
+
     @Autowired
     private lateinit var customerController: CustomerController
 

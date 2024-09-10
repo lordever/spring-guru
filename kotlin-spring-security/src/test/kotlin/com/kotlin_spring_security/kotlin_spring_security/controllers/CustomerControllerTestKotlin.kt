@@ -1,7 +1,7 @@
 package com.kotlin_spring_security.kotlin_spring_security.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.kotlin_spring_security.kotlin_spring_security.config.HttpBasicSecurityConfig
+import com.kotlin_spring_security.kotlin_spring_security.config.Oauth2SecurityConfig
 import com.kotlin_spring_security.kotlin_spring_security.models.CustomerDTO
 import com.kotlin_spring_security.kotlin_spring_security.services.CustomerService
 import com.kotlin_spring_security.kotlin_spring_security.services.CustomerServiceImpl
@@ -16,19 +16,27 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.Instant
 import java.util.*
 
 @WebMvcTest(CustomerController::class)
-@Import(HttpBasicSecurityConfig::class)
+@Import(Oauth2SecurityConfig::class)
 class CustomerControllerTestKotlin {
-
     companion object {
-        const val USERNAME = "user1"
-        const val PASSWORD = "user123"
+        val jwtProcessor: SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor = jwt().jwt { jwt ->
+            jwt.claims { claims ->
+                claims["scope"] = "message-read"
+                claims["scope"] = "message-write"
+            }
+                .subject("messaging-client")
+                .notBefore(Instant.now().minusSeconds(5L))
+        }
     }
 
     @Autowired
@@ -48,7 +56,7 @@ class CustomerControllerTestKotlin {
 
         mockMvc.perform(
             get(CustomerController.BASE_CUSTOMERS_PATH).accept(MediaType.APPLICATION_JSON)
-                .with(httpBasic(BeerControllerTestKotlin.USERNAME, BeerControllerTestKotlin.PASSWORD))
+                .with(jwtProcessor)
         )
             .andExpect(status().isOk)
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
@@ -64,7 +72,7 @@ class CustomerControllerTestKotlin {
 
         mockMvc.perform(
             get(CustomerController.CUSTOMERS_PATH_WITH_ID, customerId)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
@@ -79,7 +87,7 @@ class CustomerControllerTestKotlin {
 
         mockMvc.perform(
             get(CustomerController.CUSTOMERS_PATH_WITH_ID, UUID.randomUUID())
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(BeerControllerTestKotlin.jwtProcessor)
         )
             .andExpect(status().isNotFound());
     }
@@ -98,7 +106,7 @@ class CustomerControllerTestKotlin {
         mockMvc
             .perform(
                 post(CustomerController.BASE_CUSTOMERS_PATH)
-                    .with(httpBasic(USERNAME, PASSWORD))
+                    .with(jwtProcessor)
                     .accept(MediaType.APPLICATION_JSON)
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(testCustomer))
@@ -118,7 +126,7 @@ class CustomerControllerTestKotlin {
 
         mockMvc.perform(
             put(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testCustomer))
@@ -137,7 +145,7 @@ class CustomerControllerTestKotlin {
 
         mockMvc.perform(
             delete(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNoContent())
@@ -160,7 +168,7 @@ class CustomerControllerTestKotlin {
 
         mockMvc.perform(
             patch(CustomerController.CUSTOMERS_PATH_WITH_ID, testCustomer.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customerMap))

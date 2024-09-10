@@ -1,7 +1,7 @@
 package com.kotlin_spring_security.kotlin_spring_security.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.kotlin_spring_security.kotlin_spring_security.config.HttpBasicSecurityConfig
+import com.kotlin_spring_security.kotlin_spring_security.config.Oauth2SecurityConfig
 import com.kotlin_spring_security.kotlin_spring_security.models.BeerDTO
 import com.kotlin_spring_security.kotlin_spring_security.services.BeerService
 import com.kotlin_spring_security.kotlin_spring_security.services.BeerServiceImpl
@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
@@ -28,12 +28,18 @@ import java.time.Instant
 import java.util.*
 
 @WebMvcTest(BeerController::class)
-@Import(HttpBasicSecurityConfig::class)
+@Import(Oauth2SecurityConfig::class)
 class BeerControllerTestKotlin {
 
     companion object {
-        const val USERNAME = "user1"
-        const val PASSWORD = "user123"
+        val jwtProcessor: SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor = jwt().jwt { jwt ->
+            jwt.claims { claims ->
+                claims["scope"] = "message-read"
+                claims["scope"] = "message-write"
+            }
+                .subject("messaging-client")
+                .notBefore(Instant.now().minusSeconds(5L))
+        }
     }
 
     @Autowired
@@ -65,14 +71,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
-                .with(jwt().jwt { jwt ->
-                    jwt.claims { claims ->
-                        claims["scope"] = "message-read"
-                        claims["scope"] = "message-write"
-                    }
-                        .subject("messaging-client")
-                        .notBefore(Instant.now().minusSeconds(5L))
-                })
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
@@ -89,7 +88,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             get(BeerController.BEER_PATH_WITH_ID, beerId)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
@@ -104,7 +103,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             get(BeerController.BEER_PATH_WITH_ID, UUID.randomUUID())
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
         )
             .andExpect(status().isNotFound)
     }
@@ -120,7 +119,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             post(BeerController.BASE_BEER_PATH)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testBeer))
@@ -137,7 +136,7 @@ class BeerControllerTestKotlin {
 
         val mockMvcResult = mockMvc.perform(
             post(BeerController.BASE_BEER_PATH)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testBeer))
@@ -157,7 +156,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             put(BeerController.BEER_PATH_WITH_ID, testBeerDTO.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(testBeerDTO))
@@ -178,7 +177,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             delete(BeerController.BEER_PATH_WITH_ID, testBeer.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isNoContent())
@@ -200,7 +199,7 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             patch(BeerController.BEER_PATH_WITH_ID, testBeer.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerMap))

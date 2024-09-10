@@ -18,7 +18,9 @@ import org.springframework.data.domain.Page
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity
 import org.springframework.test.annotation.Rollback
 import org.springframework.test.web.servlet.MockMvc
@@ -29,13 +31,20 @@ import org.springframework.test.web.servlet.setup.DefaultMockMvcBuilder
 import org.springframework.test.web.servlet.setup.MockMvcBuilders
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.context.WebApplicationContext
+import java.time.Instant
 import java.util.*
 
 @SpringBootTest
 class BeerControllerIT {
     companion object {
-        const val USERNAME = "user1"
-        const val PASSWORD = "user123"
+        val jwtProcessor: SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor = jwt().jwt { jwt ->
+            jwt.claims { claims ->
+                claims["scope"] = "message-read"
+                claims["scope"] = "message-write"
+            }
+                .subject("messaging-client")
+                .notBefore(Instant.now().minusSeconds(5L))
+        }
     }
 
     @Autowired
@@ -205,7 +214,7 @@ class BeerControllerIT {
 
         val result = mockMvc.perform(
             patch(BeerController.BEER_PATH_WITH_ID, testBeer.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(beerMap))
@@ -220,7 +229,7 @@ class BeerControllerIT {
     fun testListBeersByName() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .queryParam("name", "IPA")
         )
             .andExpect(status().isOk)
@@ -231,7 +240,7 @@ class BeerControllerIT {
     fun testListBeersByStyle() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .queryParam("style", BeerStyle.ALE.toString())
         )
             .andExpect(status().isOk)
@@ -242,7 +251,7 @@ class BeerControllerIT {
     fun testListBeersByStyleAndNameAndShowInventory() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .queryParam("name", "ALE")
                 .queryParam("style", BeerStyle.ALE.toString())
                 .queryParam("showInventory", "TRUE")
@@ -256,7 +265,7 @@ class BeerControllerIT {
     fun testListBeersByStyleAndName() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .queryParam("name", "ALE")
                 .queryParam("style", BeerStyle.ALE.toString())
         )
@@ -269,7 +278,7 @@ class BeerControllerIT {
     fun testListBeersByStyleAndNameShowInventoryTruePage2() {
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .queryParam("name", "ALE")
                 .queryParam("style", BeerStyle.ALE.toString())
                 .queryParam("showInventory", "TRUE")
@@ -291,7 +300,7 @@ class BeerControllerIT {
 
         mockMvc.perform(
             put(BeerController.BEER_PATH_WITH_ID, testBeer.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(firstTestBeerDTO))
@@ -305,7 +314,7 @@ class BeerControllerIT {
         secondTestBeerDTO.name = "New Beer Name 2"
         mockMvc.perform(
             put(BeerController.BEER_PATH_WITH_ID, testBeer.id)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwtProcessor)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(secondTestBeerDTO))
