@@ -1,7 +1,7 @@
 package com.kotlin_spring_security.kotlin_spring_security.controllers
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.kotlin_spring_security.kotlin_spring_security.config.SpringSecurityConfig
+import com.kotlin_spring_security.kotlin_spring_security.config.HttpBasicSecurityConfig
 import com.kotlin_spring_security.kotlin_spring_security.models.BeerDTO
 import com.kotlin_spring_security.kotlin_spring_security.services.BeerService
 import com.kotlin_spring_security.kotlin_spring_security.services.BeerServiceImpl
@@ -26,7 +26,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.util.*
 
 @WebMvcTest(BeerController::class)
-@Import(SpringSecurityConfig::class)
+@Import(HttpBasicSecurityConfig::class)
 class BeerControllerTestKotlin {
 
     companion object {
