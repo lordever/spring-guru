@@ -20,9 +20,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.context.annotation.Import
 import org.springframework.http.MediaType
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.Instant
 import java.util.*
 
 @WebMvcTest(BeerController::class)
@@ -63,7 +65,14 @@ class BeerControllerTestKotlin {
 
         mockMvc.perform(
             get(BeerController.BASE_BEER_PATH)
-                .with(httpBasic(USERNAME, PASSWORD))
+                .with(jwt().jwt { jwt ->
+                    jwt.claims { claims ->
+                        claims["scope"] = "message-read"
+                        claims["scope"] = "message-write"
+                    }
+                        .subject("messaging-client")
+                        .notBefore(Instant.now().minusSeconds(5L))
+                })
                 .accept(MediaType.APPLICATION_JSON)
         )
             .andExpect(status().isOk)
