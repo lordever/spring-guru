@@ -16,7 +16,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory
 @Configuration
 class RestTemplateBuilderConfig(
     val clientRegistrationRepository: ClientRegistrationRepository,
-    val oauth2AuthorizedClientService: OAuth2AuthorizedClientService
+    val oauth2AuthorizedClientService: OAuth2AuthorizedClientService,
 ) {
 
     @Value("\${rest.template.rootUrl}")
