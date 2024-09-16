@@ -13,17 +13,10 @@ class RestTemplateBuilderConfig {
     @Value("\${rest.template.rootUrl}")
     lateinit var rootUrl: String
 
-    @Value("\${rest.template.username}")
-    lateinit var username: String
-
-    @Value("\${rest.template.password}")
-    lateinit var password: String
-
     @Bean
     fun restTemplateBuilder(configurer: RestTemplateBuilderConfigurer): RestTemplateBuilder =
         configurer
             .configure(RestTemplateBuilder())
-            .basicAuthentication(username, password)
             .uriTemplateHandler(
                 DefaultUriBuilderFactory(
                     rootUrl
