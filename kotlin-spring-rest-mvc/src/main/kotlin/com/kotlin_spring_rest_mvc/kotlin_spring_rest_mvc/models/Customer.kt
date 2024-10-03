@@ -1,4 +1,4 @@
-package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models
+package com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.models
 
 import java.time.LocalDateTime
 import java.util.*
