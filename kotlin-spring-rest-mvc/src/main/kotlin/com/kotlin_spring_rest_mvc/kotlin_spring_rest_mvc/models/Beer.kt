@@ -1,4 +1,4 @@
-package com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.models
+package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models
 
 import java.math.BigDecimal
 import java.time.LocalDateTime

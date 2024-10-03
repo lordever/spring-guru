@@ -1,4 +1,4 @@
-package com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.services
+package com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.services
 
 import com.kotlin_spring_rest_mvc.kotlin_spring_rest_mvc.models.Beer
 import java.util.UUID
