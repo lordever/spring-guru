@@ -31,7 +31,7 @@ class PersonRepositoryImpl : PersonRepository {
     )
 
     override fun getById(id: Int): Mono<Person> {
-        return Mono.just(michael)
+        return findAll().filter { person -> person.id == id }.next()
     }
 
     override fun findAll(): Flux<Person> {

@@ -2,6 +2,7 @@ package com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.repo
 
 import com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.domain.Person
 import io.mockk.InternalPlatformDsl.toStr
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -24,6 +25,14 @@ class PersonRepositoryImplTest {
         val personMono: Mono<Person> = personRepository.getById(1)
 
         personMono.subscribe { person -> println(person.toString()) }
+    }
+
+    @Test
+    fun testGetByIdInteraction() {
+        val expectedName = "Sam"
+        val personMono: Mono<Person> = personRepository.getById(3)
+
+        personMono.subscribe { person -> assertEquals(expectedName, person.firstName) }
     }
 
     @Test
