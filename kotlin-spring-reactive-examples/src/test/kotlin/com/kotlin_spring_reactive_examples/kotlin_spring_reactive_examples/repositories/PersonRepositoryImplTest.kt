@@ -2,10 +2,11 @@ package com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.repo
 
 import com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.domain.Person
 import io.mockk.InternalPlatformDsl.toStr
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
+import reactor.test.StepVerifier
 
 class PersonRepositoryImplTest {
 
@@ -34,6 +35,39 @@ class PersonRepositoryImplTest {
 
         personMono.subscribe { person -> assertEquals(expectedName, person.firstName) }
     }
+
+    @Test
+    fun testGetByIdFound() {
+        val personMono: Mono<Person> = personRepository.getById(3)
+
+        personMono.hasElement().block()?.let { assertTrue(it) }
+    }
+
+    @Test
+    fun testGetByIdFoundStepVerifier() {
+        val personMono: Mono<Person> = personRepository.getById(3)
+
+        StepVerifier.create(personMono).expectNextCount(1).verifyComplete()
+
+        personMono.subscribe { person -> println(person.toString()) }
+    }
+
+    @Test
+    fun testGetByIdNotFound() {
+        val personMono: Mono<Person> = personRepository.getById(6)
+
+        personMono.hasElement().block()?.let { assertFalse(it) }
+    }
+
+    @Test
+    fun testGetByIdNotFoundStepVerifier() {
+        val personMono: Mono<Person> = personRepository.getById(6)
+
+        StepVerifier.create(personMono).expectNextCount(0).verifyComplete()
+
+        personMono.subscribe { person -> println(person.toString()) }
+    }
+
 
     @Test
     fun testMapOperation() {
