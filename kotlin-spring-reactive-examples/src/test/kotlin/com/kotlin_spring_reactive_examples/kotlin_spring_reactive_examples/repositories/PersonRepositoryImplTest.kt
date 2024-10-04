@@ -66,4 +66,20 @@ class PersonRepositoryImplTest {
             }
         }
     }
+
+    @Test
+    fun testFilterOnName() {
+        personRepository.findAll()
+            .filter { person -> person.firstName.equals("Fiona") }
+            .subscribe { person -> println(person.firstName) }
+    }
+
+    @Test
+    fun testGetByName() {
+        val personMono: Mono<Person> = personRepository.findAll()
+            .filter { person -> person.firstName.equals("Fiona") }
+            .next()
+
+        personMono.subscribe { person -> println(person.firstName) }
+    }
 }
