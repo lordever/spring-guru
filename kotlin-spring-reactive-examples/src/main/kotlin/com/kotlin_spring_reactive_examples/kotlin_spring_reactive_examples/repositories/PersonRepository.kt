@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono
 
 interface PersonRepository {
     fun getById(id: Int): Mono<Person>
-    fun findAll(id: Int): Flux<Person>
+    fun findAll(): Flux<Person>
 }

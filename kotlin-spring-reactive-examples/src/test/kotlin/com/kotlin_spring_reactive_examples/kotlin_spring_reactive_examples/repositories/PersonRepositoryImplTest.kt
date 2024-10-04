@@ -2,6 +2,7 @@ package com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.repo
 
 import com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.domain.Person
 import org.junit.jupiter.api.Test
+import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
 
 class PersonRepositoryImplTest {
@@ -31,5 +32,38 @@ class PersonRepositoryImplTest {
         personMono
             .map { person -> person.firstName }
             .subscribe { firstName -> println(firstName) }
+    }
+
+    @Test
+    fun testFluxBlockFirst() {
+        val personFlux: Flux<Person> = personRepository.findAll()
+        val person: Person? = personFlux.blockFirst() //Not preferred
+
+        println(person.toString())
+    }
+
+    @Test
+    fun testFluxSubscriber() {
+        val personFlux: Flux<Person> = personRepository.findAll()
+        personFlux.subscribe { person -> println(person) }
+    }
+
+    @Test
+    fun testFluxMap() {
+        val personFlux: Flux<Person> = personRepository.findAll()
+        personFlux
+            .map { person -> person.firstName }
+            .subscribe { firstName -> println(firstName) }
+    }
+
+    @Test
+    fun testFluxToList() {
+        val personFlux: Flux<Person> = personRepository.findAll()
+        val personList: Mono<List<Person>> = personFlux.collectList()
+        personList.subscribe { list ->
+            run {
+                list.forEach { person -> println(person.firstName) }
+            }
+        }
     }
 }
