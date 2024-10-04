@@ -1,6 +1,7 @@
 package com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.repositories
 
 import com.kotlin_spring_reactive_examples.kotlin_spring_reactive_examples.domain.Person
+import io.mockk.InternalPlatformDsl.toStr
 import org.junit.jupiter.api.Test
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -81,5 +82,32 @@ class PersonRepositoryImplTest {
             .next()
 
         personMono.subscribe { person -> println(person.firstName) }
+    }
+
+
+    @Test
+    fun testFindPersonByNameNotFound() {
+        val personFlux: Flux<Person> = personRepository.findAll()
+        val nonExistingName = "Alex"
+
+        val personMono: Mono<Person> = personFlux
+            .filter { person -> person.firstName.equals(nonExistingName) }
+            .single()
+            .doOnError { throwable ->
+                run {
+                    println("Error occurred in the flux")
+                    println(throwable.toStr())
+                }
+            }
+
+        personMono.subscribe(
+            { person -> println(person.firstName) },
+            { throwable ->
+                run {
+                    println("Error occurred in the mono")
+                    println(throwable.toStr())
+                }
+            }
+        )
     }
 }
