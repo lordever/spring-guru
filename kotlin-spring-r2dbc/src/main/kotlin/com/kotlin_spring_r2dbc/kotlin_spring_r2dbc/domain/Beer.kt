@@ -6,12 +6,12 @@ import org.springframework.data.annotation.Id
 
 data class Beer(
     @Id
-    val id: Int,
+    val id: Int? = null,
     val name: String,
     val style: String,
     val upc: String,
     val quantity: Int,
     val price: BigDecimal,
-    val createdDate: LocalDateTime,
-    val lastModifiedDate: LocalDateTime,
+    val createdDate: LocalDateTime? = null,
+    val lastModifiedDate: LocalDateTime? = null,
 )
