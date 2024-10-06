@@ -5,11 +5,11 @@ import java.time.LocalDateTime
 
 data class BeerDTO(
     val id: Int? = null,
-    val name: String,
-    val style: String,
-    val upc: String,
-    val quantity: Int,
-    val price: BigDecimal,
+    val name: String? = null,
+    val style: String? = null,
+    val upc: String? = null,
+    val quantity: Int? = null,
+    val price: BigDecimal? = null,
     val createdDate: LocalDateTime? = null,
     val lastModifiedDate: LocalDateTime? = null,
 )
