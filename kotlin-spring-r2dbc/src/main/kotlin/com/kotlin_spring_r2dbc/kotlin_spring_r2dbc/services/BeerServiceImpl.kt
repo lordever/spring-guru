@@ -5,6 +5,7 @@ import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.model.BeerDTO
 import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.repositories.BeerRepository
 import org.springframework.stereotype.Service
 import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 
 @Service
 class BeerServiceImpl(
@@ -14,6 +15,12 @@ class BeerServiceImpl(
     override fun listBeers(): Flux<BeerDTO> {
         return beerRepository
             .findAll()
+            .map(beerMapper::toDto)
+    }
+
+    override fun getBeerById(beerId: Int): Mono<BeerDTO> {
+        return beerRepository
+            .findById(beerId)
             .map(beerMapper::toDto)
     }
 }
