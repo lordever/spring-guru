@@ -9,15 +9,15 @@ import org.springframework.data.annotation.LastModifiedDate
 data class Beer(
     @Id
     val id: Int? = null,
-    val name: String,
-    val style: String,
-    val upc: String,
-    val quantity: Int,
-    val price: BigDecimal,
+    var name: String? = null,
+    var style: String? = null,
+    var upc: String? = null,
+    var quantity: Int? = null,
+    var price: BigDecimal? = null,
 
     @CreatedDate
-    val createdDate: LocalDateTime? = null,
+    var createdDate: LocalDateTime? = null,
 
     @LastModifiedDate
-    val lastModifiedDate: LocalDateTime? = null,
+    var lastModifiedDate: LocalDateTime? = null,
 )

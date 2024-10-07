@@ -3,11 +3,7 @@ package com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.controller
 import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.model.BeerDTO
 import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.services.BeerService
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Flux
 import reactor.core.publisher.Mono
@@ -40,5 +36,14 @@ class BeerController(var beerService: BeerService) {
                         .toUri()
                 ).build()
             }
+    }
+
+    @PutMapping(BEER_PATH_ID)
+    fun updateExistingBeer(
+        @PathVariable beerId: Int,
+        @RequestBody dto: BeerDTO
+    ): Mono<ResponseEntity<Void>> {
+        return beerService.updateBeer(beerId, dto)
+            .map { ResponseEntity.ok().build() }
     }
 }
