@@ -11,4 +11,5 @@ interface BeerService {
     fun createBeer(beerDTO: BeerDTO): Mono<BeerDTO>
     fun updateBeer(beerId: Int, dto: BeerDTO): Mono<BeerDTO>
     fun patchBeer(beerId: Int, dto: BeerDTO): Mono<BeerDTO>
+    fun deleteBeerById(beerId: Int): Mono<Void>
 }

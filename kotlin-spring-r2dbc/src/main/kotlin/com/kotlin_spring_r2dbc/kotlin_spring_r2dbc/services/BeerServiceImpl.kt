@@ -35,6 +35,10 @@ class BeerServiceImpl(
         }.flatMap(beerRepository::save).map(beerMapper::toDto)
     }
 
+    override fun deleteBeerById(beerId: Int): Mono<Void> {
+        return beerRepository.deleteById(beerId)
+    }
+
     override fun patchBeer(beerId: Int, dto: BeerDTO): Mono<BeerDTO> {
         return beerRepository.findById(beerId).map { foundBeer ->
             if (dto.name != null) foundBeer.name = dto.name

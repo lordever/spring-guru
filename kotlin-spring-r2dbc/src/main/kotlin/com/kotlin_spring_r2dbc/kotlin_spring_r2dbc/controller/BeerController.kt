@@ -55,4 +55,10 @@ class BeerController(var beerService: BeerService) {
         return beerService.patchBeer(beerId, dto)
             .map { ResponseEntity.ok().build() }
     }
+
+    @DeleteMapping(BEER_PATH_ID)
+    fun deleteById(@PathVariable beerId: Int): Mono<ResponseEntity<Void>> {
+        return beerService.deleteBeerById(beerId)
+            .then(Mono.fromCallable { ResponseEntity.noContent().build() })
+    }
 }
