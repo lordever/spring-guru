@@ -3,6 +3,7 @@ package com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.controller
 import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.model.BeerDTO
 import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.services.BeerService
 import org.springframework.http.ResponseEntity
+import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.UriComponentsBuilder
 import reactor.core.publisher.Flux
@@ -26,7 +27,7 @@ class BeerController(var beerService: BeerService) {
     }
 
     @PostMapping(BEER_PATH)
-    fun createNewBeer(@RequestBody beerDTO: BeerDTO): Mono<ResponseEntity<Void>> {
+    fun createNewBeer(@Validated @RequestBody beerDTO: BeerDTO): Mono<ResponseEntity<Void>> {
         return beerService.createBeer(beerDTO)
             .map { savedDto ->
                 ResponseEntity.created(
@@ -41,7 +42,7 @@ class BeerController(var beerService: BeerService) {
     @PutMapping(BEER_PATH_ID)
     fun updateExistingBeer(
         @PathVariable beerId: Int,
-        @RequestBody dto: BeerDTO
+        @Validated @RequestBody dto: BeerDTO
     ): Mono<ResponseEntity<Void>> {
         return beerService.updateBeer(beerId, dto)
             .map { ResponseEntity.ok().build() }
@@ -50,7 +51,7 @@ class BeerController(var beerService: BeerService) {
     @PatchMapping(BEER_PATH_ID)
     fun patchExistingBeer(
         @PathVariable beerId: Int,
-        @RequestBody dto: BeerDTO
+        @Validated @RequestBody dto: BeerDTO
     ): Mono<ResponseEntity<Void>> {
         return beerService.patchBeer(beerId, dto)
             .map { ResponseEntity.ok().build() }
