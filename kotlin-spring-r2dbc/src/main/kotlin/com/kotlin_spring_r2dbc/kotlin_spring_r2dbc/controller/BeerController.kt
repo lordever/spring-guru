@@ -46,4 +46,13 @@ class BeerController(var beerService: BeerService) {
         return beerService.updateBeer(beerId, dto)
             .map { ResponseEntity.ok().build() }
     }
+
+    @PatchMapping(BEER_PATH_ID)
+    fun patchExistingBeer(
+        @PathVariable beerId: Int,
+        @RequestBody dto: BeerDTO
+    ): Mono<ResponseEntity<Void>> {
+        return beerService.patchBeer(beerId, dto)
+            .map { ResponseEntity.ok().build() }
+    }
 }

@@ -34,4 +34,16 @@ class BeerServiceImpl(
             foundBeer
         }.flatMap(beerRepository::save).map(beerMapper::toDto)
     }
+
+    override fun patchBeer(beerId: Int, dto: BeerDTO): Mono<BeerDTO> {
+        return beerRepository.findById(beerId).map { foundBeer ->
+            if (dto.name != null) foundBeer.name = dto.name
+            if (dto.style != null) foundBeer.style = dto.style
+            if (dto.price != null) foundBeer.price = dto.price
+            if (dto.upc != null) foundBeer.upc = dto.upc
+            if (dto.quantity != null) foundBeer.quantity = dto.quantity
+
+            foundBeer
+        }.flatMap(beerRepository::save).map(beerMapper::toDto)
+    }
 }
