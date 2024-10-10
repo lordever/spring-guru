@@ -6,19 +6,19 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 data class BeerDTO(
-    val id: Int? = null,
+    var id: Int? = null,
 
     @field:NotBlank
     @field:Size(min = 3, max = 255)
-    val name: String? = null,
+    var name: String? = null,
 
     @field:Size(min = 3, max = 255)
-    val style: String? = null,
+    var style: String? = null,
 
     @field:Size(max = 25)
-    val upc: String? = null,
-    val quantity: Int? = null,
-    val price: BigDecimal? = null,
-    val createdDate: LocalDateTime? = null,
-    val lastModifiedDate: LocalDateTime? = null,
+    var upc: String? = null,
+    var quantity: Int? = null,
+    var price: BigDecimal? = null,
+    var createdDate: LocalDateTime? = null,
+    var lastModifiedDate: LocalDateTime? = null,
 )
