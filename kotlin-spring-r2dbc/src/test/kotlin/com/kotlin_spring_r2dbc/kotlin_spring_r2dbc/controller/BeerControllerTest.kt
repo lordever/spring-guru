@@ -2,13 +2,17 @@ package com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.controller
 
 import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.model.BeerDTO
 import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.repositories.BeerRepositoryTest
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 @SpringBootTest
 @AutoConfigureWebTestClient
 class BeerControllerTest {
@@ -16,6 +20,7 @@ class BeerControllerTest {
     lateinit var webTestClient: WebTestClient
 
     @Test
+    @Order(1)
     fun testListBeers() {
         webTestClient
             .get()
@@ -27,6 +32,7 @@ class BeerControllerTest {
     }
 
     @Test
+    @Order(2)
     fun testGetBeerById() {
         webTestClient
             .get()
@@ -50,6 +56,7 @@ class BeerControllerTest {
     }
 
     @Test
+    @Order(3)
     fun testUpdateBeer() {
         webTestClient.put()
             .uri(BeerController.BEER_PATH_ID, 1)
@@ -59,6 +66,7 @@ class BeerControllerTest {
     }
 
     @Test
+    @Order(999)
     fun testDeleteBeer() {
         webTestClient.delete()
             .uri(BeerController.BEER_PATH_ID, 1)
