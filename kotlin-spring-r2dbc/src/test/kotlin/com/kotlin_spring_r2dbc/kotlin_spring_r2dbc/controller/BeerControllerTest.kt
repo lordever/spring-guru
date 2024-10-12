@@ -1,5 +1,6 @@
 package com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.controller
 
+import com.kotlin_spring_r2dbc.kotlin_spring_r2dbc.model.BeerDTO
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
@@ -21,5 +22,16 @@ class BeerControllerTest {
             .expectStatus().isOk
             .expectHeader().valueEquals("Content-type", "application/json")
             .expectBody().jsonPath("$.size()").isEqualTo(3)
+    }
+
+    @Test
+    fun testGetBeerById() {
+        webTestClient
+            .get()
+            .uri(BeerController.BEER_PATH_ID, 1)
+            .exchange()
+            .expectStatus().isOk
+            .expectHeader().valueEquals("Content-type", "application/json")
+            .expectBody(BeerDTO::class.java)
     }
 }
