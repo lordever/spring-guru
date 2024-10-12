@@ -39,7 +39,7 @@ class CustomerController(
         @Validated @RequestBody customerDTO: CustomerDTO
     ): Mono<ResponseEntity<Void>> =
         customerService.updateCustomer(customerId, customerDTO)
-            .map { ResponseEntity.ok().build() }
+            .map { ResponseEntity.noContent().build() }
 
     @PatchMapping(CUSTOMER_PATH_ID)
     fun patchCustomer(

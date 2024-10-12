@@ -14,6 +14,13 @@ class CustomerRepositoryTest {
     @Autowired
     lateinit var customerRepository: CustomerRepository
 
+    companion object {
+        fun getTestCustomer(): Customer =
+            Customer(
+                name = "Alex Johnson"
+            )
+    }
+
     @Test
     fun testCreateJson() {
         val objectMapper = ObjectMapper()
@@ -30,9 +37,4 @@ class CustomerRepositoryTest {
         customerRepository.save(getTestCustomer())
             .subscribe { customer -> println(customer.toString()) }
     }
-
-    fun getTestCustomer(): Customer =
-        Customer(
-            name = "Alex Johnson"
-        )
 }
