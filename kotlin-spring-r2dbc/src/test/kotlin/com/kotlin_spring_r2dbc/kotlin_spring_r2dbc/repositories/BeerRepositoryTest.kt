@@ -15,6 +15,17 @@ class BeerRepositoryTest {
     @Autowired
     lateinit var beerRepository: BeerRepository
 
+     companion object {
+         fun getTestBeer(): Beer =
+             Beer(
+                 name = "Space Dust",
+                 style = "IPA",
+                 price = BigDecimal.TEN,
+                 quantity = 12,
+                 upc = "123213"
+             )
+     }
+
     @Test
     fun testCreateJson() {
         val objectMapper = ObjectMapper()
@@ -31,13 +42,4 @@ class BeerRepositoryTest {
         beerRepository.save(getTestBeer())
             .subscribe { beer -> println(beer.toString()) }
     }
-
-    fun getTestBeer(): Beer =
-        Beer(
-            name = "Space Dust",
-            style = "IPA",
-            price = BigDecimal.TEN,
-            quantity = 12,
-            upc = "123213"
-        )
 }
