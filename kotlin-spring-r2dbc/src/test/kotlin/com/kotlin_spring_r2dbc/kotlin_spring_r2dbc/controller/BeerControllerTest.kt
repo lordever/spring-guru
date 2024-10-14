@@ -66,6 +66,21 @@ class BeerControllerTest {
     }
 
     @Test
+    fun testCreateBeerBad() {
+        val testBeer = BeerRepositoryTest.getTestBeer()
+        testBeer.name = ""
+
+
+        webTestClient
+            .post()
+            .uri(BeerController.BEER_PATH)
+            .body(Mono.just(testBeer), BeerDTO::class.java)
+            .header("Content-type", "application/json")
+            .exchange()
+            .expectStatus().isBadRequest
+    }
+
+    @Test
     @Order(999)
     fun testDeleteBeer() {
         webTestClient.delete()
