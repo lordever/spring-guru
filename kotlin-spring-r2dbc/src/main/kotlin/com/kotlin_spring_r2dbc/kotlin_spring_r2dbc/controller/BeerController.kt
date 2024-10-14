@@ -58,6 +58,7 @@ class BeerController(var beerService: BeerService) {
         @Validated @RequestBody dto: BeerDTO
     ): Mono<ResponseEntity<Void>> {
         return beerService.patchBeer(beerId, dto)
+            .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)))
             .map { ResponseEntity.ok().build() }
     }
 
