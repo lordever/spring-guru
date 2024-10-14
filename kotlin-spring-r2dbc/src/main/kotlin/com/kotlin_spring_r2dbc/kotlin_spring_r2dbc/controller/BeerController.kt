@@ -64,7 +64,9 @@ class BeerController(var beerService: BeerService) {
 
     @DeleteMapping(BEER_PATH_ID)
     fun deleteById(@PathVariable beerId: Int): Mono<ResponseEntity<Void>> {
-        return beerService.deleteBeerById(beerId)
+        return beerService.getBeerById(beerId)
+            .switchIfEmpty(Mono.error(ResponseStatusException(HttpStatus.NOT_FOUND)))
+            .mapNotNull { beerDto -> beerDto.id?.let { beerService.deleteBeerById(it) } }
             .then(Mono.fromCallable { ResponseEntity.noContent().build() })
     }
 }
