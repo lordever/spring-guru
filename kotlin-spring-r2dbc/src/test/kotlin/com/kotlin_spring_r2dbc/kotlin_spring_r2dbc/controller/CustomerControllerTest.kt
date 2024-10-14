@@ -44,6 +44,15 @@ class CustomerControllerTest {
     }
 
     @Test
+    fun testGetCustomerNotFound() {
+        webTestClient
+            .get()
+            .uri(CustomerController.CUSTOMER_PATH_ID, 1111)
+            .exchange()
+            .expectStatus().isNotFound
+    }
+
+    @Test
     @Order(3)
     fun testUpdateCustomer() {
         webTestClient
@@ -52,6 +61,42 @@ class CustomerControllerTest {
             .body(Mono.just(CustomerRepositoryTest.getTestCustomer()), CustomerDTO::class.java)
             .exchange()
             .expectStatus().isNoContent
+    }
+
+    @Test
+    @Order(4)
+    fun testUpdateCustomerNotFound() {
+        val testCustomer = CustomerRepositoryTest.getTestCustomer()
+        webTestClient
+            .put()
+            .uri(CustomerController.CUSTOMER_PATH_ID, 111)
+            .body(Mono.just(testCustomer), CustomerDTO::class.java)
+            .exchange()
+            .expectStatus().isNotFound
+    }
+
+    @Test
+    @Order(5)
+    fun testUpdateCustomerBad() {
+        val testCustomer = CustomerRepositoryTest.getTestCustomer()
+        testCustomer.name = ""
+        webTestClient
+            .put()
+            .uri(CustomerController.CUSTOMER_PATH_ID, 1)
+            .body(Mono.just(testCustomer), CustomerDTO::class.java)
+            .exchange()
+            .expectStatus().isBadRequest
+    }
+
+    @Test
+    fun testPatchCustomerNotFound() {
+        val testCustomer = CustomerRepositoryTest.getTestCustomer()
+        webTestClient
+            .patch()
+            .uri(CustomerController.CUSTOMER_PATH_ID, 1111)
+            .body(Mono.just(testCustomer), CustomerDTO::class.java)
+            .exchange()
+            .expectStatus().isNotFound
     }
 
     @Test
@@ -65,6 +110,19 @@ class CustomerControllerTest {
     }
 
     @Test
+    fun testCreateCustomerBad() {
+        val testCustomer = CustomerRepositoryTest.getTestCustomer()
+        testCustomer.name = ""
+
+        webTestClient
+            .post()
+            .uri(CustomerController.CUSTOMER_PATH)
+            .body(Mono.just(testCustomer), CustomerDTO::class.java)
+            .exchange()
+            .expectStatus().isBadRequest
+    }
+
+    @Test
     @Order(999)
     fun testDeleteCustomer() {
         webTestClient
@@ -72,5 +130,14 @@ class CustomerControllerTest {
             .uri(CustomerController.CUSTOMER_PATH_ID, 1)
             .exchange()
             .expectStatus().isNoContent
+    }
+
+    @Test
+    fun testDeleteCustomerNotFound() {
+        webTestClient
+            .delete()
+            .uri(CustomerController.CUSTOMER_PATH_ID, 1111)
+            .exchange()
+            .expectStatus().isNotFound
     }
 }
