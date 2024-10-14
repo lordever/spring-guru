@@ -54,6 +54,19 @@ class BeerControllerTest {
     }
 
     @Test
+    @Order(4)
+    fun testUpdateBeerBad() {
+        val testBeer = BeerRepositoryTest.getTestBeer()
+        testBeer.style = ""
+
+        webTestClient.put()
+            .uri(BeerController.BEER_PATH_ID, 1)
+            .body(Mono.just(testBeer), BeerDTO::class.java)
+            .exchange()
+            .expectStatus().isBadRequest
+    }
+
+    @Test
     fun testCreateBeer() {
         webTestClient
             .post()
